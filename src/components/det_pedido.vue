@@ -48,9 +48,9 @@
 import { ref } from "vue";
 
 const columns = [
-  { name: 'Nombre', align: 'center', label: 'Nombre', field: 'nombre', sortable: true },
-  { name: 'Presupuesto', align: 'center', label: 'Presupuesto', field: 'presupuesto', sortable: true},
-  { name: 'Ficha',align: 'center',  label: 'Ficha', field: 'ficha_id' },
+  { name: 'Cantidad', align: 'center', label: 'Cantidad', field: 'cantidad', sortable: true },
+  { name: 'Pedido', align: 'center', label: 'Pedido', field: 'pedido_id', sortable: true },
+  { name: 'Producto',align: 'center',  label: 'Producto', field: 'producto_id' },
   { name: 'Estado',align: 'center',  label: 'Estado', field: 'status' },
 ]
 
