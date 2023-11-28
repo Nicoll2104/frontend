@@ -1,11 +1,68 @@
 <template>
-    <div class="padre">   
-      <div class="card"><router-link to="/"><img src="https://cdn-icons-png.flaticon.com/128/2684/2684218.png" style="height: 150px; width: 150px;"> <br></router-link></div>
-      <div class="card"><router-link to="/"><img src="https://cdn-icons-png.flaticon.com/128/3859/3859309.png" style="height: 150px; width: 150px;"> <br></router-link></div>
-      <div class="card"><router-link to="/"><img src="https://cdn-icons-png.flaticon.com/128/9830/9830829.png" style="height: 150px; width: 150px;"> <br></router-link></div>
-      <div class="card"><router-link to="/"><img src="https://cdn-icons-png.flaticon.com/128/3124/3124383.png" style="height: 150px; width: 150px;"> <br></router-link></div>
-      <div class="card"><router-link to="/"><img src="https://cdn-icons-png.flaticon.com/128/3201/3201521.png" style="height: 150px; width: 150px;"> <br></router-link></div>
-      <div class="card"><router-link to="/"><img src="https://cdn-icons-png.flaticon.com/128/1019/1019607.png" style="height: 150px; width: 150px;"> <br></router-link></div>
-      <div class="card"><router-link to="/"><img src="https://cdn-icons-png.flaticon.com/128/6030/6030250.png" style="height: 150px; width: 150px;"> <br></router-link></div>
+    <div class="row absolute-center " style="margin-top:7%;">
+        <div class="menu" v-for="(objeto, i) in tarjeta" :key="i"  :class="`shadow-up-${6}`">
+            <router-link :to="objeto.link" class=" text-orange-12">
+                <q-card class="my-card bg-orange-12 text-orange-10 text-center" style=" height: 200px; width: 160px;">
+                <q-card-section>
+                    <div class="text-h6" style="font-family:Georgia, 'Times New Roman', Times, serif; font-size: large; font-weight: 900;">{{ objeto.item }}</div>
+                </q-card-section>
+                <q-icon :name="objeto.icono" style="font-size: 8em;" />
+            </q-card>
+                </router-link>       
+        </div>
     </div>
   </template>
+  <script setup>
+  import axios from "axios";
+  import { ref } from 'vue';
+  
+  let tarjeta = ref([
+      {
+          item: "Ventas",
+          icono: "🗓️",
+          link:"/ventas"
+      },
+      {
+          item: "Ticket",
+          icono: "🎟️",
+          link: "/billete"
+      },
+      {
+          item: "Buses",
+          icono: "🚌",
+          link: "/buses"
+      },
+      {
+          item: "Clientes",
+          icono: "👥",
+          link: "/cliente"
+      },
+      {
+          item: "Conductores",
+          icono: "🧑‍✈️",
+          link: "/conductor"
+      },
+      {
+          item: "Horarios",
+          icono: "🕕",
+          link: "/horario"
+      },
+      {
+          item: "Rutas",
+          icono: "🚏",
+          link: "/ruta"
+      },
+      {
+          item: "Vendededor",
+          icono: "👮",
+          link: "/vendedor"
+      },
+      {
+          item: "Salir",
+          icono:"📤",
+          link: "/"
+      }
+  ]);
+  
+  
+  </script>

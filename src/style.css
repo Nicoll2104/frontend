@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:display=swap');
+
+*{
+  font-size: large;
+  font-family:'inter';
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+}
+
+body{
+  background-color: rgb(255, 255, 255);
+  min-height: 100vh;
+}
