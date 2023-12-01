@@ -1,88 +1,84 @@
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
+console.log(router.getRoutes());
+
+const leftDrawerOpen = ref(false)
+
+
+
+function toggleLeftDrawer() {
+    leftDrawerOpen.value = !leftDrawerOpen.value
+}
+
+
+
+</script>
+
 <template>
-  <div class="contenedor">
-      <q-layout view="hHh lpR fFf">
-          <q-header elevated class="bg-secondary text-white">
-              <q-toolbar>
-                  <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-                  <q-toolbar-title>
-                      <q-avatar>
-                          <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
-                      </q-avatar>
-                      Title
-                  </q-toolbar-title>
-              </q-toolbar>
-          </q-header>
+    <div>
+        <q-layout view="hHh lpR fFf">
+            <q-header elevated class="bg-secondary text-white">
+                <q-toolbar>
+                    <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+                    <q-toolbar-title>
+                        <q-avatar>
+                            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
+                        </q-avatar>
+                        Title
+                    </q-toolbar-title>
+                </q-toolbar>
+            </q-header>
 
-          <q-drawer class="bg-secondary" v-model="leftDrawerOpen" side="left" behavior="mobile" elevated>
-              <div class="q-pa-md q-gutter">
-                  <div class="q-pa-md q-gutter-sm" style="margin-top: 3em">
-                      <q-avatar color="white" text-color="primary" padding="none" icon="face" style="font-size: 7em" />
-                  </div>
-                  <router-link to="/" class="opcioncont" style="font-size: 2em">
-                      <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
-                          style="width: 95%">Cerrar Sesión </q-btn>
-                  </router-link>
-                  <router-link to="/home" class="opcioncont" style="font-size: 2em">
-                      <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
-                          style="width: 95%">Cambiar nombre </q-btn>
-                  </router-link>
-                  <q-linear-progress :value="progress" class="q-mt-md" color="primary" />
-                  <router-link to="/Presupuesto" class="opcioncont" style="font-size: 2em">
-                      <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
-                          label="Presupuesto" style="width: 95%" />
-                  </router-link>
-                  <router-link to="/inventario" class="opcioncont" style="font-size: 2em">
-                      <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
-                          label="Inventarios" style="width: 95%" />
-                  </router-link>
-                  <router-link to="/pedidos" class="opcioncont" style="font-size: 2em">
-                      <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send" label="Pedidos"
-                          style="width: 95%" />
-                  </router-link>
-                  <router-link to="/informes_sistema" class="opcioncont" style="font-size: 2em">
-                      <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
-                          label="Informes del sistema" style="width: 95%" />
-                  </router-link>
-                  <router-link to="/utilidades_sistema" class="opcioncont" style="font-size: 2em">
-                      <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
-                          label="Utilidades del sistema" style="width: 95%" />
-                  </router-link>
-                  <q-linear-progress :value="progress" class="q-mt-md" />
+            <q-drawer class="bg-secondary" v-model="leftDrawerOpen" side="left" behavior="mobile" elevated>
+                <div class="q-pa-md q-gutter">
+                    <div class="q-pa-md q-gutter-sm" style="margin-top: 3em">
+                        <q-avatar color="white" text-color="primary" padding="none" icon="face" style="font-size: 7em" />
+                    </div>
+                    <router-link to="/" class="opcioncont" style="font-size: 2em">
+                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
+                            style="width: 95%">Cerrar Sesión </q-btn>
+                    </router-link>
+                    <router-link to="/home" class="opcioncont" style="font-size: 2em">
+                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
+                            style="width: 95%">Cambiar nombre </q-btn>
+                    </router-link>
+                    <q-linear-progress :value="progress" class="q-mt-md" color="primary" />
+                    <router-link to="/Presupuesto" class="opcioncont" style="font-size: 2em">
+                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
+                            label="Presupuesto" style="width: 95%" />
+                    </router-link>
+                    <router-link to="/inventario" class="opcioncont" style="font-size: 2em">
+                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
+                            label="Inventarios" style="width: 95%" />
+                    </router-link>
+                    <router-link to="/pedidos" class="opcioncont" style="font-size: 2em">
+                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send" label="Pedidos"
+                            style="width: 95%" />
+                    </router-link>
+                    <router-link to="/informes_sistema" class="opcioncont" style="font-size: 2em">
+                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
+                            label="Informes del sistema" style="width: 95%" />
+                    </router-link>
+                    <router-link to="/utilidades_sistema" class="opcioncont" style="font-size: 2em">
+                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
+                            label="Utilidades del sistema" style="width: 95%" />
+                    </router-link>
+                    <q-linear-progress :value="progress" class="q-mt-md" />
 
-              </div>
-          </q-drawer>
+                </div>
+            </q-drawer>
 
-          <q-page-container>
-              <router-view />
-          </q-page-container>
+            <q-page-container>
+                <router-view />
+            </q-page-container>
 
-      </q-layout>
-  </div>
+        </q-layout>
+    </div>
 </template>
-  
-  <script>
-  import { ref } from "vue";
-  
-  export default {
-    setup() {
-      const leftDrawerOpen = ref(false);
-  
-      return {
-        leftDrawerOpen,
-        toggleLeftDrawer() {
-          leftDrawerOpen.value = !leftDrawerOpen.value;
-        },
-        cerrarSesion() {
-          console.log("Cerrando sesión...");
-          localStorage.removeItem("token");
-          localStorage.removeItem("vendedor");
-        },
-      };
-    },
-  };
-  </script>
-  
-  <style scoped>
+
+<style scoped>
 .padre {
     display: flex;
     flex-wrap: wrap;

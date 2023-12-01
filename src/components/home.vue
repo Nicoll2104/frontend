@@ -1,68 +1,91 @@
+<script setup>
+import { useRouter } from 'vue-router'
+import imgBuses from '../assets/buses.png'
+import imgCiudades from '../assets/ciudades.png'
+import imgClientes from '../assets/clientes.png'
+import imgConductores from '../assets/conductores.png'
+import imgRutas from '../assets/rutas.png'
+import imgTiquetes from '../assets/tiquetes.png'
+import imgVentas from '../assets/ventas.png'
+import imgVendedores from '../assets/vendedores.png'
+
+const router = useRouter()
+console.log(router.getRoutes());
+
+
+const opciones = [
+  { nombre: "Buses", imagen: imgBuses },
+  { nombre: "Ciudades", imagen: imgCiudades },
+  { nombre: "Clientes", imagen: imgClientes },
+  { nombre: "Conductores", imagen: imgConductores },
+  { nombre: "Rutas", imagen: imgRutas },
+  { nombre: "Tiquetes", imagen: imgTiquetes },
+  { nombre: "Ventas", imagen: imgVentas },
+  { nombre: "Vendedores", imagen: imgVendedores }
+];
+const primeraMayuscula = (cadena) =>
+  cadena.charAt(0).toUpperCase() + cadena.slice(1);
+
+const primeraMinuscula = (cadena) => cadena.charAt(0).toLowerCase() + cadena.slice(1);
+</script>
+
+
 <template>
-    <div class="row absolute-center " style="margin-top:7%;">
-        <div class="menu" v-for="(objeto, i) in tarjeta" :key="i"  :class="`shadow-up-${6}`">
-            <router-link :to="objeto.link" class=" text-orange-12">
-                <q-card class="my-card bg-orange-12 text-orange-10 text-center" style=" height: 200px; width: 160px;">
-                <q-card-section>
-                    <div class="text-h6" style="font-family:Georgia, 'Times New Roman', Times, serif; font-size: large; font-weight: 900;">{{ objeto.item }}</div>
-                </q-card-section>
-                <q-icon :name="objeto.icono" style="font-size: 8em;" />
-            </q-card>
-                </router-link>       
-        </div>
-    </div>
-  </template>
-  <script setup>
-  import axios from "axios";
-  import { ref } from 'vue';
-  
-  let tarjeta = ref([
-      {
-          item: "Ventas",
-          icono: "🗓️",
-          link:"/ventas"
-      },
-      {
-          item: "Ticket",
-          icono: "🎟️",
-          link: "/billete"
-      },
-      {
-          item: "Buses",
-          icono: "🚌",
-          link: "/buses"
-      },
-      {
-          item: "Clientes",
-          icono: "👥",
-          link: "/cliente"
-      },
-      {
-          item: "Conductores",
-          icono: "🧑‍✈️",
-          link: "/conductor"
-      },
-      {
-          item: "Horarios",
-          icono: "🕕",
-          link: "/horario"
-      },
-      {
-          item: "Rutas",
-          icono: "🚏",
-          link: "/ruta"
-      },
-      {
-          item: "Vendededor",
-          icono: "👮",
-          link: "/vendedor"
-      },
-      {
-          item: "Salir",
-          icono:"📤",
-          link: "/"
-      }
-  ]);
-  
-  
-  </script>
+  <div class="opcionescont">
+    <router-link v-for="(opcion, i) in opciones" :key="i" class="opcioncont" :to="'/' + primeraMinuscula(opcion.nombre)">
+      <button class="opcion">
+        <div class="opcion-text">{{ opcion.nombre }}</div>
+        <img :src="opcion.imagen" alt="Imagen" class="opcion-imagen" />
+      </button>
+    </router-link>
+  </div>
+</template>
+
+<style scoped>
+.opcionescont {
+  padding: 30px;
+  display: block;
+}
+
+.opcioncont {
+  margin: 12px 10px;
+  width: 300px;
+  min-width: 200px;
+  height: 200px;
+  display: inline-block;
+}
+
+.opcion {
+  border: none;
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+  display: grid;
+  justify-content: center;
+  transition: transform 0.1s ease;
+}
+
+.opcion:hover {
+  background: #a3f7bf;
+  transform: scale(1.05);
+}
+
+.opcion-imagen {
+  height: 100px;
+  margin: auto;
+}
+
+.opcion-text {
+  font-size: 25px;
+  text-align: center;
+  margin: auto;
+  font-weight: bold;
+  text-decoration: underline;
+  color: black;
+}
+
+.paleta {
+  background-color: #3f497f #29a19c #a3f7bf;
+}
+</style>
+
