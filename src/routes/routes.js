@@ -1,10 +1,5 @@
-import home from "../components/home.vue";
-import menu from "../components/menu.vue";
-import area from "../components/area.vue";
-import ficha from "../components/ficha.vue";
-import login from "../components/login.vue";
-import { createRouter, createWebHashHistory } from "vue-router";
 
+/* 
 const authGuard = (to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     console.log(isAuthenticated());
@@ -19,26 +14,29 @@ const authGuard = (to, from, next) => {
     next();
     console.log("b");
   }
-};
+}; */
+import Login from "../components/login.vue" 
+import Menu from "../components/menu.vue"
+import home from "../components/home.vue"
+
+
+
+
+import {createRouter, createWebHashHistory} from 'vue-router'
 
 const routes = [
-  { path: "/", component: login },
-  {
-    path: "/menu",
-    meta: { requiresAuth: true },
-    beforeEnter: authGuard,
-    component: menu,
-    children: [
-      { path: "", component: home },
-      { path: "/home", component: home },
-      { path: "/ficha", component: ficha },
-      { path: "/area", component: area },
-    ],
-  },
-];
+    {path: "/",component: Login,},
+    {path: "/menu",component: Menu, 
+      children: [
+        { path: "/", redirect: "/menu/home" },
+        { path: "/home", component: home }
+
+      ],
+    }
+]
 
 export const router = createRouter({
-  history: createWebHashHistory(),
-  routes,
-});
+    history:createWebHashHistory(),
+    routes
+})
 
