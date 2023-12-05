@@ -2,7 +2,7 @@
     <div class="q-pa-md">
       <q-table
         flat bordered
-        title="Treats"
+        title="Fichas"
         :rows="rows"
         :columns="columns"
         row-key="name"
@@ -48,11 +48,12 @@
   import { ref } from "vue";
   
   const columns = [
-    { name: 'Codigo', align: 'center', label: 'Codigo', field: 'codigo_presupuestal', sortable: true },
+    { name: 'Codigo', align: 'center', label: 'Codigo', field: 'codigo', sortable: true },
     { name: 'Nombre', align: 'center', label: 'Nombre', field: 'nombre', sortable: true },
-    { name: 'Presupuesto_inicial', align: 'center', label: 'Presupuesto_inicial', field: 'presupuesto_inicial', sortable: true },
-    { name: 'Año',align: 'center',  label: 'Año', field: 'año' },
-    { name: 'Lote',align: 'center',  label: 'Lote', field: 'lote' },
+    { name: 'Nivel_formacion', align: 'center', label: 'Nivel_formacion', field: 'nivel_formacion', sortable: true },
+    { name: 'Fecha_inicio',align: 'center',  label: 'Fecha_inicio', field: 'fecha_inicio' },
+    { name: 'Fecha_fin',align: 'center',  label: 'Lote', field: 'lote' },
+    { name: 'codigo_area',align: 'center',  label: 'Lote', field: 'lote' },
     { name: 'Items',align: 'center',  label: 'Items', field: 'items' },
     { name: 'Estado',align: 'center',  label: 'Estado', field: 'status' },
   ]
