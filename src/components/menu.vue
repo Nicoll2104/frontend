@@ -32,9 +32,9 @@ function toggleLeftDrawer() {
             </q-header>
 
             <q-drawer class="bg-secondary" v-model="leftDrawerOpen" side="left" behavior="mobile" elevated>
-                <div class="q-pa-md q-gutter">
+                <div class="q-pa-md q-gutter opcionescont">
                     <div class="q-pa-md q-gutter-sm" style="margin-top: 3em">
-                        <q-avatar color="white" text-color="primary" padding="none" icon="face" style="font-size: 7em" />
+                        <q-avatar color="white" text-color="primary" padding="none" icon="face" style="font-size: 7em"/>
                     </div>
                     <router-link to="/" class="opcioncont" style="font-size: 2em">
                         <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
@@ -83,30 +83,15 @@ function toggleLeftDrawer() {
 </template>
 
 <style scoped>
-.padre {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 65px;
-    padding: 2%;
+
+*{
+    font-size: large;
+    text-align: center;
 }
 
-.card {
-    box-sizing: border-box;
-    width: 240px;
-    height: 254px;
-    background: white;
-    box-shadow: 2px 7px 11px rgba(0, 0, 0, 0.22);
-    backdrop-filter: blur(6px);
-    border-radius: 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.5s;
-    display: flex;
-    user-select: none;
-    font-weight: bolder;
-    color: black;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
+.opcionescont{
+    font-size: large;
+    
 }
+
 </style>
