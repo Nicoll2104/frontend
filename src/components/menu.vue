@@ -23,10 +23,10 @@ function toggleLeftDrawer() {
                 <q-toolbar>
                     <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
                     <q-toolbar-title>
-                        <q-avatar>
-                            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
+                        <q-avatar icon="page_info">
+                            
                         </q-avatar>
-                        Title
+                        Distribucion De Presupuesto SENA
                     </q-toolbar-title>
                 </q-toolbar>
             </q-header>

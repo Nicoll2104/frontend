@@ -18,7 +18,7 @@ const routes = [
       children: [
         { path: "/", redirect: "/menu/home" },
         { path: "/home", component: home },
-        {path: '/Pesupuesto', component:presupuesto},
+        {path: '/Presupuesto', component:presupuesto},
         {path: '/Fichas', component:Fichas},
         {path: '/Lotes', component:Lotes},
         {path: '/Areas', component:Areas},
