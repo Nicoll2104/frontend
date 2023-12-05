@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <q-table
       flat bordered
-      title="Treats"
+      title="Areas"
       :rows="rows"
       :columns="columns"
       row-key="name"
@@ -51,6 +51,7 @@ const columns = [
   { name: 'Nombre', align: 'center', label: 'Nombre', field: 'nombre', sortable: true },
   { name: 'Presupuesto', align: 'center', label: 'Presupuesto', field: 'presupuesto', sortable: true},
   { name: 'Ficha',align: 'center',  label: 'Ficha', field: 'ficha_id' },
+  { name: 'Items',align: 'center',  label: 'Items', field: 'items' },
   { name: 'Estado',align: 'center',  label: 'Estado', field: 'status' },
 ]
 
