@@ -49,21 +49,25 @@ function toggleLeftDrawer() {
                         <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
                             label="Presupuesto" style="width: 95%" />
                     </router-link>
-                    <router-link to="/inventario" class="opcioncont" style="font-size: 2em">
+                    <router-link to="/Fichas" class="opcioncont" style="font-size: 2em">
                         <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
-                            label="Inventarios" style="width: 95%" />
+                            label="Fichas" style="width: 95%" />
                     </router-link>
-                    <router-link to="/pedidos" class="opcioncont" style="font-size: 2em">
-                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send" label="Pedidos"
+                    <router-link to="/Lotes" class="opcioncont" style="font-size: 2em">
+                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send" label="Lotes"
                             style="width: 95%" />
                     </router-link>
-                    <router-link to="/informes_sistema" class="opcioncont" style="font-size: 2em">
+                    <router-link to="/Areas" class="opcioncont" style="font-size: 2em">
                         <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
-                            label="Informes del sistema" style="width: 95%" />
+                            label="Areas" style="width: 95%" />
                     </router-link>
-                    <router-link to="/utilidades_sistema" class="opcioncont" style="font-size: 2em">
+                    <router-link to="/Pedidos" class="opcioncont" style="font-size: 2em">
                         <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
-                            label="Utilidades del sistema" style="width: 95%" />
+                            label="Pedido" style="width: 95%" />
+                    </router-link>
+                    <router-link to="/Productos" class="opcioncont" style="font-size: 2em">
+                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
+                            label="Producto" style="width: 95%" />
                     </router-link>
                     <q-linear-progress :value="progress" class="q-mt-md" />
 
