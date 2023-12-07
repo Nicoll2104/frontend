@@ -1,91 +1,149 @@
-<script setup>
-import { useRouter } from 'vue-router'
-import imgBuses from '../assets/buses.png'
-import imgCiudades from '../assets/ciudades.png'
-import imgClientes from '../assets/clientes.png'
-import imgConductores from '../assets/conductores.png'
-import imgRutas from '../assets/rutas.png'
-import imgTiquetes from '../assets/tiquetes.png'
-import imgVentas from '../assets/ventas.png'
-import imgVendedores from '../assets/vendedores.png'
-
-const router = useRouter()
-console.log(router.getRoutes());
-
-
-const opciones = [
-  { nombre: "Buses", imagen: imgBuses },
-  { nombre: "Ciudades", imagen: imgCiudades },
-  { nombre: "Clientes", imagen: imgClientes },
-  { nombre: "Conductores", imagen: imgConductores },
-  { nombre: "Rutas", imagen: imgRutas },
-  { nombre: "Tiquetes", imagen: imgTiquetes },
-  { nombre: "Ventas", imagen: imgVentas },
-  { nombre: "Vendedores", imagen: imgVendedores }
-];
-const primeraMayuscula = (cadena) =>
-  cadena.charAt(0).toUpperCase() + cadena.slice(1);
-
-const primeraMinuscula = (cadena) => cadena.charAt(0).toLowerCase() + cadena.slice(1);
-</script>
-
 
 <template>
-  <div class="opcionescont">
-    <router-link v-for="(opcion, i) in opciones" :key="i" class="opcioncont" :to="'/' + primeraMinuscula(opcion.nombre)">
-      <button class="opcion">
-        <div class="opcion-text">{{ opcion.nombre }}</div>
-        <img :src="opcion.imagen" alt="Imagen" class="opcion-imagen" />
-      </button>
-    </router-link>
+  <div class="container">
+    <div class="contenedor2" v-for="(item, index) in content" :key="index">
+      <router-link :to="item.ruta" class="link-card">
+        <div class="card">
+          <div class="tools">
+            <div class="circle">
+              <span class="blue box"></span>
+            </div>
+            <div class="circle">
+              <span class="blue box"></span>
+            </div>
+            <div class="circle">
+              <span class="blue box"></span>
+            </div>
+          </div>
+          <div class="card__content">
+            {{ item.titulo }}
+            <img :src="item.img" alt="" class="img" />
+          </div>
+        </div>
+      </router-link>
+    </div>
   </div>
 </template>
 
-<style scoped>
-.opcionescont {
-  padding: 30px;
-  display: block;
-}
+<script setup>
+import { ref } from "vue";
 
-.opcioncont {
-  margin: 12px 10px;
-  width: 300px;
-  min-width: 200px;
-  height: 200px;
-  display: inline-block;
-}
+let content = ref([
+  {
+    ruta: "/Presupuesto",
+    titulo: "Presupuesto",
+    img: "src/assets/presupuesto.png",
+  },
+  {
+    ruta: "/Fichas",
+    titulo: "Fichas",
+    img: "src/assets/fichas2.png",
+  },
+  {
+    ruta: "/Lotes",
+    titulo: "Lotes",
+    img: "src/assets/lotes.png",
+  },
+  {
+    ruta: "/Areas",
+    titulo: "Areas",
+    img: "src/assets/areas.png",
+  },
+  {
+    ruta: "/Pedidos",
+    titulo: "Pedido",
+    img: "src/assets/pedido.png",
+  },
+  {
+    ruta: "/Productos",
+    titulo: "Producto",
+    img: "src/assets/producto.png ",
+  },
+]);
+</script>
 
-.opcion {
-  border: none;
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap");
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  height: 75vh;
   width: 100%;
-  height: 100%;
-  padding: 5px;
-  display: grid;
   justify-content: center;
-  transition: transform 0.1s ease;
+  gap: 40px;
 }
 
-.opcion:hover {
-  background: #a3f7bf;
-  transform: scale(1.05);
+.contenedor2 {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+  height: 290px;
+  margin: 5px 15px;
 }
 
-.opcion-imagen {
-  height: 100px;
-  margin: auto;
+.contenedor2 a {
+  text-decoration: none;
+  color: #0d0d0d; 
+  gap: 30px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-size: 2em;
+  border-radius: 50px;
 }
 
-.opcion-text {
-  font-size: 25px;
-  text-align: center;
-  margin: auto;
-  font-weight: bold;
-  text-decoration: underline;
-  color: black;
+.img {
+  position: relative;
+  height: 150px;
+  width: 150px;
+  border: #A3F7BF;
 }
 
-.paleta {
-  background-color: #3f497f #29a19c #a3f7bf;
+.link-card {
+  width: 257px;
+  height: 290px;
+}
+
+.card {
+  width: 257px;
+  height: 290px;
+  margin: 0 auto;
+  background-color: #A3F7BF; 
+  border-radius: 8px;
+  z-index: 1;
+  box-shadow: 5px 5px 10px -5px rgba(0, 0, 0, 0.77);
+}
+
+.tools {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+}
+
+.circle {
+  padding: 0 4px;
+}
+
+.box {
+  display: inline-block;
+  align-items: center;
+  width: 10px;
+  height: 10px;
+  padding: 1px;
+  border-radius: 50%;
+}
+
+.blue {
+  background-color: #1920e6;
+}
+
+.card__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: "Roboto Slab", serif;
 }
 </style>
-

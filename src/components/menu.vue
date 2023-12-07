@@ -42,7 +42,7 @@ function toggleLeftDrawer() {
                     </router-link>
                     <router-link to="/home" class="opcioncont" style="font-size: 2em">
                         <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
-                            style="width: 95%">Cambiar nombre </q-btn>
+                            style="width: 95%">Menu </q-btn>
                     </router-link>
                     <q-linear-progress :value="progress" class="q-mt-md" color="primary" />
                     <router-link to="/Presupuesto" class="opcioncont" style="font-size: 2em">
