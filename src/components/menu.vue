@@ -33,7 +33,7 @@ function toggleLeftDrawer() {
 
             <q-drawer class="bg-secondary" v-model="leftDrawerOpen" side="left" behavior="mobile" elevated>
                 <div class="q-pa-md q-gutter opcionescont">
-                    <div class="q-pa-md q-gutter-sm" style="margin-top: 3em">
+                    <div class="q-pa-md q-gutter-sm" style="margin-top: 1em">
                         <q-avatar color="white" text-color="primary" padding="none" icon="face" style="font-size: 7em"/>
                     </div>
                     <router-link to="/" class="opcioncont" style="font-size: 2em">

@@ -136,7 +136,7 @@ let content = ref([
 }
 
 .blue {
-  background-color: #1920e6;
+  background-color: #ffffff;
 }
 
 .card__content {

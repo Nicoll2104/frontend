@@ -8,7 +8,6 @@
         <p class="tittle">Bienvenido</p>
         <p class="subtittle">Por favor ingrese sus datos de usuario para continuar, ¡te esperamos!</p>
   
-  
         <input class="input opcion" type="text" placeholder="Nombre de usuario">
         <div class="contrasenacont">
           <input class="input opcion" type="text" placeholder="Contraseña">
@@ -220,4 +219,22 @@ async function validar() {
       font-size: 20px;
       }
   }
+  .cont {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+}
+
+.olascont {
+
+  flex: 1;
+}
+
+.opcioncont {
+  flex: 1;
+  text-align: center; 
+}
+
+
   </style>
