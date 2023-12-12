@@ -22,12 +22,25 @@ const columns = ref([
 ]);
 
 const rows = ref([]);
+const selectunidadmedida = [
+        { label: 'Unidades', value: 'unidades' },
+        { label: 'Kilogramos', value: 'kg' },
+        { label: 'Libras', value: 'lb' },
+        { label: 'Litros', value: 'l' },
+      ]
 
 const data = ref({
   nombre: "",
   cedula: "",
-  email: "",
+  fecha: "",
+  ficha: "",
+  producto: "",
+  descripcion: "",
+  unidadmedida: "",
+  cantidad: "",
 });
+
+const preciototal = data.cantidad * data.precioporunidad;
 
 const obtenerInfo = async () => {
   try {
@@ -57,9 +70,17 @@ const modal = ref(false);
 const opciones = {
   agregar: () => {
     data.value = {
-      nombre: "",
-      cedula: "",
-      email: "",
+    nombre: "",
+    cedula: "",
+    fecha: "",
+    ficha: "",
+    producto: "",
+    descripcion: "",
+    unidadmedida: "",
+    cantidad: "",
+    precioporunidad: "",
+    impuesto: "",
+
     };
     modal.value = true;
     estado.value = "guardar";
@@ -198,32 +219,100 @@ function notificar(tipo, msg) {
     position: "top"
   })
 }
+
+function prompt () {
+      $q.dialog({
+        title: 'Prompt',
+        message: 'What is your name?',
+        prompt: {
+          model: '',
+          type: 'text' // optional
+        },
+        cancel: true,
+        persistent: true
+      }).onOk(data => {
+        // console.log('>>>> OK, received', data)
+      }).onCancel(() => {
+        // console.log('>>>> Cancel')
+      }).onDismiss(() => {
+        // console.log('I am triggered on both OK and Cancel')
+      })
+    }
 </script>
 
 <template>
   <div>
-    <q-dialog v-model="modal">
+    <q-dialog v-model="modal" persistent color="primary">
       <q-card class="modal">
         <q-toolbar>
-          <q-toolbar-title>Agregar {{ modelo }}</q-toolbar-title>
+          <q-toolbar-title> Agregar {{ modelo }}</q-toolbar-title>
           <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
+        
         </q-toolbar>
-
-        <q-card-section class="q-gutter-md">
-          <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
+        <!-- inputs🃏👇-->
+        <q-card-section class="q-gutter-md row items-star justify-center continputs1">
+            <q-input class="nombreinput modalinputs" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-          <q-input class="input2" outlined v-model="data.cedula" label="Cedula" type="number"
-             lazy-rules
-            :rules="[val => val != '' || 'Ingrese una cedula', val => val.length < 11 || 'Cedula debe tener 10 o menos carácteres']" maxlength="10"></q-input>
-          <q-input class="input3" outlined v-model="data.email" label="Email" type="email"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese un email']"></q-input>
+            
+            <q-input class="cedulainput modalinputs" outlined v-model="data.cedula" label="cedula" type="text" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese una cedula']"></q-input>
 
+            <q-input class="fechainput modalinputs" outlined v-model="data.fecha" label="fecha" type="date" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese una fecha']"></q-input>
 
+            <q-input class="fichainput modalinputs" outlined v-model="data.ficha" label="ficha" type="text" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese una ficha']"></q-input>
+          
+          </q-card-section>
+
+          <q-card-section class="q-gutter-md row items-star justify-center continputs1">
+
+            <q-input class="productoinput modalinputs" outlined v-model="data.producto" label="producto" type="text" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese un producto']"></q-input>
+            
+            <q-input class="cantidadinput modalinputs" outlined v-model="data.cantidad" label="cantidad" type="number" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
+
+            <q-select class="unidadmedidainput modalinputs" outlined v-model="data.unidadmedida" :options="selectunidadmedida" label="Selecciona la unidad de medida" 
+            lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese una unidad de medida']"/>
+
+            <q-input class="precioporunidadinput modalinputs" outlined v-model="data.precioporunidad" label="precio por unidad" type="number" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese un precio por unidad']"></q-input>
+
+            <q-input class="impuestoinput modalinputs" outlined v-model="data.impuesto" label="impuesto" type="number" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese impuesto']"></q-input>
+
+            <q-input class="preciototalinput modalinputs" v-model="preciototal" outlined label="Precio total" type="number" disable >
+              {{data.cantidad * data.precioporunidad }}
+            </q-input>
+
+          </q-card-section>
+          <q-card-section class="q-gutter-md row items-star justify-center">
+            <q-input class="descripcioninput modalinputs" outlined v-model="data.descripcion" label="descripcion" type="textarea" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese una descripcion']"></q-input>
+          </q-card-section>
+          <!-- inputs🃏☝ -->
+
+          <!-- btns 🛑👇 -->
+          <q-card-section class="q-gutter-md row items-end justify-end continputs1">
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
-            :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
-            <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
+            color="secondary" label="guardar">
+            <q-icon name="style" color="white" right />
           </q-btn>
+
+          <q-btn @click="" :loading="loadingmodal" padding="10px"
+            color="secondary" label="imprimir">
+            <q-icon name="print" color="white" right />
+          </q-btn>
+
+          <q-btn :loading="loadingmodal" padding="10px"
+            color="warning" label="cancelar" text-color="white" v-close-popup >
+            <q-icon name="cancel" color="white" right />
+          </q-btn>
+
         </q-card-section>
+        <!-- btns 🛑☝ -->
       </q-card>
     </q-dialog>
 
@@ -276,6 +365,12 @@ function notificar(tipo, msg) {
           </q-td>
         </template>
       </q-table>
+
+      <router-link to="/Det_pedido" class="ingresarcont">
+        <q-btn class="ingresar opcion" color="secondary">Detalle Pedido
+          <q-icon name="style" color="white" right />
+        </q-btn>
+      </router-link>
     </div>
   </div>
 </template>
@@ -297,7 +392,21 @@ warning: Color para advertencias o mensajes importantes.
 
 .modal {
   width: 100%;
-  max-width: 600px;
+  max-width: none;
+}
+
+.continputs1{
+  border-top: solid 2px rgba(0, 0, 0, 0.267);
+  margin-top: 2px ;
+}
+
+.modalinputs{
+  width: 400px;
+  max-width: 80% ;
+}
+
+.descripcioninput{
+  width: 100%;
 }
 
 .tabla {
