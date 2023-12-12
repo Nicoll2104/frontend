@@ -115,6 +115,9 @@ let content = ref([
   z-index: 1;
   box-shadow: 5px 5px 10px -5px rgba(0, 0, 0, 0.77);
 }
+.card:hover {
+  box-shadow: 5px 5px 20px 0px rgba(0, 0, 0, 0.77); 
+}
 
 .tools {
   display: flex;
