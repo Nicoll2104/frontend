@@ -22,16 +22,28 @@ const loadingmodal = ref(false);
 
 const columns = ref([
   {
-    name: "Nombre",
-    label: "Nombre",
+    name: "codigo_presupuesto",
+    label: "Codigo presupuesto",
     align: "left",
     field: (row) => row.nombre,
     sort: true,
     sortOrder: "da",
   },
   {
-    name: "Presupuesto",
-    label: "Presupuesto",
+    name: "nombre",
+    label: "Nombre",
+    align: "left",
+    field: (row) => row.cedula,
+  },
+  {
+    name: "presupuesto_inicial",
+    label: "Presupuesto inicial",
+    align: "left",
+    field: (row) => row.cedula,
+  },
+  {
+    name: "año",
+    label: "Año",
     align: "left",
     field: (row) => row.cedula,
   },
@@ -50,9 +62,10 @@ const columns = ref([
 const rows = ref([]);
 
 const data = ref({
+  codigo_presupuesto: "",
   nombre: "",
-  cedula: "",
-  email: "",
+  presupuesto_inicial: "",
+  año: "",
 });
 
 const obtenerInfo = async () => {
@@ -83,9 +96,10 @@ const modal = ref(false);
 const opciones = {
   agregar: () => {
     data.value = {
+      codigo_presupuesto: "",
       nombre: "",
-      cedula: "",
-      email: "",
+      presupuesto_inicial: "",
+      año: "",
     };
     modal.value = true;
     estado.value = "guardar";
@@ -236,10 +250,14 @@ function notificar(tipo, msg) {
         </q-toolbar>
 
         <q-card-section class="q-gutter-md">
+          <q-input class="input1" outlined v-model="data.codigo_presupuesto" label="Codigo presupuesto" type="number" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese el codigo de presupuesto']"></q-input>
           <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-            <q-input class="input1" outlined v-model="data.nombre" label="Presupuesto" type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
+          <q-input class="input2" outlined v-model="data.presupuesto_inicial" label="Presupuesto inicial" type="number" maxlength="15"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
+            <q-input class="input2" outlined v-model="data.año" label="año" type="number" maxlength="15"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
 
 
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
@@ -256,7 +274,7 @@ function notificar(tipo, msg) {
         no-results-label="No hay resultados para la busqueda" wrap-cells="false">
         <template v-slot:top>
           <h4 class="titulo-cont">
-            {{ modelo +' ' }}
+            {{ modelo + ' ' }}
             <q-btn @click="opciones.agregar" label="Añadir" color="secondary">
               <q-icon name="style" color="white" right />
             </q-btn>
@@ -300,8 +318,15 @@ function notificar(tipo, msg) {
         </template>
       </q-table>
     </div>
+    <router-link to="/Dis_presupuesto" class="ingresarcont">
+      <button class=" personalizado">Distribucion presupuesto</button>
+  </router-link>
+
   </div>
 </template>
+
+
+
 <style scoped>
 /* 
 primary: Color principal del tema.
@@ -349,8 +374,23 @@ warning: Color para advertencias o mensajes importantes.
   font-size: 15px;
 }
 
+
 .botonv1 {
   font-size: 10px;
   font-weight: bold;
+}
+.personalizado {
+  font-size: 20px;
+  font-weight: 700;
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  background: linear-gradient(to right, #29A19C, #3F497F); 
+  transition: background 0.3s ease; 
+}
+
+.personalizado:hover {
+  background: linear-gradient(to right, #3F497F, #29A19C);
 }
 </style>

@@ -1,11 +1,76 @@
+<!-- <template>
+    <div class="q-pa-md">
+      <q-table
+        flat bordered
+        title="Treats"
+        :rows="rows"
+        :columns="columns"
+        row-key="name"
+        binary-state-sort
+      >
+        <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td key="name" :props="props">
+              {{ props.row.name }}
+              <q-popup-edit v-model="props.row.name" v-slot="scope">
+                <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+              </q-popup-edit>
+            </q-td>
+            <q-td key="calories" :props="props">
+              {{ props.row.calories }}
+              <q-popup-edit v-model="props.row.calories" title="Update calories" buttons v-slot="scope">
+                <q-input type="number" v-model="scope.value" dense autofocus />
+              </q-popup-edit>
+            </q-td>
+            <q-td key="fat" :props="props">
+              <div class="text-pre-wrap">{{ props.row.fat }}</div>
+              <q-popup-edit v-model="props.row.fat" v-slot="scope">
+                <q-input type="textarea" v-model="scope.value" dense autofocus />
+              </q-popup-edit>
+            </q-td>
+            <q-td key="carbs" :props="props">
+              {{ props.row.carbs }}
+              <q-popup-edit v-model="props.row.carbs" title="Update carbs" buttons persistent v-slot="scope">
+                <q-input type="number" v-model="scope.value" dense autofocus hint="Use buttons to close" />
+              </q-popup-edit>
+            </q-td>
+            <q-td key="protein" :props="props">{{ props.row.protein }}</q-td>
+            <q-td key="sodium" :props="props">{{ props.row.sodium }}</q-td>
+            <q-td key="calcium" :props="props">{{ props.row.calcium }}</q-td>
+            <q-td key="iron" :props="props">{{ props.row.iron }}</q-td>
+          </q-tr>
+        </template>
+      </q-table>
+    </div>
+  </template>
+  
+  <script setup>
+  import { ref } from "vue";
+  
+  const columns = [
+    { name: 'Codigo', align: 'center', label: 'Codigo', field: 'codigo_presupuestal', sortable: true },
+    { name: 'Nombre', align: 'center', label: 'Nombre', field: 'nombre', sortable: true },
+    { name: 'Presupuesto_inicial', align: 'center', label: 'Presupuesto_inicial', field: 'presupuesto_inicial', sortable: true },
+    { name: 'Año',align: 'center',  label: 'Año', field: 'año' },
+    { name: 'Lote',align: 'center',  label: 'Lote', field: 'lote' },
+    { name: 'Items',align: 'center',  label: 'Items', field: 'items' },
+    { name: 'Estado',align: 'center',  label: 'Estado', field: 'status' },
+  ]
+  
+  const rows = []
+  </script>
+  
+  <style scoped>
+  </style> -->
 
+  
 
 <script setup>
 import { ref } from "vue";
 import { useClienteStore } from "../stores/clientes.js";
 import { useQuasar } from 'quasar'
 
-const modelo = "Lotes";
+const modelo = "Distribucion presupuesto";
 const useCliente = useClienteStore();
 const loadingTable = ref(true)
 const $q = useQuasar()
@@ -41,16 +106,10 @@ const columns = ref([
     field: (row) => row.año,
   },
   {
-    name: "modificaciones",
-    label: "Modificaciones",
+    name: "lote",
+    label: "Lote",
     align: "left",
-    field: (row) => row.modificaciones,
-  },
-  {
-    name: "presupuesto_definitivo",
-    label: "Presupuesto definitivo",
-    align: "left",
-    field: (row) => row.presupuesto_definitivo,
+    field: (row) => row.lote,
   },
 
   {
@@ -72,8 +131,7 @@ const data = ref({
   nombre: "",
   presupuesto_inicial: "",
   año: "",
-  modificaciones: "",
-  presupuesto_definitivo: "",
+  lote: "",
 });
 
 const obtenerInfo = async () => {
@@ -108,8 +166,7 @@ const opciones = {
       nombre: "",
       presupuesto_inicial: "",
       año: "",
-      modificaciones: "",
-      presupuesto_definitivo: "",
+      lote: "",
     };
     modal.value = true;
     estado.value = "guardar";
@@ -268,11 +325,8 @@ function notificar(tipo, msg) {
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
           <q-input class="input1" outlined v-model="data.año" label="Año" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
-          <q-input class="input1" outlined v-model="data.modificaciones" label="Modificaciones" type="text" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese las modificaciones']"></q-input>
-          <q-input class="input1" outlined v-model="data.presupuesto_definitivo" label="Presupuesto definitivo"
-            type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el presupuesto definitivo']"></q-input>
+          <q-input class="input1" outlined v-model="data.lote" label="Lote" type="text" maxlength="15"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el lote']"></q-input>
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
@@ -331,11 +385,12 @@ function notificar(tipo, msg) {
         </template>
       </q-table>
     </div>
+    <router-link to="/Dis_ficha" class="ingresarcont">
+  <button class=" personalizado">Distribucion ficha</button>
+</router-link>
 
-    <router-link to="/Dis_presupuesto" class="ingresarcont">
-      <button class=" personalizado">Distribucion presupuesto</button>
-    </router-link>
-  </div>
+
+    </div>
 </template>
 <style scoped>
 /* 
@@ -388,10 +443,6 @@ warning: Color para advertencias o mensajes importantes.
   font-size: 10px;
   font-weight: bold;
 }
-.botonv1 {
-  font-size: 10px;
-  font-weight: bold;
-}
 .personalizado {
   font-size: 20px;
   font-weight: 700;
@@ -406,4 +457,5 @@ warning: Color para advertencias o mensajes importantes.
 .personalizado:hover {
   background: linear-gradient(to right, #3F497F, #29A19C);
 }
+
 </style>

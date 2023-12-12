@@ -5,19 +5,15 @@
         <img class="olaverde" src="../assets/olaverde.svg">
       </div>
       <div class="opcioncont">
-        <p class="tittle">Bienvenido</p>
-        <p class="subtittle">Por favor ingrese sus datos de usuario para continuar, ¡te esperamos!</p>
+        <p class="tittle">Restablecer contraseña</p>
+        <p class="subtittle">Por favor ingrese una nueva contraseña</p>
   
-        <input class="input opcion" type="text" placeholder="Nombre de usuario">
+        <input class="input opcion" type="text" placeholder="Nueva contraseña">
         <div class="contrasenacont">
-          <input class="input opcion" type="text" placeholder="Contraseña">
-          <router-link to="/Restableciemiento" class="ingresarcont">
-            <button class="contrasenaayuda">¿Olvidaste tu contraseña?</button>
-          </router-link>
-          
+          <input class="input opcion" type="text" placeholder="Confirmar contraseña">
         </div>
         <router-link to="/home" class="ingresarcont">
-          <button class="ingresar opcion">Ingresar</button>
+          <button class="ingresar opcion">Cambiar</button>
         </router-link>
       </div>
     </div>
@@ -106,7 +102,7 @@ async function validar() {
   
   
   .tittle {
-    margin-top: 20px;
+    margin-top: 5px;
     font-size: 100px;
     font-weight: 700;
     color: #3F497F;
@@ -237,16 +233,6 @@ async function validar() {
   flex: 1;
   text-align: center; 
 }
-.contrasenaayuda {
-  background-color: transparent;
-  border: none;
-  color: #29A19C; 
-  text-decoration: underline;
-  cursor: pointer;
-  font-size: 14px; 
-}
 
-.contrasenaayuda:hover {
-  color: #3F497F; 
-}
+
   </style>

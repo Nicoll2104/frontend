@@ -28,6 +28,9 @@ function toggleLeftDrawer() {
                         </q-avatar>
                         Distribucion De Presupuesto SENA
                     </q-toolbar-title>
+                    <router-link to="/">
+    <q-btn dense flat round icon="exit_to_app" color="white" />
+  </router-link>
                 </q-toolbar>
             </q-header>
 

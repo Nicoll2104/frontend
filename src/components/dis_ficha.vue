@@ -1,11 +1,73 @@
+<!-- <template>
+    <div class="q-pa-md">
+      <q-table
+        flat bordered
+        title="Treats"
+        :rows="rows"
+        :columns="columns"
+        row-key="name"
+        binary-state-sort
+      >
+        <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td key="name" :props="props">
+              {{ props.row.name }}
+              <q-popup-edit v-model="props.row.name" v-slot="scope">
+                <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
+              </q-popup-edit>
+            </q-td>
+            <q-td key="calories" :props="props">
+              {{ props.row.calories }}
+              <q-popup-edit v-model="props.row.calories" title="Update calories" buttons v-slot="scope">
+                <q-input type="number" v-model="scope.value" dense autofocus />
+              </q-popup-edit>
+            </q-td>
+            <q-td key="fat" :props="props">
+              <div class="text-pre-wrap">{{ props.row.fat }}</div>
+              <q-popup-edit v-model="props.row.fat" v-slot="scope">
+                <q-input type="textarea" v-model="scope.value" dense autofocus />
+              </q-popup-edit>
+            </q-td>
+            <q-td key="carbs" :props="props">
+              {{ props.row.carbs }}
+              <q-popup-edit v-model="props.row.carbs" title="Update carbs" buttons persistent v-slot="scope">
+                <q-input type="number" v-model="scope.value" dense autofocus hint="Use buttons to close" />
+              </q-popup-edit>
+            </q-td>
+            <q-td key="protein" :props="props">{{ props.row.protein }}</q-td>
+            <q-td key="sodium" :props="props">{{ props.row.sodium }}</q-td>
+            <q-td key="calcium" :props="props">{{ props.row.calcium }}</q-td>
+            <q-td key="iron" :props="props">{{ props.row.iron }}</q-td>
+          </q-tr>
+        </template>
+      </q-table>
+    </div>
+  </template>
+  
+  <script setup>
+  import { ref } from "vue";
+  
+  const columns = [
+    { name: 'Presupuesto', align: 'center', label: 'Presupuesto', field: 'presupuesto', sortable: true },
+    { name: 'Distribucion_presupuesto', align: 'center', label: 'Distribucion_presupuesto', field: 'distribucion_presupuesto', sortable: true },
+    { name: 'Ficha',align: 'center',  label: 'Ficha', field: 'ficha' },
+    { name: 'Estado',align: 'center',  label: 'Estado', field: 'status' },
+  ]
+  
+  const rows = []
+  </script>
+  
+  <style scoped>
+  </style> -->
 
+  
 
 <script setup>
 import { ref } from "vue";
 import { useClienteStore } from "../stores/clientes.js";
 import { useQuasar } from 'quasar'
 
-const modelo = "Lotes";
+const modelo = "Distribucion ficha";
 const useCliente = useClienteStore();
 const loadingTable = ref(true)
 const $q = useQuasar()
@@ -14,45 +76,26 @@ const loadingmodal = ref(false);
 
 const columns = ref([
   {
-    name: "codigo_presupuestal",
-    label: "Codigo presupuestal",
+    name: "presupuesto",
+    label: "Presupuesto",
     align: "left",
-    field: (row) => row.codigo_presupuestal,
+    field: (row) => row.presupuesto,
     sort: true,
     sortOrder: "da",
   },
   {
-    name: "nombre",
-    label: "Nombre",
+    name: "distribucion_presupuesto",
+    label: "Distribucion presupuesto",
     align: "left",
-    field: (row) => row.nombre,
+    field: (row) => row.distribucion_presupuesto,
 
   },
   {
-    name: "presupuesto_inicial",
-    label: "Presupuesto inicial",
+    name: "ficha",
+    label: "Ficha",
     align: "left",
-    field: (row) => row.presupuesto_inicial,
+    field: (row) => row.ficha,
   },
-  {
-    name: "año",
-    label: "Año",
-    align: "left",
-    field: (row) => row.año,
-  },
-  {
-    name: "modificaciones",
-    label: "Modificaciones",
-    align: "left",
-    field: (row) => row.modificaciones,
-  },
-  {
-    name: "presupuesto_definitivo",
-    label: "Presupuesto definitivo",
-    align: "left",
-    field: (row) => row.presupuesto_definitivo,
-  },
-
   {
     name: "Estado",
     label: "Estado",
@@ -68,12 +111,9 @@ const columns = ref([
 const rows = ref([]);
 
 const data = ref({
-  codigo_presupuestal: "",
-  nombre: "",
-  presupuesto_inicial: "",
-  año: "",
-  modificaciones: "",
-  presupuesto_definitivo: "",
+  presupuesto: "",
+  distribucion_presupuesto: "",
+  ficha: "",
 });
 
 const obtenerInfo = async () => {
@@ -104,12 +144,9 @@ const modal = ref(false);
 const opciones = {
   agregar: () => {
     data.value = {
-      codigo_presupuestal: "",
-      nombre: "",
-      presupuesto_inicial: "",
-      año: "",
-      modificaciones: "",
-      presupuesto_definitivo: "",
+      presupuesto: "",
+      distribucion_presupuesto: "",
+      ficha: "",
     };
     modal.value = true;
     estado.value = "guardar";
@@ -260,19 +297,13 @@ function notificar(tipo, msg) {
         </q-toolbar>
 
         <q-card-section class="q-gutter-md">
-          <q-input class="input1" outlined v-model="data.codigo_presupuestal" label="Codigo presupuestal" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo presupuestal']"></q-input>
-          <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-          <q-input class="input1" outlined v-model="data.presupuesto_inicial" label="Presupuesto inicial" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
-          <q-input class="input1" outlined v-model="data.año" label="Año" type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
-          <q-input class="input1" outlined v-model="data.modificaciones" label="Modificaciones" type="text" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese las modificaciones']"></q-input>
-          <q-input class="input1" outlined v-model="data.presupuesto_definitivo" label="Presupuesto definitivo"
-            type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el presupuesto definitivo']"></q-input>
+          <q-input class="input1" outlined v-model="data.presupuesto" label="Presupuesto" type="number"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto']"></q-input>
+          <q-input class="input1" outlined v-model="data.distribucion_presupuesto" label="Distribucion presupuesto" type="text" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese la distribucion presupuesto']"></q-input>
+          <q-input class="input1" outlined v-model="data.ficha" label="Ficha" type="number"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la ficha']"></q-input>
+
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
@@ -331,10 +362,6 @@ function notificar(tipo, msg) {
         </template>
       </q-table>
     </div>
-
-    <router-link to="/Dis_presupuesto" class="ingresarcont">
-      <button class=" personalizado">Distribucion presupuesto</button>
-    </router-link>
   </div>
 </template>
 <style scoped>
@@ -387,23 +414,5 @@ warning: Color para advertencias o mensajes importantes.
 .botonv1 {
   font-size: 10px;
   font-weight: bold;
-}
-.botonv1 {
-  font-size: 10px;
-  font-weight: bold;
-}
-.personalizado {
-  font-size: 20px;
-  font-weight: 700;
-  padding: 10px 20px;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  background: linear-gradient(to right, #29A19C, #3F497F); 
-  transition: background 0.3s ease; 
-}
-
-.personalizado:hover {
-  background: linear-gradient(to right, #3F497F, #29A19C);
 }
 </style>
