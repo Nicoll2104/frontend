@@ -1,20 +1,14 @@
-
 <template>
   <div class="container">
     <div class="contenedor2" v-for="(item, index) in content" :key="index">
       <router-link :to="item.ruta" class="link-card">
         <div class="card">
           <div class="tools">
-            <div class="circle">
-              <span class="blue box"></span>
-            </div>
-            <div class="circle">
-              <span class="blue box"></span>
-            </div>
-            <div class="circle">
-              <span class="blue box"></span>
-            </div>
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
           </div>
+
           <div class="card__content">
             {{ item.titulo }}
             <img :src="item.img" alt="" class="img" />
@@ -29,42 +23,16 @@
 import { ref } from "vue";
 
 let content = ref([
-  {
-    ruta: "/Presupuesto",
-    titulo: "Presupuesto",
-    img: "src/assets/presupuesto.png",
-  },
-  {
-    ruta: "/Fichas",
-    titulo: "Fichas",
-    img: "src/assets/fichas2.png",
-  },
-  {
-    ruta: "/Lotes",
-    titulo: "Lotes",
-    img: "src/assets/lotes.png",
-  },
-  {
-    ruta: "/Areas",
-    titulo: "Areas",
-    img: "src/assets/areas.png",
-  },
-  {
-    ruta: "/Pedidos",
-    titulo: "Pedido",
-    img: "src/assets/pedido.png",
-  },
-  {
-    ruta: "/Productos",
-    titulo: "Producto",
-    img: "src/assets/producto.png ",
-  },
+  { ruta: "/Presupuesto", titulo: "Presupuesto", img: "src/assets/presupuesto.png" },
+  { ruta: "/Fichas", titulo: "Fichas", img: "src/assets/fichas2.png" },
+  { ruta: "/Lotes", titulo: "Lotes", img: "src/assets/lotes.png" },
+  { ruta: "/Areas", titulo: "Areas", img: "src/assets/areas.png" },
+  { ruta: "/Pedidos", titulo: "Pedido", img: "src/assets/pedido.png" },
+  { ruta: "/Productos", titulo: "Producto", img: "src/assets/producto.png" },
 ]);
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap");
-
 .container {
   display: flex;
   flex-wrap: wrap;
@@ -87,7 +55,7 @@ let content = ref([
 
 .contenedor2 a {
   text-decoration: none;
-  color: #0d0d0d; 
+  color: #0d0d0d;
   gap: 30px;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-size: 2em;
@@ -95,10 +63,12 @@ let content = ref([
 }
 
 .img {
-  position: relative;
   height: 150px;
   width: 150px;
   border: #A3F7BF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .link-card {
@@ -110,13 +80,15 @@ let content = ref([
   width: 257px;
   height: 290px;
   margin: 0 auto;
-  background-color: #A3F7BF; 
+  background-color: #A3F7BF;
   border-radius: 8px;
   z-index: 1;
   box-shadow: 5px 5px 10px -5px rgba(0, 0, 0, 0.77);
 }
+
 .card:hover {
-  box-shadow: 5px 5px 20px 0px rgba(0, 0, 0, 0.77); 
+  background-color: #F2F7FF;
+  transition: background-color 0.3s ease;
 }
 
 .tools {
@@ -125,21 +97,11 @@ let content = ref([
   padding: 5px;
 }
 
-.circle {
-  padding: 0 4px;
-}
-
-.box {
-  display: inline-block;
-  align-items: center;
-  width: 10px;
-  height: 10px;
-  padding: 1px;
-  border-radius: 50%;
-}
-
-.blue {
-  background-color: #ffffff;
+.line {
+  width: 30px;
+  height: 3px;
+  background-color: #29A19C;
+  margin: 5px;
 }
 
 .card__content {
@@ -150,3 +112,4 @@ let content = ref([
   font-family: "Roboto Slab", serif;
 }
 </style>
+
