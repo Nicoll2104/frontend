@@ -301,7 +301,7 @@ function prompt () {
             <q-icon name="style" color="white" right />
           </q-btn>
 
-          <q-btn @click="" :loading="loadingmodal" padding="10px"
+          <q-btn :loading="loadingmodal" padding="10px"
             color="secondary" label="imprimir">
             <q-icon name="print" color="white" right />
           </q-btn>

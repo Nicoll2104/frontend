@@ -1,26 +1,26 @@
 <template>
-    <div class="cont">
-      <div class="olascont">
-        <img class="olaazul" src="../assets/olaazul.svg">
-        <img class="olaverde" src="../assets/olaverde.svg">
-      </div>
-      <div class="opcioncont">
-        <p class="tittle">Bienvenido</p>
-        <p class="subtittle">Por favor ingrese sus datos de usuario para continuar, ¡te esperamos!</p>
-  
-        <input class="input opcion" type="text" placeholder="Nombre de usuario">
-        <div class="contrasenacont">
-          <input class="input opcion" type="text" placeholder="Contraseña">
-          <router-link to="/Restableciemiento" class="ingresarcont">
-            <button class="contrasenaayuda">¿Olvidaste tu contraseña?</button>
-          </router-link>
-          
-        </div>
-        <router-link to="/home" class="ingresarcont">
-          <button class="ingresar opcion">Ingresar</button>
-        </router-link>
-      </div>
+  <div class="cont">
+    <div class="olascont">
+      <img class="olaazul" src="../assets/olaazul.svg">
+      <img class="olaverde" src="../assets/olaverde.svg">
     </div>
+    <div class="opcioncont">
+      <p class="tittle">Bienvenido</p>
+      <p class="subtittle">Por favor ingrese sus datos de usuario para continuar, ¡te esperamos!</p>
+
+      <input class="input opcion" type="text" placeholder="Nombre de usuario">
+      <div class="contrasenacont">
+        <input class="input opcion" type="text" placeholder="Contraseña">
+        <router-link to="/Restableciemiento" class="ingresarcont">
+          <button class="contrasenaayuda">¿Olvidaste tu contraseña?</button>
+        </router-link>
+
+      </div>
+      <router-link to="/home" class="ingresarcont">
+        <button class="ingresar opcion">Ingresar</button>
+      </router-link>
+    </div>
+  </div>
 </template>
 <!-- <script setup>
 import { ref } from "vue";
@@ -91,142 +91,24 @@ async function validar() {
   
   <!-- scoped sirve para evitar que los estilos afecte a los
   demas componentes  -->
-  <style scoped>
-  .paleta {
-    background-color:
-      #3F497F #29A19C #A3F7BF;
-  }
-  
-  * {
-    margin: 0;
-    padding: 0;
-  }
-  
-  
-  
-  
-  .tittle {
-    margin-top: 20px;
-    font-size: 100px;
-    font-weight: 700;
-    color: #3F497F;
-  }
-  
-  
-  
-  .subtittle {
-    font-size: 20px;
-    font-weight: bold;
-    color: #3F497F;
-    margin-bottom: 10px;
-  }
-  
-  
-  
-  .opcion {
-    width: 95vw;
-    max-width: 525px;
-  }
-  
-  .input {
-    background-color: #29A19C;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 20px;
-    text-align: left;
-    padding: 15px 30px;
-    margin-top: 70px;
-  }
-  
-  
-  
-  input::placeholder {
-    color: rgb(255, 255, 255);
-  }
-  
-  .input:focus {
-    outline: solid #A3F7BF;
-  }
-  
-  .contrasenacont {
-    width: min-content;
-    margin: auto;
-  }
-  
-  .contrasenaayuda {
-    text-align: right;
-    color: #29A19C;
-    font-weight: 700;
-    text-decoration-line: underline;
-    margin: 10px 0px;
-  }
-  
-  
-  .ingresar {
-    font-size: 30px;
-    font-weight: 700;
-    padding: 10px 100px;
-    background-color: #3F497F;
-    color: white;
-    border-radius: 20px;
-    margin: 50px 0px;
-  }
-  
-  .olascont {
-    user-select: none;
-    z-index: -1;
-    Overflow: hidden;
-    position: fixed;
-    height: 100vh;
-    width: 100vw;
-    bottom: 0;
-    right: 50%;
-    transform: translate(50%, 0);
-  }
-  
-  .olaverde,.olaazul {
-    position: absolute;
-    width: 100vw;
-    min-width: 1280px;
-    bottom: 0;
-    right: 50%;
-    transform: translate(50%, 0);
-  }
-  
-  
-  @media screen and (min-height: 850px ) {
-    .opcioncont {
-      margin-top: 5vh;
-    }
-  }
-  
-  @media screen and (max-width: 640px ) {
-    .tittle {
-    font-size: 80px;
-    font-weight: 700;
-  }
-  }
-  
-  @media screen and (max-width: 500px ) {
-    .tittle {
-    font-size: 55px;
-    font-weight: 700;
-    }
-  
-    .subtittle,.input,.contrasenaayuda {
-      font-size: 17px;
-    }
-  
-    .ingresar{
-      font-size: 20px;
-      }
-  }
-  .cont {
+<style scoped>
+.paleta {
+  background-color:
+    #3F497F #29A19C #A3F7BF;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+
+
+
+.cont {
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: 100vh; 
+  height: 100vh;
 }
 
 .olascont {
@@ -235,18 +117,140 @@ async function validar() {
 
 .opcioncont {
   flex: 1;
-  text-align: center; 
+  text-align: center;
 }
+
+.tittle {
+  margin-top: 20px;
+  font-size: 100px;
+  font-weight: 700;
+  color: #3F497F;
+}
+
+
+
+.subtittle {
+  font-size: 20px;
+  font-weight: bold;
+  color: #3F497F;
+  margin-bottom: 10px;
+}
+
+
+
+.opcion {
+  width: 95vw;
+  max-width: 525px;
+}
+
+.input {
+  background-color: #29A19C;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 20px;
+  text-align: left;
+  padding: 15px 30px;
+  margin-top: 70px;
+}
+
+
+
+input::placeholder {
+  color: rgb(255, 255, 255);
+}
+
+.input:focus {
+  outline: solid #A3F7BF;
+}
+
+.contrasenacont {
+  width: min-content;
+  margin: auto;
+}
+
+.contrasenaayuda {
+  text-align: right;
+  color: #29A19C;
+  font-weight: 700;
+  text-decoration-line: underline;
+  margin: 10px 0px;
+}
+
+
+.ingresar {
+  font-size: 30px;
+  font-weight: 700;
+  padding: 10px 100px;
+  background-color: #3F497F;
+  color: white;
+  border-radius: 20px;
+  margin: 50px 0px;
+}
+
+.olascont {
+  user-select: none;
+  z-index: -1;
+  Overflow: hidden;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  bottom: 0;
+  right: 50%;
+  transform: translate(50%, 0);
+}
+
+.olaverde,
+.olaazul {
+  position: absolute;
+  width: 100vw;
+  min-width: 1280px;
+  bottom: 0;
+  right: 50%;
+  transform: translate(50%, 0);
+}
+
+
+@media screen and (min-height: 850px) {
+  .opcioncont {
+    margin-top: 5vh;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .tittle {
+    font-size: 80px;
+    font-weight: 700;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .tittle {
+    font-size: 55px;
+    font-weight: 700;
+  }
+
+  .subtittle,
+  .input,
+  .contrasenaayuda {
+    font-size: 17px;
+  }
+
+  .ingresar {
+    font-size: 20px;
+  }
+}
+
 .contrasenaayuda {
   background-color: transparent;
   border: none;
-  color: #29A19C; 
+  color: #29A19C;
   text-decoration: underline;
   cursor: pointer;
-  font-size: 14px; 
+  font-size: 14px;
 }
 
 .contrasenaayuda:hover {
-  color: #3F497F; 
+  color: #3F497F;
 }
-  </style>
+</style>
