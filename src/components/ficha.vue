@@ -396,8 +396,8 @@ function notificar(tipo, msg) {
       </q-table>
     </div>
     <router-link to="/Dis_ficha" class="ingresarcont">
-      <button class=" personalizado">Distribucion fichas</button>
-    </router-link>
+      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Distribucion fichas</q-btn>
+    </router-link>
   </div>
 </template>
 <style scoped>
@@ -451,18 +451,9 @@ warning: Color para advertencias o mensajes importantes.
   font-size: 10px;
   font-weight: bold;
 }
-.personalizado {
+.distribucion {
   font-size: 20px;
   font-weight: 700;
-  padding: 10px 20px;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  background: linear-gradient(to right, #29A19C, #3F497F); 
-  transition: background 0.3s ease; 
-}
-
-.personalizado:hover {
-  background: linear-gradient(to right, #3F497F, #29A19C);
+  max-width: 80vw;
 }
 </style>
