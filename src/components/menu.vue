@@ -57,7 +57,7 @@ function toggleLeftDrawer() {
                         <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
                             label="Presupuesto" style="width: 95%" />
                     </router-link>
-                    <router-link to="/Presupuesto" class="opcioncont" style="font-size: 2em">
+                                <router-link to="/Presupuesto" class="opcioncont" style="font-size: 2em">
                         <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
                             label="Presupuesto" style="width: 95%" />
                     </router-link>

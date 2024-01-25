@@ -5,15 +5,10 @@
 
       <router-link v-for="(item, index) in content" :key="index" :to="item.ruta" class="link-card">
         <q-btn color="secondary" class="tarjetasbtn text-weight-bold text-h6 justify-center">
-          {{ item.titulo }}
-          <div class="tools">
-            <div class="line"></div>
-            <div class="line"></div>
-            <div class="line"></div>
-          </div>
+           <span class="tarjetastxt">{{ item.titulo }}</span>
+
 
           <div class="card__content" :class="item.titulo +'btn'">
-
             <img :src="item.img" alt="" :class="item.titulo +'img'" class="img" />
           </div>
         </q-btn>
@@ -56,6 +51,12 @@ let content = ref([
 .tarjetasbtn {
   margin: 15px;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.144);
+  width: 80vw !important;
+  max-width: 400px;
+}
+
+.tarjetastxt{
+  width: 50%;
 }
 
 
