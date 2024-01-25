@@ -72,7 +72,7 @@ const rows = []
 
 <script setup>
 import { ref } from "vue";
-import { useClienteStore } from "../stores/clientes.js";
+import { useClienteStore } from "../stores/presupuesto.js";
 import { useQuasar } from 'quasar'
 
 const modelo = "Areas";
