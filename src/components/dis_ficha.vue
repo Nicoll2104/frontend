@@ -68,7 +68,7 @@ import { ref } from "vue";
 import { useQuasar } from 'quasar'
 
 const modelo = "Distribucion ficha";
-const useCliente = useClienteStore();
+/* const useCliente = useClienteStore(); */
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");

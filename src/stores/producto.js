@@ -1,4 +1,4 @@
-/* import { defineStore } from 'pinia';
+/*  import { defineStore } from 'pinia';
 import axios from 'axios';
 import { ref } from 'vue';
 
@@ -37,7 +37,7 @@ export const useProductoStore = defineStore('producto', () => {
             let r = await axios.put(`producto/inactivar/${id}`)
             return r
         } catch (error) {
-            console.log(error, "Error al cambiar el estado del bus");
+            console.log(error, "Error al cambiar el estado del producto");
         }
     }
     const putActivar = async (id)=>{
@@ -45,7 +45,7 @@ export const useProductoStore = defineStore('producto', () => {
             let r = await axios.put(`bus/activarBus/${id}`)
             return r
         } catch (error) {
-            console.log(error, "Error al cambiar el estado del bus");
+            console.log(error, "Error al cambiar el estado del producto");
         }
     }
 
@@ -53,4 +53,4 @@ export const useProductoStore = defineStore('producto', () => {
         productos,
         obtenerInfoProductos, postProducto, putProducto, putInactivar,putActivar 
     };
-}); */
+});  */
