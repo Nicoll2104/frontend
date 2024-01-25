@@ -3,16 +3,6 @@
     <router-view></router-view>
   </div>
 </template>
-  
-
-
-<script>
-
-
-
-</script>
-
-
 
 <style scoped>
 .q-pa-md {
