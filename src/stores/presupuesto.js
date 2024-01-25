@@ -1,56 +1,56 @@
-import { defineStore } from 'pinia';
+/* import { defineStore } from 'pinia';
 import axios from 'axios';
 import { ref } from 'vue';
 
-export const useBusStore = defineStore('bus', () => {
-    const buses = ref([]);
+export const usePresupuestoStore = defineStore('Presupuesto', () => {
+    const presupuestos = ref([]);
 
-    const obtenerInfoBuses = async () => {
+    const obtenerInfoPresupuesto = async () => {
         try {
-            let responseBuses = await axios.get('bus/buses');
-            buses.value = responseBuses.data.buses; 
+            let responsePresupuesto = await axios.get('items/ver');
+            presupuestos.value = responsePresupuesto.data.presupuestos; 
         } catch (error) {
             throw error
         }
     };
 
-    const postBus = async (data) =>{
+    const postItem = async (data) =>{
         try {
-            let res = await axios.post("bus/bus/agregar", data);
+            let res = await axios.post("items/agregar", data);
             return res
         } catch (error) {
             throw error
         }
     }
 
-    const putEditarBus = async (id, data) => {
+    const  putItem= async (id, data) => {
         try {
-            let res = await axios.put(`bus/bus/${id}`, data);
+            let res = await axios.put(`items/modificar/${id}`, data);
             return res
         } catch (error) {
             throw error;
         }
     };
 
-    const putInactivarBus = async (id)=>{
+    const putInactivar = async (id)=>{
         try {
-            let r = await axios.put(`bus/inactivarBus/${id}`)
+            let r = await axios.put(`items/inactivar/${id}`)
             return r
         } catch (error) {
-            console.log(error, "Error al cambiar el estado del bus");
+            console.log(error, "Error al cambiar el estado del presupuesto");
         }
     }
-    const putActivarBus = async (id)=>{
+    const putactivar = async (id)=>{
         try {
-            let r = await axios.put(`bus/activarBus/${id}`)
+            let r = await axios.put(`items/activar/${id}`)
             return r
         } catch (error) {
-            console.log(error, "Error al cambiar el estado del bus");
+            console.log(error, "Error al cambiar el estado del presupuesto");
         }
     }
 
     return {
-        buses,
-        obtenerInfoBuses, postBus, putEditarBus, putInactivarBus, putActivarBus
+        presupuestos,
+        obtenerInfoPresupuesto, postItem, putItem,putInactivar , putactivar
     };
-});
+}); */
