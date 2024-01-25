@@ -1,10 +1,10 @@
 <script setup>
 import { ref } from "vue";
-import { useClienteStore } from "../stores/clientes.js";
+/* import { useClienteStore } from "../stores/presupuesto.js"; */
 import { useQuasar } from 'quasar'
 
 const modelo = "Pedidos";
-const useCliente = useClienteStore();
+/* const useCliente = useClienteStore(); */
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
