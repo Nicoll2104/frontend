@@ -5,7 +5,7 @@ import { ref } from 'vue';
 export const useAreaStore = defineStore('area', () => {
     const areas = ref([]);
 
-    const obtenerInfoAreas = async () => {
+    const getArea = async () => {
         try {
             let responseAreas = await axios.get('area/ver');
             areas.value = responseAreas.data.areas; 
@@ -51,6 +51,6 @@ export const useAreaStore = defineStore('area', () => {
 
     return {
         areas,
-        obtenerInfoAreas, postArea, putArea, putInactivar, putActivar
+        getArea, postArea, putArea, putInactivar, putActivar
     };
 }); 
