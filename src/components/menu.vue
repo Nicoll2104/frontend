@@ -85,7 +85,7 @@ function toggleLeftDrawer() {
                         <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
                             label="Producto" style="width: 95%" />
                     </router-link>
-                    <q-linear-progress :value="progress" class="q-mt-md" />
+                     <q-linear-progress :value="progress" class="q-mt-md" /> 
 
                 </div>
             </q-drawer>

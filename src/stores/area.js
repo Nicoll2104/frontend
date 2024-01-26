@@ -1,4 +1,4 @@
-/* import { defineStore } from 'pinia';
+ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { ref } from 'vue';
 
@@ -53,4 +53,4 @@ export const useAreaStore = defineStore('area', () => {
         areas,
         obtenerInfoAreas, postArea, putArea, putInactivar, putActivar
     };
-}); */
+}); 
