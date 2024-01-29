@@ -2,15 +2,28 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
-console.log(router.getRoutes());
 
 const leftDrawerOpen = ref(false)
-
-
 
 function toggleLeftDrawer() {
     leftDrawerOpen.value = !leftDrawerOpen.value
 }
+
+let menu1_content = ref([
+    { ruta: "/", titulo: "Cerrar Sesión", desplegable: false },
+    { ruta: "/home", titulo: "Menu", desplegable: false },
+]);
+
+let menu2_content = ref([
+    { ruta: "/Presupuesto", titulo: "Presupuesto", desplegable: false },
+    { ruta: "/Fichas", titulo: "Fichas", desplegable: false },
+    { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
+    { ruta: "/Areas", titulo: "Areas", desplegable: false },
+    { ruta: "/Pedidos", titulo: "Pedido", desplegable: false },
+    { ruta: "/Productos", titulo: "Producto", desplegable: false },
+]);
+
+
 
 
 
@@ -34,59 +47,78 @@ function toggleLeftDrawer() {
                 </q-toolbar>
             </q-header>
 
-            <q-drawer class="bg-secondary" v-model="leftDrawerOpen" side="left" behavior="mobile" elevated>
+            <q-drawer class="bg-secondary" v-model="leftDrawerOpen" side="left" behavior="mobile" elevated style="scrollbar-width: none;">
                 <div class="q-pa-md q-gutter opcionescont">
                     <div class="q-pa-md q-gutter-sm" style="margin-top: 1em">
                         <q-avatar color="white" text-color="primary" padding="none" icon="face" style="font-size: 7em" />
                     </div>
-                    <router-link to="/" class="opcioncont" style="font-size: 2em">
-                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
-                            style="width: 95%">Cerrar Sesión </q-btn>
+
+
+                    <router-link class="opcioncont" 
+                    v-for="(item, index) in menu1_content" :key="index" :to="item.ruta">
+                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="chevron_right"
+                            class="botones_principales">{{ item.titulo }}</q-btn>
                     </router-link>
-                    <router-link to="/home" class="opcioncont" style="font-size: 2em">
-                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
-                            style="width: 95%">Menu </q-btn>
-                    </router-link>
+
+
+                    <!--🧩🧩🧩🧩-->
                     <q-linear-progress :value="progress" class="q-mt-md" />
+                    <!--🧩🧩🧩🧩-->
 
-                    <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
-                            label="Presupuesto" style="width: 95%;margin-top: 8%;">
-                        <q-menu>
-                            <q-list style="min-width: 100px">
-                                <router-link to="/Presupuesto" class="opcioncont" style="font-size: 2em">
-                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
-                            label="Presupuesto" style="width: 95%" />
-                    </router-link>
-                                <router-link to="/Presupuesto" class="opcioncont" style="font-size: 2em">
-                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
-                            label="Presupuesto" style="width: 95%" />
-                    </router-link>
-                            </q-list>
-                        </q-menu>
-                    </q-btn>
 
-                    <router-link to="/Fichas" class="opcioncont" style="font-size: 2em">
-                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send" label="Fichas"
-                            style="width: 95%" />
-                    </router-link>
-                    <router-link to="/Lotes" class="opcioncont" style="font-size: 2em">
-                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send" label="Lotes"
-                            style="width: 95%" />
-                    </router-link>
-                    <router-link to="/Areas" class="opcioncont" style="font-size: 2em">
-                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send" label="Areas"
-                            style="width: 95%" />
-                    </router-link>
-                    <router-link to="/Pedidos" class="opcioncont" style="font-size: 2em">
-                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send" label="Pedido"
-                            style="width: 95%" />
-                    </router-link>
-                    <router-link to="/Productos" class="opcioncont" style="font-size: 2em">
-                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="send"
-                            label="Producto" style="width: 95%" />
-                    </router-link>
-                     <q-linear-progress :value="progress" class="q-mt-md" /> 
 
+
+                    
+                    
+
+
+
+                    <q-expansion-item label="Presupuesto" align="between"  style="margin-top: 10px;"
+                    header-class="bg-accent text-primary" expand-icon-class="text-primary" >
+
+                                <router-link to="/Fichas" class="opcioncont">
+                                    <q-btn no-caps align="between" color="accent" text-color="primary"
+                                        icon-right="chevron_right" label="Fichas" class="botones_principales" />
+                                </router-link>
+                                <router-link to="/Fichas" class="opcioncont">
+                                    <q-btn no-caps align="between" color="accent" text-color="primary"
+                                        icon-right="chevron_right" label="Fichas" class="botones_principales" />
+                                </router-link>
+
+                    </q-expansion-item>
+
+
+
+
+
+
+
+
+
+                    <router-link to="/Fichas" class="opcioncont">
+                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="expand_more"
+                            label="Fichas" class="botones_principales" />
+                    </router-link>
+                    <router-link to="/Lotes" class="opcioncont">
+                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="expand_more"
+                            label="Lotes" class="botones_principales" />
+                    </router-link>
+                    <router-link to="/Areas" class="opcioncont">
+                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="expand_more"
+                            label="Areas" class="botones_principales" />
+                    </router-link>
+                    <router-link to="/Pedidos" class="opcioncont">
+                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="expand_more"
+                            label="Pedido" class="botones_principales" />
+                    </router-link>
+                    <router-link to="/Productos" class="opcioncont">
+                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="expand_more"
+                            label="Producto" class="botones_principales" />
+                    </router-link>
+
+                    <!--🧩🧩🧩🧩-->
+                    <q-linear-progress :value="progress" class="q-mt-md" />
+                    <!--🧩🧩🧩🧩-->
                 </div>
             </q-drawer>
 
@@ -104,8 +136,12 @@ function toggleLeftDrawer() {
     text-align: center;
 }
 
-.opcionescont {
-    font-size: large;
+.opcioncont {
 
+}
+
+.botones_principales {
+    width: 95%;
+    margin: 9px 0px;
 }
 </style>
