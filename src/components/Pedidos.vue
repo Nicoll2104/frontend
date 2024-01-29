@@ -367,7 +367,7 @@ function prompt () {
       </q-table>
 
       <router-link to="/Det_pedido" class="ingresarcont">
-        <q-btn class="ingresar opcion" color="secondary">Detalle Pedido
+        <q-btn class="ingresar opcion" color="primary">Detalle Pedido
           <q-icon name="style" color="white" right />
         </q-btn>
       </router-link>

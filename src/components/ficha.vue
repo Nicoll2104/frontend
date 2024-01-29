@@ -451,9 +451,4 @@ warning: Color para advertencias o mensajes importantes.
   font-size: 10px;
   font-weight: bold;
 }
-.distribucion {
-  font-size: 20px;
-  font-weight: 700;
-  max-width: 80vw;
-}
 </style>

@@ -419,7 +419,7 @@ function notificar(tipo, msg) {
       </q-table>
     </div>
     <router-link to="/Det_pedido" class="ingresarcont">
-      <q-btn class="distribucion" color="secondary" icon-right="chevron_right">Detalle Pedido</q-btn>
+      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Detalle Pedido</q-btn>
     </router-link>
   </div>
 </template>
@@ -478,9 +478,5 @@ warning: Color para advertencias o mensajes importantes.
   font-size: 10px;
   font-weight: bold;
 }
-.distribucion {
-  font-size: 20px;
-  font-weight: 700;
-  max-width: 80vw;
-}
+
 </style>
