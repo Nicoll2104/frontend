@@ -91,10 +91,6 @@ let menu2_content = ref([
 
 
 
-
-
-
-
                     <router-link to="/Fichas" class="opcioncont">
                         <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="expand_more"
                             label="Fichas" class="botones_principales" />
