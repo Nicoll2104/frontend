@@ -12,7 +12,7 @@
         <div class="contrasenacont">
           <input class="input opcion" type="text" placeholder="Confirmar contraseña">
         </div>
-        <router-link to="/home" class="ingresarcont">
+        <router-link to="/" class="ingresarcont">
           <button class="ingresar opcion">Cambiar</button>
         </router-link>
       </div>

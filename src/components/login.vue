@@ -19,9 +19,11 @@
                         <button class="contrasenaayuda">¿Olvidaste tu contraseña?</button>
                     </router-link>
                 </q-card-section>
-                <q-card-section style="max-width: 500px">
-                    <q-btn push color="primary" label="Ingresar" />
-                </q-card-section>
+                    <q-card-section style="max-width: 500px">
+                        <router-link to="/home" class="ingresarcont">
+                        <q-btn push color="primary" label="Ingresar" />
+                    </router-link>
+                    </q-card-section>
             </q-card>
         </div>
     </div>
