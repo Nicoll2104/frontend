@@ -107,44 +107,25 @@
 }
 .my-card{
     background-color: accent;
+    transform: translate(0px, -50px);
 }
-
-
-
 
 .cont {
     display: flex;
     justify-content: center;
     height: 100vh;
+    align-items: center;
 }
 
 .olascont {
     flex: 1;
 }
-
-.opcioncont {
-    flex: 1;
-    text-align: center;
-}
-
-.tittle {
-    margin-top: 20px;
-    font-size: 70px;
-    font-weight: 700;
-    color: #3F497F;
-}
-
 .subtittle {
     font-size: 20px;
     font-weight: bold;
     color: #3F497F;
     margin-bottom: 10px;
 }
-
-
-
-
-
 
 
 input::placeholder {
@@ -172,46 +153,22 @@ input::placeholder {
     transform: translate(50%, 0);
 }
 
+@media only screen and (min-width: 1200px) {
+    .olascont{
+        bottom: -2vw;
+    }
+}
+
 .olaverde,
 .olaazul {
     position: absolute;
     width: 100vw;
-    min-width: 1280px;
+    min-width: 980px;
     bottom: 0;
     right: 50%;
     transform: translate(50%, 0);
 }
 
-
-@media screen and (min-height: 850px) {
-    .opcioncont {
-        margin-top: 5vh;
-    }
-}
-
-@media screen and (max-width: 640px) {
-    .tittle {
-        font-size: 80px;
-        font-weight: 700;
-    }
-}
-
-@media screen and (max-width: 500px) {
-    .tittle {
-        font-size: 55px;
-        font-weight: 700;
-    }
-
-    .subtittle,
-    .input,
-    .contrasenaayuda {
-        font-size: 17px;
-    }
-
-    .ingresar {
-        font-size: 20px;
-    }
-}
 
 .contrasenaayuda {
     background-color: transparent;
