@@ -1,12 +1,12 @@
 
 
 <script setup>
-import { ref } from "vue";
-/* import { useClienteStore } from "../stores/presupuesto.js"; */
+import { onMounted, ref } from "vue";
+import { useLoteStore } from "../stores/lotes.js";
 import { useQuasar } from 'quasar'
 
 const modelo = "Lotes";
-/* const useCliente = useClienteStore(); */
+const useLote = useLoteStore();
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
@@ -78,7 +78,7 @@ const data = ref({
 
 const obtenerInfo = async () => {
   try {
-    const cliente = await useCliente.obtener();
+    const cliente = await useLote.obtenerInfoLotes();
 
     console.log(cliente);
 
@@ -97,7 +97,11 @@ const obtenerInfo = async () => {
   }
 };
 
-obtenerInfo();
+
+onMounted(()=>{
+  obtenerInfo();
+});
+
 
 const estado = ref("guardar");
 const modal = ref(false);
