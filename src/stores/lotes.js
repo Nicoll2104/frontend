@@ -8,7 +8,10 @@ export const useLoteStore = defineStore('lote', () => {
     const obtenerInfoLotes = async () => {
         try {
             let responseLotes = await axios.get('lote/ver');
-            lotes.value = responseLotes.data.lotes; 
+            console.log (responseLotes);
+            // lotes.value = responseLotes.data; 
+            return responseLotes.data
+            console.log(lotes)
         } catch (error) {
             throw error
         }
