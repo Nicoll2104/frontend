@@ -15,8 +15,11 @@ let menu1_content = ref([
 ]);
 
 let menu2_content = ref([
-    { ruta: "/Presupuesto", titulo: "Presupuesto", desplegable: false },
-    { ruta: "/Fichas", titulo: "Fichas", desplegable: false },
+    { ruta: "", titulo: "Presupuesto", desplegable: [
+        {ruta: "/Presupuesto", titulo: "items"},
+        {ruta: "/Presupuesto", titulo: "Distribucion"},
+    ]},
+    { ruta: "/Fichas", titulo: "Fichas", desplegable: false},
     { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
     { ruta: "/Areas", titulo: "Areas", desplegable: false },
     { ruta: "/Pedidos", titulo: "Pedido", desplegable: false },
@@ -48,16 +51,16 @@ let menu2_content = ref([
             </q-header>
 
             <q-drawer class="bg-secondary" v-model="leftDrawerOpen" side="left" behavior="mobile" elevated style="scrollbar-width: none;">
-                <div class="q-pa-md q-gutter opcionescont">
+                <div class="q-pa-md q-gutter menucont">
                     <div class="q-pa-md q-gutter-sm" style="margin-top: 1em">
                         <q-avatar color="white" text-color="primary" padding="none" icon="face" style="font-size: 7em" />
                     </div>
 
 
-                    <router-link class="opcioncont" 
+                    <router-link
                     v-for="(item, index) in menu1_content" :key="index" :to="item.ruta">
                         <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="chevron_right"
-                            class="botones_principales">{{ item.titulo }}</q-btn>
+                            class="botones_secundarios">{{ item.titulo }}</q-btn>
                     </router-link>
 
 
@@ -67,50 +70,29 @@ let menu2_content = ref([
 
 
 
+                    <div class="opcionescont">
 
+                        <router-link 
+                        v-for="(item, index) in menu2_content" :key="index" :to="item.ruta">
+                    <!-- ❄️❄️Expandibles❄️❄️ -->
+                        <q-expansion-item v-if="item.desplegable !== false" :label=item.titulo class="botones_principales"
+                        header-class="bg-accent text-primary" expand-icon-class="text-primary">
+                                    <router-link
+                                    v-for="(item2, index2) in item.desplegable" :key="index2" :to="item2.ruta">
+                                        <q-btn no-caps align="between" color="accent" text-color="primary"
+                                        icon-right="chevron_right" :label="item2.titulo" class="botones_secundarios" />
+                                    </router-link>
+                        </q-expansion-item>
+
+                    <!-- ❄️❄️No expandibles❄️❄️ -->
+                        <q-expansion-item  v-if="item.desplegable == false" :label=item.titulo class="botones_principales"
+                        header-class="bg-accent text-primary" expand-icon-class="text-primary" 
+                        expand-icon="chevron_right" expanded-icon="chevron_right">
+                        </q-expansion-item>
+
+                    </router-link>
                     
-                    
-
-
-
-                    <q-expansion-item label="Presupuesto" align="between"  style="margin-top: 10px;"
-                    header-class="bg-accent text-primary" expand-icon-class="text-primary" >
-
-                                <router-link to="/Fichas" class="opcioncont">
-                                    <q-btn no-caps align="between" color="accent" text-color="primary"
-                                        icon-right="chevron_right" label="Fichas" class="botones_principales" />
-                                </router-link>
-                                <router-link to="/Fichas" class="opcioncont">
-                                    <q-btn no-caps align="between" color="accent" text-color="primary"
-                                        icon-right="chevron_right" label="Fichas" class="botones_principales" />
-                                </router-link>
-
-                    </q-expansion-item>
-
-
-
-
-
-                    <router-link to="/Fichas" class="opcioncont">
-                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="expand_more"
-                            label="Fichas" class="botones_principales" />
-                    </router-link>
-                    <router-link to="/Lotes" class="opcioncont">
-                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="expand_more"
-                            label="Lotes" class="botones_principales" />
-                    </router-link>
-                    <router-link to="/Areas" class="opcioncont">
-                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="expand_more"
-                            label="Areas" class="botones_principales" />
-                    </router-link>
-                    <router-link to="/Pedidos" class="opcioncont">
-                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="expand_more"
-                            label="Pedido" class="botones_principales" />
-                    </router-link>
-                    <router-link to="/Productos" class="opcioncont">
-                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="expand_more"
-                            label="Producto" class="botones_principales" />
-                    </router-link>
+                    </div>
 
                     <!--🧩🧩🧩🧩-->
                     <q-linear-progress :value="progress" class="q-mt-md" />
@@ -132,12 +114,20 @@ let menu2_content = ref([
     text-align: center;
 }
 
-.opcioncont {
+.menucont{
+
+}
+.opcionescont {
+    margin: 10px 0px;
 
 }
 
 .botones_principales {
-    width: 95%;
+    margin-top: 10px;
+}
+
+.botones_secundarios {
+    width: 90%;
     margin: 9px 0px;
 }
 </style>
