@@ -77,7 +77,7 @@ const loadingmodal = ref(false);
 const columns = ref([
   {
     name: "pedido_id",
-    label: "Pedido",
+    label: "Items",
     align: "left",
     field: (row) => row.pedido_id,
 
@@ -292,17 +292,15 @@ function notificar(tipo, msg) {
     <q-dialog v-model="modal">
       <q-card class="modal">
         <q-toolbar>
-          <q-toolbar-title>Agregar {{ modelo }}</q-toolbar-title>
+          <q-toolbar-title>Agregar producto</q-toolbar-title>
           <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
         </q-toolbar>
 
         <q-card-section class="q-gutter-md">
-          <q-input class="input1" outlined v-model="data.producto_id" label="Producto" type="text"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el producto']"></q-input>
+          <q-select class="productoinput modalinputs" outlined v-model="data.unidadmedida" :options="selectunidadmedida" label="Producto" 
+            lazy-rules :rules="[val => val.trim() != '' || 'Selecciones un producto']"/>
           <q-input class="input1" outlined v-model="data.cantidad" label="Cantidad" type="number"
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
-          <q-input class="input1" outlined v-model="data.pedido_id" label="Pedido" type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese un pedido']"></q-input>
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
