@@ -418,9 +418,6 @@ function notificar(tipo, msg) {
         </template>
       </q-table>
     </div>
-    <router-link to="/Det_pedido" class="ingresarcont">
-      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Detalle Pedido</q-btn>
-    </router-link>
   </div>
 </template>
 <style scoped>

@@ -76,14 +76,6 @@ const loadingmodal = ref(false);
 
 const columns = ref([
   {
-    name: "cantidad",
-    label: "Cantidad",
-    align: "left",
-    field: (row) => row.cantidad,
-    sort: true,
-    sortOrder: "da",
-  },
-  {
     name: "pedido_id",
     label: "Pedido",
     align: "left",
@@ -97,14 +89,22 @@ const columns = ref([
     field: (row) => row.producto_id,
   },
   {
-    name: "Estado",
-    label: "Estado",
+    name: "cantidad",
+    label: "Cantidad",
+    align: "left",
+    field: (row) => row.cantidad,
+    sort: true,
+    sortOrder: "da",
+  },
+  {
+    name: "Precio",
+    label: "Precio",
     align: "center",
     field: (row) => row.estado,
   },
   {
-    name: "opciones",
-    label: "Opciones",
+    name: "Subtotal",
+    label: "Subtotal",
     field: "opciones",
   },
 ]);
@@ -297,12 +297,12 @@ function notificar(tipo, msg) {
         </q-toolbar>
 
         <q-card-section class="q-gutter-md">
+          <q-input class="input1" outlined v-model="data.producto_id" label="Producto" type="text"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el producto']"></q-input>
           <q-input class="input1" outlined v-model="data.cantidad" label="Cantidad" type="number"
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
           <q-input class="input1" outlined v-model="data.pedido_id" label="Pedido" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un pedido']"></q-input>
-          <q-input class="input1" outlined v-model="data.producto_id" label="Producto" type="text"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el producto']"></q-input>
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
@@ -318,7 +318,7 @@ function notificar(tipo, msg) {
         <template v-slot:top>
           <h4 class="titulo-cont">
             {{ modelo + ' ' }}
-            <q-btn @click="opciones.agregar" label="Añadir" color="secondary">
+            <q-btn @click="opciones.agregar" label="Agregar Producto" color="secondary">
               <q-icon name="style" color="white" right />
             </q-btn>
           </h4>
