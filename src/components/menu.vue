@@ -1,9 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-const router = useRouter()
 
-const leftDrawerOpen = ref(false)
+const router = useRouter();
+const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {
     leftDrawerOpen.value = !leftDrawerOpen.value
