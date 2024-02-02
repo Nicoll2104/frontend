@@ -180,12 +180,13 @@ const in_activar = {
     try {
       const response = await useLote.putActivar(id);
       console.log(response);
+      console.log("Activando");
       if (!response) return
       if (response.error) {
         notificar('negative', response.error)
         return
       }
-      rows.value.splice(buscarIndexLocal(response._id), 1, response);
+      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response);
     } catch (error) {
       console.log(error);
     } finally {
@@ -196,6 +197,7 @@ const in_activar = {
     console.log("inactivar");
     try {
       const response = await useLote.putInactivar(id);
+      console.log("Desactivar");
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -203,7 +205,7 @@ const in_activar = {
 
         return
       }
-      rows.value.splice(buscarIndexLocal(response._id), 1, response);
+      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response);
     } catch (error) {
       console.log(error);
     } finally {
@@ -329,7 +331,7 @@ function notificar(tipo, msg) {
           </q-tr>
         </template>
 
-        <template v-slot:body-cell-Estado="props">
+        <template v-slot:body-cell-status="props">
           <q-td :props="props" class="botones">
             <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.status === 1
               ? 'Activo'
