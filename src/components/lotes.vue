@@ -143,7 +143,7 @@ const enviarInfo = {
         return
       }
 
-      rows.value.unshift(response.cliente);
+      rows.value.unshift(response);
       notificar('positive', 'Guardado exitosamente')
       modal.value = false;
     } catch (error) {
@@ -163,7 +163,8 @@ const enviarInfo = {
         loadingmodal.value = false;
         return
       }
-      rows.value.splice(buscarIndexLocal(response._id), 1, response);
+      console.log(rows.value);
+      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response.data.lotes);
       notificar('positive', 'Editado exitosamente')
       modal.value = false;
     } catch (error) {
@@ -172,7 +173,7 @@ const enviarInfo = {
       loadingmodal.value = false;
     }
   },
-};
+};                                          
 
 const in_activar = {
   putActivar: async (id) => {
@@ -192,6 +193,7 @@ const in_activar = {
     }
   },
   putInactivar: async (id) => {
+    console.log("inactivar");
     try {
       const response = await useLote.putInactivar(id);
       console.log(response);

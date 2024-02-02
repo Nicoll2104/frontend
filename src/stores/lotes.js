@@ -19,8 +19,10 @@ export const useLoteStore = defineStore('lote', () => {
 
     const postLotes = async (data) =>{
         try {
+            console.log('a');
             let res = await axios.post("lote/agregar", data);
-            return res
+            console.log('a', res);
+            return res.data.lotes
         } catch (error) {
             throw error
         }
@@ -37,7 +39,7 @@ export const useLoteStore = defineStore('lote', () => {
 
     const putInactivar = async (id)=>{
         try {
-            let r = await axios.put(`lote/inactivar/${id}`)
+            let r = await axios.put(`lote/inactivar/${id}`, data)
             return r
         } catch (error) {
             console.log(error, "Error al cambiar el estado del bus");
@@ -45,7 +47,7 @@ export const useLoteStore = defineStore('lote', () => {
     }
     const  putActivar = async (id)=>{
         try {
-            let r = await axios.put(`lote/activar/${id}`)
+            let r = await axios.put(`lote/activar/${id}`, data)
             return r
         } catch (error) {
             console.log(error, "Error al cambiar el estado del bus");
