@@ -186,7 +186,7 @@ const in_activar = {
         notificar('negative', response.error)
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response);
+      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response.data.lotes);
     } catch (error) {
       console.log(error);
     } finally {
@@ -205,7 +205,7 @@ const in_activar = {
 
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response);
+      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response.data.lotes);
     } catch (error) {
       console.log(error);
     } finally {
@@ -333,14 +333,15 @@ function notificar(tipo, msg) {
 
         <template v-slot:body-cell-status="props">
           <q-td :props="props" class="botones">
-            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.status === 1
+             props.row.data.lotes 
+            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.status == 1
               ? 'Activo'
-              : props.row.status === 0
+              : props.row.status == 0
                 ? 'Inactivo'
                 : '‎  ‎   ‎   ‎   ‎ '
-              " :color="props.row.status === 1 ? 'positive' : 'accent'" :loading="props.row.status === 'load'"
+              " :color="props.row.status == 1 ? 'positive' : 'accent'" :loading="props.row.status == 'load'"
               loading-indicator-size="small" @click="
-                props.row.status === 1
+                props.row.status == 1
                   ? in_activar.putInactivar(props.row._id)
                   : in_activar.putActivar(props.row._id);
               props.row.status = 'load';
