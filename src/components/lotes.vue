@@ -178,6 +178,7 @@ const enviarInfo = {
 const in_activar = {
   putActivar: async (id) => {
     try {
+      console.log(id);
       const response = await useLote.putActivar(id);
       console.log(response);
       console.log("Activando");
@@ -186,7 +187,7 @@ const in_activar = {
         notificar('negative', response.error)
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response);
+      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response.data.lotes);
     } catch (error) {
       console.log(error);
     } finally {
@@ -196,8 +197,8 @@ const in_activar = {
   putInactivar: async (id) => {
     console.log("inactivar");
     try {
-      const response = await useLote.putInactivar(id);
       console.log("Desactivar");
+      const response = await useLote.putInactivar(id);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -205,7 +206,7 @@ const in_activar = {
 
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response);
+      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response.data.lotes);
     } catch (error) {
       console.log(error);
     } finally {
@@ -340,7 +341,7 @@ function notificar(tipo, msg) {
                 : '‎  ‎   ‎   ‎   ‎ '
               " :color="props.row.status === 1 ? 'positive' : 'accent'" :loading="props.row.status === 'load'"
               loading-indicator-size="small" @click="
-                props.row.status === 1
+                props.row.status == 1
                   ? in_activar.putInactivar(props.row._id)
                   : in_activar.putActivar(props.row._id);
               props.row.status = 'load';
