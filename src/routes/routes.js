@@ -6,7 +6,7 @@ import presupuesto from '../components/presupuesto.vue'
 import Lotes from "../components/lotes.vue"
 import Fichas from '../components/ficha.vue'
 import Areas from '../components/area.vue'
-import Pedidos from '../components/pedidos.vue'
+import Pedidos from '../components/Pedidos.vue'
 import Productos from '../components/producto.vue'
 import contraseña from '../components/res_clave.vue'
 import Dis_presupuesto from '../components/dis_presupuesto.vue'

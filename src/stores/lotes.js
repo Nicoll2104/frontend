@@ -42,7 +42,7 @@ export const useLoteStore = defineStore('lote', () => {
             let r = await axios.put(`lote/inactivar/${id}`)
             return r
         } catch (error) {
-            console.log(error, "Error al cambiar el estado del bus");
+            console.log(error, "Error al cambiar el estado del lote");
         }
     }
     const  putActivar = async (id)=>{
@@ -50,7 +50,7 @@ export const useLoteStore = defineStore('lote', () => {
             let r = await axios.put(`lote/activar/${id}`)
             return r
         } catch (error) {
-            console.log(error, "Error al cambiar el estado del bus");
+            console.log(error, "Error al cambiar el estado del lote");
         }
     }
 
