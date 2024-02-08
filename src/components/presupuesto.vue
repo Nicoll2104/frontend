@@ -118,7 +118,7 @@ const enviarInfo = {
   guardar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await usePresup.putItem(data.value);
+      const response = await usePresup.postItem(data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -148,7 +148,7 @@ const enviarInfo = {
         return
       }
       console.log(rows.value);
-      rows.value.splice(buscarIndexLocal(response.data.presupuestos._id), 1, response.data.presupuestos);
+      rows.value.splice(buscarIndexLocal(response.data.items._id), 1, response.data.items);
       notificar('positive', 'Editado exitosamente')
       modal.value = false;
     } catch (error) {

@@ -81,7 +81,7 @@ export const usePresupStore = defineStore('items', () => {
             console.log('a');
             let res = await axios.post("items/agregar", data);
             console.log('a', res);
-            return res.data.presupuestos
+            return res.data.items
         } catch (error) {
             throw error
         }
