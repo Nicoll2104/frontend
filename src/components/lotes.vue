@@ -187,6 +187,7 @@ const in_activar = {
         return
       }
       rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response.data.lotes);
+      notificar('positive', 'Activado, exitosamente')
     } catch (error) {
       console.log(error);
     } finally {
@@ -206,6 +207,7 @@ const in_activar = {
         return
       }
       rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response.data.lotes);
+      notificar('negative', 'Inactivado exitosamente')
     } catch (error) {
       console.log(error);
     } finally {
