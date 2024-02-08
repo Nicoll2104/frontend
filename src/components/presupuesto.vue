@@ -1,20 +1,11 @@
-<!-- <template>
-  <div class="cont">====================tabla presupuesto=====================</div>
-</template>
-
-<style scoped>
-.cont {
-  color: rgb(221, 115, 89);
-}
-</style> -->
 
 <script setup>
-import { ref } from "vue";
-/* import { useClienteStore } from "../stores/presupuesto.js";   */
+import { onMounted, ref } from "vue";
+import { usePresupStore } from "../stores/presupuesto.js";
 import { useQuasar } from 'quasar'
 
 const modelo = "Presupuesto";
-/* const useCliente = useClienteStore(); */
+const usePresup = usePresupStore();
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
@@ -23,9 +14,9 @@ const loadingmodal = ref(false);
 const columns = ref([
   {
     name: "codigo_presupuesto",
-    label: "Codigo presupuesto",
+    label: "Codigo Presupuesto",
     align: "left",
-    field: (row) => row.nombre,
+    field: (row) => row.codigo_presupuesto,
     sort: true,
     sortOrder: "da",
   },
@@ -33,25 +24,26 @@ const columns = ref([
     name: "nombre",
     label: "Nombre",
     align: "left",
-    field: (row) => row.cedula,
+    field: (row) => row.nombre,
+
   },
   {
     name: "presupuesto_inicial",
     label: "Presupuesto inicial",
     align: "left",
-    field: (row) => row.cedula,
+    field: (row) => row.presupuesto_inicial,
   },
   {
     name: "año",
     label: "Año",
     align: "left",
-    field: (row) => row.cedula,
+    field: (row) => row.año,
   },
   {
-    name: "Estado",
+    name: "status",
     label: "Estado",
     align: "center",
-    field: (row) => row.estado,
+    field: (row) => row.status,
   },
   {
     name: "opciones",
@@ -70,17 +62,19 @@ const data = ref({
 
 const obtenerInfo = async () => {
   try {
-    const cliente = await useCliente.obtener();
+    const presupuestos= await usePresup.obtenerInfoPresup();
+    console.log("usePresup")
+    console.log(usePresup)
+    console.log("dentro")
+    console.log(presupuestos);
 
-    console.log(cliente);
+    if (!presupuestos) return
 
-    if (!cliente) return
-
-    if (cliente.error) {
-      notificar('negative', cliente.error)
+    if (presupuestos.error) {
+      notificar('negative', presupuestos.error)
       return
     }
-    rows.value = cliente.cliente;
+    rows.value = presupuestos
 
   } catch (error) {
     console.error(error);
@@ -88,8 +82,13 @@ const obtenerInfo = async () => {
     loadingTable.value = false
   }
 };
+console.log("Antes de la línea 101");
 
-obtenerInfo();
+onMounted(() => {
+  obtenerInfo();
+  console.log("inicio");
+});
+
 
 const estado = ref("guardar");
 const modal = ref(false);
@@ -119,7 +118,7 @@ const enviarInfo = {
   guardar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await useCliente.guardar(data.value);
+      const response = await usePresup.putItem(data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -128,7 +127,7 @@ const enviarInfo = {
         return
       }
 
-      rows.value.unshift(response.cliente);
+      rows.value.unshift(response);
       notificar('positive', 'Guardado exitosamente')
       modal.value = false;
     } catch (error) {
@@ -140,7 +139,7 @@ const enviarInfo = {
   editar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await useCliente.editar(data.value._id, data.value);
+      const response = await usePresup.putItem(data.value._id, data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -148,7 +147,8 @@ const enviarInfo = {
         loadingmodal.value = false;
         return
       }
-      rows.value.splice(buscarIndexLocal(response._id), 1, response);
+      console.log(rows.value);
+      rows.value.splice(buscarIndexLocal(response.data.presupuestos._id), 1, response.data.presupuestos);
       notificar('positive', 'Editado exitosamente')
       modal.value = false;
     } catch (error) {
@@ -157,28 +157,31 @@ const enviarInfo = {
       loadingmodal.value = false;
     }
   },
-};
+};                                          
 
 const in_activar = {
-  activar: async (id) => {
+  putActivar: async (id) => {
     try {
-      const response = await useCliente.activar(id);
+      const response = await usePresup.putActivar(id);
       console.log(response);
+      console.log("Activando");
       if (!response) return
       if (response.error) {
         notificar('negative', response.error)
         return
       }
-      rows.value.splice(buscarIndexLocal(response._id), 1, response);
+      rows.value.splice(buscarIndexLocal(response.data.presupuestos._id), 1, response.data.presupuestos);
     } catch (error) {
       console.log(error);
     } finally {
       loadingmodal.value = false;
     }
   },
-  inactivar: async (id) => {
+  putInactivar: async (id) => {
+    console.log("inactivar");
     try {
-      const response = await useCliente.inactivar(id);
+      const response = await useLote.putInactivar(id);
+      console.log("Desactivar");
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -186,7 +189,7 @@ const in_activar = {
 
         return
       }
-      rows.value.splice(buscarIndexLocal(response._id), 1, response);
+      rows.value.splice(buscarIndexLocal(response.data.presupuestos._id), 1, response.data.presupuestos);
     } catch (error) {
       console.log(error);
     } finally {
@@ -196,7 +199,7 @@ const in_activar = {
   },
 };
 
-/* function validarCampos() {
+function validarCampos() {
 
   const arrData = Object.entries(data.value)
   console.log(arrData);
@@ -213,18 +216,23 @@ const in_activar = {
       }
     }
 
+    if (d[0] === "codigo_presupuesto" && d[1].toString().length < 6) {
+      notificar('negative', "El codigo debe tener más de 6 digitos")
+      return
+    }
+
     if (d[0] === "nombre" && d[1].length > 15) {
       notificar('negative', 'El nombre no puede tener más de 15 caracteres')
       return
     }
 
-    if (d[0] === "cedula" && d[1].toString().length < 8) {
-      notificar('negative', "La cedula debe tener más de 8 digitos")
+    if (d[0] === "presupuesto_inicial" && d[1].toString().length < 1) {
+      notificar('negative', "El presupuesto inicial debe ser diferente a 0")
       return
     }
 
-    if (d[0] === "email" && !d[1].includes('@')) {
-      notificar('negative', 'Email no válido')
+    if (d[0] === "año" && d[1].length > 4) {
+      notificar('negative', 'El año no puede tener mas de 4 caracteres')
       return
     }
   }
@@ -237,7 +245,7 @@ function notificar(tipo, msg) {
     message: msg,
     position: "top"
   })
-} */
+}
 </script>
 
 <template>
@@ -250,16 +258,14 @@ function notificar(tipo, msg) {
         </q-toolbar>
 
         <q-card-section class="q-gutter-md">
-          <q-input class="input1" outlined v-model="data.codigo_presupuesto" label="Codigo presupuesto" type="number" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el codigo de presupuesto']"></q-input>
+          <q-input class="input1" outlined v-model="data.codigo_presupuesto" label="Codigo presupuesto" type="number"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo de presupuesto']"></q-input>
           <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-          <q-input class="input2" outlined v-model="data.presupuesto_inicial" label="Presupuesto inicial" type="number" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
-            <q-input class="input2" outlined v-model="data.año" label="año" type="number" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
-
-
+          <q-input class="input1" outlined v-model="data.presupuesto_inicial" label="Presupuesto inicial" type="number"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
+          <q-input class="input1" outlined v-model="data.año" label="Año" type="text" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
@@ -294,19 +300,19 @@ function notificar(tipo, msg) {
           </q-tr>
         </template>
 
-        <template v-slot:body-cell-Estado="props">
+        <template v-slot:body-cell-status="props">
           <q-td :props="props" class="botones">
-            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.estado === 1
+            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.status == 1
               ? 'Activo'
-              : props.row.estado === 0
+              : props.row.status == 0
                 ? 'Inactivo'
                 : '‎  ‎   ‎   ‎   ‎ '
-              " :color="props.row.estado === 1 ? 'positive' : 'accent'" :loading="props.row.estado === 'load'"
+              " :color="props.row.status == 1 ? 'primary' : 'secondary'" :loading="props.row.status == 'load'"
               loading-indicator-size="small" @click="
-                props.row.estado === 1
-                  ? in_activar.inactivar(props.row._id)
-                  : in_activar.activar(props.row._id);
-              props.row.estado = 'load';
+                props.row.status == 1
+                  ? in_activar.putInactivar(props.row._id)
+                  : in_activar.putActivar(props.row._id);
+              props.row.status = 'load';
               " />
           </q-td>
         </template>
@@ -318,15 +324,12 @@ function notificar(tipo, msg) {
         </template>
       </q-table>
     </div>
-    <router-link to="/Dis_presupuesto" class="ingresarcont">
-      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Distribucion de presupuestos</q-btn>
-  </router-link>
 
+    <router-link to="/Dis_presupuesto" class="ingresarcont">
+      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Distribucion de presupuesto</q-btn>
+    </router-link>
   </div>
 </template>
-
-
-
 <style scoped>
 /* 
 primary: Color principal del tema.
@@ -351,7 +354,7 @@ warning: Color para advertencias o mensajes importantes.
 .tabla {
   padding: 0 20px;
   margin: 10px auto;
-  max-width: 1000px;
+  max-width: 1200px;
   /* min-height: 710px; */
   border: 0px solid black;
 }
@@ -374,15 +377,13 @@ warning: Color para advertencias o mensajes importantes.
   font-size: 15px;
 }
 
+.botonv1 {
+  font-size: 10px;
+  font-weight: bold;
+}
 
 .botonv1 {
   font-size: 10px;
   font-weight: bold;
 }
-.distribucion {
-  font-size: 20px;
-  font-weight: 700;
-  max-width: 80vw;
-}
-
 </style>
