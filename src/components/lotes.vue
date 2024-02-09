@@ -1,3 +1,91 @@
+<template>
+  <div>
+    <q-dialog v-model="modal">
+      <q-card class="modal">
+        <q-toolbar>
+          <q-toolbar-title>Agregar {{ modelo }}</q-toolbar-title>
+          <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
+        </q-toolbar>
+
+        <q-card-section class="q-gutter-md">
+          <q-input class="input1" outlined v-model="data.codigo_presupuestal" label="Codigo presupuestal" type="number"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo presupuestal']"></q-input>
+          <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
+          <q-input class="input1" outlined v-model="data.presupuesto_inicial" label="Presupuesto inicial" type="number"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
+          <q-input class="input1" outlined v-model="data.año" label="Año" type="text" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
+          <q-input class="input1" outlined v-model="data.modificaciones" label="Modificaciones" type="text" maxlength="15"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese las modificaciones']"></q-input>
+          <q-input class="input1" outlined v-model="data.presupuesto_definitivo" label="Presupuesto definitivo"
+            type="text" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese el presupuesto definitivo']"></q-input>
+          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
+            :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
+            <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
+          </q-btn>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
+    <div class="q-pa-md">
+      <q-table :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
+        rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
+        no-results-label="No hay resultados para la busqueda" wrap-cells="false">
+        <template v-slot:top>
+          <h4 class="titulo-cont">
+            {{ modelo + ' ' }}
+            <q-btn @click="opciones.agregar" label="Añadir" color="secondary">
+              <q-icon name="style" color="white" right />
+            </q-btn>
+          </h4>
+          <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar">
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+        </template>
+
+        <template v-slot:header="props">
+          <q-tr :props="props">
+            <q-th v-for="col in props.cols" :key="col.name" :props="props" class="encabezado">
+              {{ col.label }}
+            </q-th>
+          </q-tr>
+        </template>
+
+        <template v-slot:body-cell-status="props">
+          <q-td :props="props" class="botones">
+            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.status == 1
+              ? 'Activo'
+              : props.row.status == 0
+                ? 'Inactivo'
+                : '‎  ‎   ‎   ‎   ‎ '
+              " :color="props.row.status == 1 ? 'primary' : 'secondary'" :loading="props.row.status == 'load'"
+              loading-indicator-size="small" @click="
+                props.row.status == 1
+                  ? in_activar.putInactivar(props.row._id)
+                  : in_activar.putActivar(props.row._id);
+              props.row.status = 'load';
+              " />
+          </q-td>
+        </template>
+
+        <template v-slot:body-cell-opciones="props">
+          <q-td :props="props" class="botones">
+            <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
+          </q-td>
+        </template>
+      </q-table>
+    </div>
+
+    <router-link to="/Dis_presupuesto" class="ingresarcont">
+      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Distribucion de presupuesto</q-btn>
+    </router-link>
+  </div>
+</template>
+
 <script setup>
 import { onMounted, ref } from "vue";
 import { useLoteStore } from "../stores/lotes.js";
@@ -277,93 +365,7 @@ function notificar(tipo, msg) {
 }
 </script>
 
-<template>
-  <div>
-    <q-dialog v-model="modal">
-      <q-card class="modal">
-        <q-toolbar>
-          <q-toolbar-title>Agregar {{ modelo }}</q-toolbar-title>
-          <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
-        </q-toolbar>
 
-        <q-card-section class="q-gutter-md">
-          <q-input class="input1" outlined v-model="data.codigo_presupuestal" label="Codigo presupuestal" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo presupuestal']"></q-input>
-          <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-          <q-input class="input1" outlined v-model="data.presupuesto_inicial" label="Presupuesto inicial" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
-          <q-input class="input1" outlined v-model="data.año" label="Año" type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
-          <q-input class="input1" outlined v-model="data.modificaciones" label="Modificaciones" type="text" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese las modificaciones']"></q-input>
-          <q-input class="input1" outlined v-model="data.presupuesto_definitivo" label="Presupuesto definitivo"
-            type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el presupuesto definitivo']"></q-input>
-          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
-            :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
-            <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
-          </q-btn>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
-
-    <div class="q-pa-md">
-      <q-table :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
-        rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
-        no-results-label="No hay resultados para la busqueda" wrap-cells="false">
-        <template v-slot:top>
-          <h4 class="titulo-cont">
-            {{ modelo + ' ' }}
-            <q-btn @click="opciones.agregar" label="Añadir" color="secondary">
-              <q-icon name="style" color="white" right />
-            </q-btn>
-          </h4>
-          <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar">
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-        </template>
-
-        <template v-slot:header="props">
-          <q-tr :props="props">
-            <q-th v-for="col in props.cols" :key="col.name" :props="props" class="encabezado">
-              {{ col.label }}
-            </q-th>
-          </q-tr>
-        </template>
-
-        <template v-slot:body-cell-status="props">
-          <q-td :props="props" class="botones">
-            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.status == 1
-              ? 'Activo'
-              : props.row.status == 0
-                ? 'Inactivo'
-                : '‎  ‎   ‎   ‎   ‎ '
-              " :color="props.row.status == 1 ? 'primary' : 'secondary'" :loading="props.row.status == 'load'"
-              loading-indicator-size="small" @click="
-                props.row.status == 1
-                  ? in_activar.putInactivar(props.row._id)
-                  : in_activar.putActivar(props.row._id);
-              props.row.status = 'load';
-              " />
-          </q-td>
-        </template>
-
-        <template v-slot:body-cell-opciones="props">
-          <q-td :props="props" class="botones">
-            <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
-          </q-td>
-        </template>
-      </q-table>
-    </div>
-
-    <router-link to="/Dis_presupuesto" class="ingresarcont">
-      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Distribucion de presupuesto</q-btn>
-    </router-link>
-  </div>
-</template>
 <style scoped>
 /* 
 primary: Color principal del tema.

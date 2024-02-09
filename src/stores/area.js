@@ -1,14 +1,16 @@
- import { defineStore } from 'pinia';
+import { defineStore } from 'pinia';
 import axios from 'axios';
 import { ref } from 'vue';
 
 export const useAreaStore = defineStore('area', () => {
-    const areas = ref([]);
+    const area = ref([]);
 
-    const getArea = async () => {
+    const obtenerInfoAreas = async () => {
         try {
             let responseAreas = await axios.get('area/ver');
-            areas.value = responseAreas.data.area; 
+            console.log (responseAreas);
+            return responseAreas.data
+            console.log(area)
         } catch (error) {
             throw error
         }
@@ -17,7 +19,7 @@ export const useAreaStore = defineStore('area', () => {
     const postArea = async (data) =>{
         try {
             let res = await axios.post("area/agregar", data);
-            return res
+            return res.data.areas
         } catch (error) {
             throw error
         }
@@ -50,7 +52,7 @@ export const useAreaStore = defineStore('area', () => {
     }
 
     return {
-        areas,
-        getArea, postArea, putArea, putInactivar, putActivar
+        area,
+        obtenerInfoAreas, postArea, putArea, putInactivar, putActivar
     };
 }); 
