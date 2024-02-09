@@ -159,7 +159,7 @@ export const useUsuarioStore = defineStore("usuario", () => {
     const login = async (data) => {
       try {
         const response = await axios.post(`${model}login`, {
-          "nombre":data.nombre,
+          "correo":data.correo,
           "contrasena":data.contrasena
         });
         console.log(response);
