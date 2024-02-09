@@ -10,11 +10,10 @@
         <q-card-section class="q-gutter-md">
           <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-          <q-input class="input1" outlined v-model="data.presupuesto" label="Presupuesto" type="text" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese un presupuesto']"></q-input>
-          <q-input class="input1" outlined v-model="data.ficha_id" label="Ficha" type="number" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese una ficha']"></q-input>
-
+          <q-input class="input1" outlined v-model="data.presupuesto" label="Presupuesto" type="number"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto']"></q-input>
+          <q-input class="input1" outlined v-model="data.ficha_id" label="Ficha" type="text" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese la ficha']"></q-input>
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
@@ -49,19 +48,19 @@
           </q-tr>
         </template>
 
-        <template v-slot:body-cell-Estado="props">
+        <template v-slot:body-cell-status="props">
           <q-td :props="props" class="botones">
-            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.estado === 1
+            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.status == 1
               ? 'Activo'
-              : props.row.estado === 0
+              : props.row.status == 0
                 ? 'Inactivo'
                 : '‎  ‎   ‎   ‎   ‎ '
-              " :color="props.row.estado === 1 ? 'positive' : 'accent'" :loading="props.row.estado === 'load'"
+              " :color="props.row.status == 1 ? 'primary' : 'secondary'" :loading="props.row.status == 'load'"
               loading-indicator-size="small" @click="
-                props.row.estado === 1
-                  ? in_activar.inactivar(props.row._id)
-                  : in_activar.activar(props.row._id);
-              props.row.estado = 'load';
+                props.row.status == 1
+                  ? in_activar.putInactivar(props.row._id)
+                  : in_activar.putActivar(props.row._id);
+              props.row.status = 'load';
               " />
           </q-td>
         </template>
@@ -73,8 +72,257 @@
         </template>
       </q-table>
     </div>
+
+    <router-link to="/Dis_presupuesto" class="ingresarcont">
+      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Distribucion de presupuesto</q-btn>
+    </router-link>
   </div>
 </template>
+<script setup>
+import { onMounted, ref } from "vue";
+import { useAreaStore } from "../stores/area.js";
+import { useQuasar } from 'quasar'
+
+const modelo = "Areas";
+const useArea = useAreaStore();
+const loadingTable = ref(true)
+const $q = useQuasar()
+const filter = ref("");
+const loadingmodal = ref(false);
+
+const columns = ref([
+  {
+    name: "nombre",
+    label: "Nombre",
+    align: "left",
+    field: (row) => row.nombre,
+
+  },
+  {
+    name: "presupuesto",
+    label: "Presupuesto",
+    align: "left",
+    field: (row) => row.presupuesto,
+  },
+  {
+    name: "ficha_id",
+    label: "ficha_id",
+    align: "left",
+    field: (row) => row.ficha_id,
+  },
+
+  {
+    name: "status",
+    label: "Estado",
+    align: "center",
+    field: (row) => row.status,
+  },
+  {
+    name: "opciones",
+    label: "Opciones",
+    field: "opciones",
+  },
+]);
+const rows = ref([]);
+
+const data = ref({
+  nombre: "",
+  presupuesto: "",
+  ficha_id: "",
+});
+
+const obtenerInfo = async () => {
+  try {
+    const area = await useArea.obtenerInfoAreas();
+
+    console.log(useArea)
+
+    if (!area) return
+
+    if (area.error) {
+      notificar('negative', area.error)
+      return
+    }
+    rows.value = area
+
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loadingTable.value = false
+  }
+};
+
+onMounted(() => {
+  obtenerInfo();
+  console.log("inicio");
+});
+
+
+const estado = ref("guardar");
+const modal = ref(false);
+const opciones = {
+  agregar: () => {
+    data.value = {
+      nombre: "",
+      presupuesto: "",
+      ficha_id: "",
+    };
+    modal.value = true;
+    estado.value = "guardar";
+  },
+  editar: (info) => {
+    data.value = { ...info }
+    modal.value = true;
+    estado.value = "editar";
+  },
+};
+
+function buscarIndexLocal(id) {
+  return rows.value.findIndex((r) => r._id === id);
+}
+
+const enviarInfo = {
+  guardar: async () => {
+    loadingmodal.value = true;
+    try {
+      const response = await useArea.postArea(data.value);
+      console.log(response);
+      if (!response) return
+      if (response.error) {
+        notificar('negative', response.error)
+        loadingmodal.value = false;
+        return
+      }
+
+      rows.value.unshift(response);
+      notificar('positive', 'Guardado exitosamente')
+      modal.value = false;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      loadingmodal.value = false;
+    }
+  },
+  editar: async () => {
+    loadingmodal.value = true;
+    try {
+      const response = await useArea.putArea(data.value._id, data.value);
+      console.log(response);
+      if (!response) return
+      if (response.error) {
+        notificar('negative', response.error)
+        loadingmodal.value = false;
+        return
+      }
+      console.log(rows.value);
+      rows.value.splice(buscarIndexLocal(response.data.area._id), 1, response.data.area);
+      notificar('positive', 'Editado exitosamente')
+      modal.value = false;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      loadingmodal.value = false;
+    }
+  },
+};                                          
+
+const in_activar = {
+  putActivar: async (id) => {
+    try {
+      console.log(id);
+      const response = await useArea.putActivar(id);
+      console.log(response);
+      console.log("Activando");
+      if (!response) return
+      if (response.error) {
+        notificar('negative', response.error)
+        return
+      }
+      rows.value.splice(buscarIndexLocal(response.data.area._id), 1, response.data.area);
+      notificar('positive', 'Activado, exitosamente')
+    } catch (error) {
+      console.log(error);
+    } finally {
+      loadingmodal.value = false;
+    }
+  },
+  putInactivar: async (id) => {
+    console.log("inactivar");
+    try {
+      console.log("Desactivar");
+      const response = await useLote.putInactivar(id);
+      console.log(response);
+      if (!response) return
+      if (response.error) {
+        notificar('negative', response.error)
+
+        return
+      }
+      rows.value.splice(buscarIndexLocal(response.data.area._id), 1, response.data.area);
+      notificar('negative', 'Inactivado exitosamente')
+    } catch (error) {
+      console.log(error);
+    } finally {
+      loadingmodal.value = false;
+    }
+
+  },
+};
+
+function validarCampos() {
+
+const arrData = Object.entries(data.value)
+console.log(arrData);
+for (const d of arrData) {
+  console.log(d);
+  if (d[1] === null) {
+    notificar('negative', "Por favor complete todos los campos")
+    return
+  }
+  if (typeof d[1] === 'string') {
+    if (d[1].trim() === "") {
+      notificar('negative', "Por favor complete todos los campos")
+      return
+    }
+  }
+
+  if (d[0] === "codigo_presupuestal" && d[1].toString().length < 6) {
+    notificar('negative', "El codigo debe tener más de 6 digitos")
+    return
+  }
+
+  if (d[0] === "nombre" && d[1].length > 15) {
+    notificar('negative', 'El nombre no puede tener más de 15 caracteres')
+    return
+  }
+
+  if (d[0] === "presupuesto_inicial" && d[1].toString().length < 1) {
+    notificar('negative', "El presupuesto inicial debe ser diferente a 0")
+    return
+  }
+
+  if (d[0] === "ficha_id" && d[1].length > 10) {
+    notificar('negative', 'La ficha no puede tener mas de 10 caracteres')
+    return
+  }
+
+
+
+
+}
+enviarInfo[estado.value]()
+}
+
+function notificar(tipo, msg) {
+$q.notify({
+  type: tipo,
+  message: msg,
+  position: "top"
+})
+}
+</script>
+
+
 <style scoped>
 /* 
 primary: Color principal del tema.
@@ -128,227 +376,3 @@ warning: Color para advertencias o mensajes importantes.
 }
 </style>
 
-  <script setup>
-import { ref } from "vue";
-import { useAreaStore } from "../stores/area.js"; 
-import { useQuasar } from 'quasar'
-
-const modelo = "Areas";
-const useAreas = useAreaStore(); 
-const loadingTable = ref(true)
-const $q = useQuasar()
-const filter = ref("");
-const loadingmodal = ref(false);
-
-const columns = ref([
-  {
-    name: "nombre",
-    label: "Nombre",
-    align: "left",
-    field: (row) => row.nombre,
-    sort: true,
-    sortOrder: "da",
-  },
-  {
-    name: "presupuesto",
-    label: "Presupuesto",
-    align: "left",
-    field: (row) => row.cedula,
-  },
-  {
-    name: "ficha_id",
-    label: "Ficha",
-    align: "left",
-    field: (row) => row.cedula,
-  },
-  {
-    name: "Estado",
-    label: "Estado",
-    align: "center",
-    field: (row) => row.estado,
-  },
-  {
-    name: "opciones",
-    label: "Opciones",
-    field: "opciones",
-  },
-]);
-const rows = ref([]);
-
-const data = ref({
-  nombre: "",
-  presupuesto: "",
-  ficha_id: "",
-});
-
-const obtenerInfo = async () => {
-  try {
-    const areas = await useAreas.getArea();
-
-    console.log(areas);
-
-    if (!areas) return
-
-    if (areas.error) {
-      notificar('negative', areas.error)
-      return
-    }
-    rows.value = cliente.cliente;
-
-  } catch (error) {
-    console.error(error);
-  } finally {
-    loadingTable.value = false
-  }
-}; 
-
-obtenerInfo(); 
-
-
-const estado = ref("guardar");
-const modal = ref(false);
-const opciones = {
-  agregar: () => {
-    data.value = {
-      nombre: "",
-      presupuesto: "",
-      ficha_id: "",
-    };
-    modal.value = true;
-    estado.value = "guardar";
-  },
-  editar: (info) => {
-    data.value = { ...info }
-    modal.value = true;
-    estado.value = "editar";
-  },
-};
-
-function buscarIndexLocal(id) {
-  return rows.value.findIndex((r) => r._id === id);
-}
-
-const enviarInfo = {
-  guardar: async () => {
-    loadingmodal.value = true;
-    try {
-      const response = await useCliente.guardar(data.value);
-      console.log(response);
-      if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
-        loadingmodal.value = false;
-        return
-      }
-
-      rows.value.unshift(response.cliente);
-      notificar('positive', 'Guardado exitosamente')
-      modal.value = false;
-    } catch (error) {
-      console.log(error);
-    } finally {
-      loadingmodal.value = false;
-    }
-  },
-  editar: async () => {
-    loadingmodal.value = true;
-    try {
-      const response = await useCliente.editar(data.value._id, data.value);
-      console.log(response);
-      if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
-        loadingmodal.value = false;
-        return
-      }
-      rows.value.splice(buscarIndexLocal(response._id), 1, response);
-      notificar('positive', 'Editado exitosamente')
-      modal.value = false;
-    } catch (error) {
-      console.log(error);
-    } finally {
-      loadingmodal.value = false;
-    }
-  },
-};
-
-const in_activar = {
-  activar: async (id) => {
-    try {
-      const response = await useCliente.activar(id);
-      console.log(response);
-      if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
-        return
-      }
-      rows.value.splice(buscarIndexLocal(response._id), 1, response);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      loadingmodal.value = false;
-    }
-  },
-  inactivar: async (id) => {
-    try {
-      const response = await useCliente.inactivar(id);
-      console.log(response);
-      if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
-
-        return
-      }
-      rows.value.splice(buscarIndexLocal(response._id), 1, response);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      loadingmodal.value = false;
-    }
-
-  },
-};
-
- function validarCampos() {
-
-  const arrData = Object.entries(data.value)
-  console.log(arrData);
-  for (const d of arrData) {
-    console.log(d);
-    if (d[1] === null) {
-      notificar('negative', "Por favor complete todos los campos")
-      return
-    }
-    if (typeof d[1] === 'string') {
-      if (d[1].trim() === "") {
-        notificar('negative', "Por favor complete todos los campos")
-        return
-      }
-    }
-
-    if (d[0] === "nombre" && d[1].length > 15) {
-      notificar('negative', 'El nombre no puede tener más de 15 caracteres')
-      return
-    }
-
-    if (d[0] === "cedula" && d[1].toString().length < 8) {
-      notificar('negative', "La cedula debe tener más de 8 digitos")
-      return
-    }
-
-    if (d[0] === "email" && !d[1].includes('@')) {
-      notificar('negative', 'Email no válido')
-      return
-    }
-  }
-  enviarInfo[estado.value]()
-}
-
-function notificar(tipo, msg) {
-  $q.notify({
-    type: tipo,
-    message: msg,
-    position: "top"
-  })
-} 
-</script>
