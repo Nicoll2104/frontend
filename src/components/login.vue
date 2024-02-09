@@ -9,9 +9,10 @@
 
 
   const UsuarioStore = useUsuarioStore()
+  const router = useRouter()
   
 const data = ref({
-  nombre: "",
+  correo: "",
   contrasena: "",
 });
   const $q = useQuasar();
@@ -136,7 +137,7 @@ async function validarIngreso() {
                     <p class="subtittle">Por favor ingrese sus datos de usuario para continuar:</p>
                 </q-card-section>
                 <q-card-section style="max-width: 500px">
-                    <q-input standout v-model="data.nombre" label="Nombre de usuario" />
+                    <q-input standout v-model="data.correo" label="Correo electronico" />
                 </q-card-section>
                 <q-card-section style="max-width: 500px">
                     <q-input standout v-model="data.contrasena" label="Contraseña" />
