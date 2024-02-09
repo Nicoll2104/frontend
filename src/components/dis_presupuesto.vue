@@ -1,79 +1,12 @@
-<!-- <template>
-    <div class="q-pa-md">
-      <q-table
-        flat bordered
-        title="Treats"
-        :rows="rows"
-        :columns="columns"
-        row-key="name"
-        binary-state-sort
-      >
-        <template v-slot:body="props">
-          <q-tr :props="props">
-            <q-td key="name" :props="props">
-              {{ props.row.name }}
-              <q-popup-edit v-model="props.row.name" v-slot="scope">
-                <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
-              </q-popup-edit>
-            </q-td>
-            <q-td key="calories" :props="props">
-              {{ props.row.calories }}
-              <q-popup-edit v-model="props.row.calories" title="Update calories" buttons v-slot="scope">
-                <q-input type="number" v-model="scope.value" dense autofocus />
-              </q-popup-edit>
-            </q-td>
-            <q-td key="fat" :props="props">
-              <div class="text-pre-wrap">{{ props.row.fat }}</div>
-              <q-popup-edit v-model="props.row.fat" v-slot="scope">
-                <q-input type="textarea" v-model="scope.value" dense autofocus />
-              </q-popup-edit>
-            </q-td>
-            <q-td key="carbs" :props="props">
-              {{ props.row.carbs }}
-              <q-popup-edit v-model="props.row.carbs" title="Update carbs" buttons persistent v-slot="scope">
-                <q-input type="number" v-model="scope.value" dense autofocus hint="Use buttons to close" />
-              </q-popup-edit>
-            </q-td>
-            <q-td key="protein" :props="props">{{ props.row.protein }}</q-td>
-            <q-td key="sodium" :props="props">{{ props.row.sodium }}</q-td>
-            <q-td key="calcium" :props="props">{{ props.row.calcium }}</q-td>
-            <q-td key="iron" :props="props">{{ props.row.iron }}</q-td>
-          </q-tr>
-        </template>
-      </q-table>
-    </div>
-  </template>
-  
-  <script setup>
-  import { ref } from "vue";
-  
-  const columns = [
-    { name: 'Codigo', align: 'center', label: 'Codigo', field: 'codigo_presupuestal', sortable: true },
-    { name: 'Nombre', align: 'center', label: 'Nombre', field: 'nombre', sortable: true },
-    { name: 'Presupuesto_inicial', align: 'center', label: 'Presupuesto_inicial', field: 'presupuesto_inicial', sortable: true },
-    { name: 'Año',align: 'center',  label: 'Año', field: 'año' },
-    { name: 'Lote',align: 'center',  label: 'Lote', field: 'lote' },
-    { name: 'Items',align: 'center',  label: 'Items', field: 'items' },
-    { name: 'Estado',align: 'center',  label: 'Estado', field: 'status' },
-  ]
-  
-  const rows = []
-  </script>
-  
-  <style scoped>
-  </style> -->
-
-  
-
 <script setup>
-import { ref } from "vue";
-/* import { useClienteStore } from "../stores/presupuesto.js"; */
+import { onMounted, ref } from "vue";
+import { usedisPresupuesStore } from "../stores/dispresupuesto.js";
 import { useQuasar } from 'quasar'
 
-const modelo = "Distribucion presupuesto";
-/* const useCliente = useClienteStore(); */
-const loadingTable = ref(true)
-const $q = useQuasar()
+const modelo = "Dis Presupuesto";
+const useDisPresupuesto = usedisPresupuesStore();
+const loadingTable = ref(true);
+const $q = useQuasar();
 const filter = ref("");
 const loadingmodal = ref(false);
 
@@ -107,16 +40,21 @@ const columns = ref([
   },
   {
     name: "lote",
-    label: "Lote",
+    label: "lote",
     align: "left",
     field: (row) => row.lote,
   },
-
   {
-    name: "Estado",
+    name: "items",
+    label: "items",
+    align: "left",
+    field: (row) => row.items,
+  },
+  {
+    name: "status",
     label: "Estado",
     align: "center",
-    field: (row) => row.estado,
+    field: (row) => row.status,
   },
   {
     name: "opciones",
@@ -132,21 +70,24 @@ const data = ref({
   presupuesto_inicial: "",
   año: "",
   lote: "",
+  items: "",
 });
 
 const obtenerInfo = async () => {
   try {
-    const cliente = await useCliente.obtener();
+    const disPresupues = await useDisPresupuesto.obtenerInfodisPresupues();
+    console.log("useDisPresupuesto")
+    console.log(useDisPresupuesto)
+    console.log("dentro")
+    console.log(disPresupues);
 
-    console.log(cliente);
+    if (!disPresupues) return
 
-    if (!cliente) return
-
-    if (cliente.error) {
-      notificar('negative', cliente.error)
+    if (disPresupues.error) {
+      notificar('negative', disPresupues.error)
       return
     }
-    rows.value = cliente.cliente;
+    rows.value = disPresupues
 
   } catch (error) {
     console.error(error);
@@ -154,8 +95,12 @@ const obtenerInfo = async () => {
     loadingTable.value = false
   }
 };
+console.log("Antes de la línea 101");
 
-obtenerInfo();
+onMounted(() => {
+  obtenerInfo();
+  console.log("inicio");
+});
 
 const estado = ref("guardar");
 const modal = ref(false);
@@ -167,6 +112,7 @@ const opciones = {
       presupuesto_inicial: "",
       año: "",
       lote: "",
+      items: "",
     };
     modal.value = true;
     estado.value = "guardar";
@@ -186,7 +132,7 @@ const enviarInfo = {
   guardar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await useCliente.guardar(data.value);
+      const response = await useDisPresupues.postDisPresupuesto(data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -195,7 +141,7 @@ const enviarInfo = {
         return
       }
 
-      rows.value.unshift(response.cliente);
+      rows.value.unshift(response);
       notificar('positive', 'Guardado exitosamente')
       modal.value = false;
     } catch (error) {
@@ -207,7 +153,7 @@ const enviarInfo = {
   editar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await useCliente.editar(data.value._id, data.value);
+      const response = await useDisPresupues.putDisPresupuesto(data.value._id, data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -215,7 +161,8 @@ const enviarInfo = {
         loadingmodal.value = false;
         return
       }
-      rows.value.splice(buscarIndexLocal(response._id), 1, response);
+      console.log(rows.value);
+      rows.value.splice(buscarIndexLocal(response.data.disPresupues._id), 1, response.data.disPresupues);
       notificar('positive', 'Editado exitosamente')
       modal.value = false;
     } catch (error) {
@@ -227,25 +174,29 @@ const enviarInfo = {
 };
 
 const in_activar = {
-  activar: async (id) => {
+  putActivar: async (id) => {
     try {
-      const response = await useCliente.activar(id);
+      const response = await useDisPresupues.putActivar(id);
       console.log(response);
+      console.log("Activando");
       if (!response) return
       if (response.error) {
         notificar('negative', response.error)
         return
       }
-      rows.value.splice(buscarIndexLocal(response._id), 1, response);
+      rows.value.splice(buscarIndexLocal(response.data.disPresupues._id), 1, response.data.disPresupues);
+      notificar('positive', 'Activado, exitosamente')
     } catch (error) {
       console.log(error);
     } finally {
       loadingmodal.value = false;
     }
   },
-  inactivar: async (id) => {
+  putInactivar: async (id) => {
+    console.log("inactivar");
     try {
-      const response = await useCliente.inactivar(id);
+      const response = await useDisPresupues.putInactivar(id);
+      console.log("Desactivar");
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -253,7 +204,8 @@ const in_activar = {
 
         return
       }
-      rows.value.splice(buscarIndexLocal(response._id), 1, response);
+      rows.value.splice(buscarIndexLocal(response.data.disPresupues._id), 1, response.data.disPresupues);
+      notificar('negative', 'Inactivado exitosamente')
     } catch (error) {
       console.log(error);
     } finally {
@@ -263,7 +215,7 @@ const in_activar = {
   },
 };
 
-/* function validarCampos() {
+function validarCampos() {
 
   const arrData = Object.entries(data.value)
   console.log(arrData);
@@ -280,18 +232,32 @@ const in_activar = {
       }
     }
 
+    if (d[0] === "codigo_presupuestal" && d[1].toString().length < 6) {
+      notificar('negative', "El codigo debe tener más de 6 digitos")
+      return
+    }
+
     if (d[0] === "nombre" && d[1].length > 15) {
       notificar('negative', 'El nombre no puede tener más de 15 caracteres')
       return
     }
 
-    if (d[0] === "cedula" && d[1].toString().length < 8) {
-      notificar('negative', "La cedula debe tener más de 8 digitos")
+    if (d[0] === "presupuesto_inicial" && d[1].toString().length < 1) {
+      notificar('negative', "El presupuesto inicial debe ser diferente a 0")
       return
     }
 
-    if (d[0] === "email" && !d[1].includes('@')) {
-      notificar('negative', 'Email no válido')
+    if (d[0] === "año" && d[1].length > 4) {
+      notificar('negative', 'El año no puede tener mas de 4 caracteres')
+      return
+    }
+
+    if (d[0] === "lote" && d[1].toString().length < 1) {
+      notificar('negative', "El lote es obligatorio")
+      return
+    }
+    if (d[0] === "items" && d[1].toString().length < 1) {
+      notificar('negative', "El items es obligatorio")
       return
     }
   }
@@ -304,7 +270,7 @@ function notificar(tipo, msg) {
     message: msg,
     position: "top"
   })
-} */
+}
 </script>
 
 <template>
@@ -327,6 +293,9 @@ function notificar(tipo, msg) {
             :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
           <q-input class="input1" outlined v-model="data.lote" label="Lote" type="text" maxlength="15"
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el lote']"></q-input>
+          <q-input class="input1" outlined v-model="data.items" label="Items"
+            type="text" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese el items de presupuesto']"></q-input>
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
@@ -361,19 +330,19 @@ function notificar(tipo, msg) {
           </q-tr>
         </template>
 
-        <template v-slot:body-cell-Estado="props">
+        <template v-slot:body-cell-status="props">
           <q-td :props="props" class="botones">
-            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.estado === 1
+            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.status == 1
               ? 'Activo'
-              : props.row.estado === 0
+              : props.row.status == 0
                 ? 'Inactivo'
                 : '‎  ‎   ‎   ‎   ‎ '
-              " :color="props.row.estado === 1 ? 'positive' : 'accent'" :loading="props.row.estado === 'load'"
+              " :color="props.row.status == 1 ? 'primary' : 'secondary'" :loading="props.row.status == 'load'"
               loading-indicator-size="small" @click="
-                props.row.estado === 1
-                  ? in_activar.inactivar(props.row._id)
-                  : in_activar.activar(props.row._id);
-              props.row.estado = 'load';
+                props.row.status == 1
+                  ? in_activar.putInactivar(props.row._id)
+                  : in_activar.putActivar(props.row._id);
+              props.row.status = 'load';
               " />
           </q-td>
         </template>
@@ -385,12 +354,11 @@ function notificar(tipo, msg) {
         </template>
       </q-table>
     </div>
+
     <router-link to="/Dis_ficha" class="ingresarcont">
-  <q-btn class="distribucion" color="primary" icon-right="chevron_right">Distribucion fichas</q-btn>
-</router-link>
-
-
-    </div>
+      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Distribucion de ficha</q-btn>
+    </router-link>
+  </div>
 </template>
 <style scoped>
 /* 
@@ -443,10 +411,9 @@ warning: Color para advertencias o mensajes importantes.
   font-size: 10px;
   font-weight: bold;
 }
-.distribucion {
-  font-size: 20px;
-  font-weight: 700;
-  max-width: 80vw;
-}
 
+.botonv1 {
+  font-size: 10px;
+  font-weight: bold;
+}
 </style>
