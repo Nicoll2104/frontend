@@ -1,318 +1,3 @@
-<!-- <template>
-    <div class="q-pa-md">
-      <q-table
-        flat bordered
-        title="Fichas"
-        :rows="rows"
-        :columns="columns"
-        row-key="name"
-        binary-state-sort
-      >
-        <template v-slot:body="props">
-          <q-tr :props="props">
-            <q-td key="name" :props="props">
-              {{ props.row.name }}
-              <q-popup-edit v-model="props.row.name" v-slot="scope">
-                <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
-              </q-popup-edit>
-            </q-td>
-            <q-td key="calories" :props="props">
-              {{ props.row.calories }}
-              <q-popup-edit v-model="props.row.calories" title="Update calories" buttons v-slot="scope">
-                <q-input type="number" v-model="scope.value" dense autofocus />
-              </q-popup-edit>
-            </q-td>
-            <q-td key="fat" :props="props">
-              <div class="text-pre-wrap">{{ props.row.fat }}</div>
-              <q-popup-edit v-model="props.row.fat" v-slot="scope">
-                <q-input type="textarea" v-model="scope.value" dense autofocus />
-              </q-popup-edit>
-            </q-td>
-            <q-td key="carbs" :props="props">
-              {{ props.row.carbs }}
-              <q-popup-edit v-model="props.row.carbs" title="Update carbs" buttons persistent v-slot="scope">
-                <q-input type="number" v-model="scope.value" dense autofocus hint="Use buttons to close" />
-              </q-popup-edit>
-            </q-td>
-            <q-td key="protein" :props="props">{{ props.row.protein }}</q-td>
-            <q-td key="sodium" :props="props">{{ props.row.sodium }}</q-td>
-            <q-td key="calcium" :props="props">{{ props.row.calcium }}</q-td>
-            <q-td key="iron" :props="props">{{ props.row.iron }}</q-td>
-          </q-tr>
-        </template>
-      </q-table>
-    </div>
-  </template>
-  
-  <script setup>
-  import { ref } from "vue";
-  
-  const columns = [
-    { name: 'Codigo', align: 'center', label: 'Codigo', field: 'codigo', sortable: true },
-    { name: 'Nombre', align: 'center', label: 'Nombre', field: 'nombre', sortable: true },
-    { name: 'Nivel_formacion', align: 'center', label: 'Nivel_formacion', field: 'nivel_formacion', sortable: true },
-    { name: 'Fecha_inicio',align: 'center',  label: 'Fecha_inicio', field: 'fecha_inicio' },
-    { name: 'Fecha_fin',align: 'center',  label: 'Lote', field: 'lote' },
-    { name: 'codigo_area',align: 'center',  label: 'Lote', field: 'lote' },
-    { name: 'Items',align: 'center',  label: 'Items', field: 'items' },
-    { name: 'Estado',align: 'center',  label: 'Estado', field: 'status' },
-  ]
-  
-  const rows = []
-  </script>
-  
-  <style scoped>
-  </style> -->
-
-<script setup>
-import { ref } from "vue";
-/* import { useClienteStore } from "../stores/presupuesto.js"; */
-import { useQuasar } from 'quasar'
-
-const modelo = "Fichas";
-/* const useCliente = useClienteStore(); */
-const loadingTable = ref(true)
-const $q = useQuasar()
-const filter = ref("");
-const loadingmodal = ref(false);
-
-const columns = ref([
-  {
-    name: "codigo_ficha",
-    label: "Codigo Ficha",
-    align: "left",
-    field: (row) => row.codigo_ficha,
-    sort: true,
-    sortOrder: "da",
-  },
-  {
-    name: "nombre",
-    label: "Nombre",
-    align: "left",
-    field: (row) => row.nombre,
-  },
-
-  {
-    name: "nivel_de_formacion",
-    label: "Nivel formacion",
-    align: "left",
-    field: (row) => row.nivel_de_formacion,
-  },
-  {
-    name: "fecha_inicio",
-    label: "Fecha inicio",
-    align: "left",
-    field: (row) => row.fecha_inicio,
-  },
-  {
-    name: "fecha_fin",
-    label: "Fecha fin",
-    align: "left",
-    field: (row) => row.fecha_fin,
-  },
-  {
-    name: "codigo_area",
-    label: "Codigo area",
-    align: "left",
-    field: (row) => row.codigo_area,
-  },
-  {
-    name: "Estado",
-    label: "Estado",
-    align: "center",
-    field: (row) => row.estado,
-  },
-  {
-    name: "opciones",
-    label: "Opciones",
-    field: "opciones",
-  },
-]);
-const rows = ref([]);
-
-const data = ref({
-  codigo_ficha: "",
-  nombre: "",
-  nivel_de_formacion: "",
-  fecha_inicio: "",
-  fecha_fin: "",
-  codigo_area: "",
-});
-
-const obtenerInfo = async () => {
-  try {
-    const cliente = await useCliente.obtener();
-
-    console.log(cliente);
-
-    if (!cliente) return
-
-    if (cliente.error) {
-      notificar('negative', cliente.error)
-      return
-    }
-    rows.value = cliente.cliente;
-
-  } catch (error) {
-    console.error(error);
-  } finally {
-    loadingTable.value = false
-  }
-};
-
-obtenerInfo();
-
-const estado = ref("guardar");
-const modal = ref(false);
-const opciones = {
-  agregar: () => {
-    data.value = {
-      codigo_ficha: "",
-      nombre: "",
-      nivel_de_formacion: "",
-      fecha_inicio: "",
-      fecha_fin: "",
-      codigo_area: "",
-    };
-    modal.value = true;
-    estado.value = "guardar";
-  },
-  editar: (info) => {
-    data.value = { ...info }
-    modal.value = true;
-    estado.value = "editar";
-  },
-};
-
-function buscarIndexLocal(id) {
-  return rows.value.findIndex((r) => r._id === id);
-}
-
-const enviarInfo = {
-  guardar: async () => {
-    loadingmodal.value = true;
-    try {
-      const response = await useCliente.guardar(data.value);
-      console.log(response);
-      if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
-        loadingmodal.value = false;
-        return
-      }
-
-      rows.value.unshift(response.cliente);
-      notificar('positive', 'Guardado exitosamente')
-      modal.value = false;
-    } catch (error) {
-      console.log(error);
-    } finally {
-      loadingmodal.value = false;
-    }
-  },
-  editar: async () => {
-    loadingmodal.value = true;
-    try {
-      const response = await useCliente.editar(data.value._id, data.value);
-      console.log(response);
-      if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
-        loadingmodal.value = false;
-        return
-      }
-      rows.value.splice(buscarIndexLocal(response._id), 1, response);
-      notificar('positive', 'Editado exitosamente')
-      modal.value = false;
-    } catch (error) {
-      console.log(error);
-    } finally {
-      loadingmodal.value = false;
-    }
-  },
-};
-
-const in_activar = {
-  activar: async (id) => {
-    try {
-      const response = await useCliente.activar(id);
-      console.log(response);
-      if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
-        return
-      }
-      rows.value.splice(buscarIndexLocal(response._id), 1, response);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      loadingmodal.value = false;
-    }
-  },
-  inactivar: async (id) => {
-    try {
-      const response = await useCliente.inactivar(id);
-      console.log(response);
-      if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
-
-        return
-      }
-      rows.value.splice(buscarIndexLocal(response._id), 1, response);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      loadingmodal.value = false;
-    }
-
-  },
-};
-
-/* function validarCampos() {
-
-  const arrData = Object.entries(data.value)
-  console.log(arrData);
-  for (const d of arrData) {
-    console.log(d);
-    if (d[1] === null) {
-      notificar('negative', "Por favor complete todos los campos")
-      return
-    }
-    if (typeof d[1] === 'string') {
-      if (d[1].trim() === "") {
-        notificar('negative', "Por favor complete todos los campos")
-        return
-      }
-    }
-
-    if (d[0] === "nombre" && d[1].length > 15) {
-      notificar('negative', 'El nombre no puede tener más de 15 caracteres')
-      return
-    }
-
-    if (d[0] === "cedula" && d[1].toString().length < 8) {
-      notificar('negative', "La cedula debe tener más de 8 digitos")
-      return
-    }
-
-    if (d[0] === "email" && !d[1].includes('@')) {
-      notificar('negative', 'Email no válido')
-      return
-    }
-  }
-  enviarInfo[estado.value]()
-} */
-
-function notificar(tipo, msg) {
-  $q.notify({
-    type: tipo,
-    message: msg,
-    position: "top"
-  })
-}
-</script>
-
 <template>
   <div>
     <q-dialog v-model="modal">
@@ -323,20 +8,19 @@ function notificar(tipo, msg) {
         </q-toolbar>
 
         <q-card-section class="q-gutter-md">
-          <q-input class="input2" outlined v-model="data.codigo_ficha" label="Codigo ficha" type="number" lazy-rules
-            :rules="[val => val != '' || 'Ingrese el codigo', val => val.length < 11 || 'Cedula debe tener 10 o menos carácteres']"
-            maxlength="10"></q-input>
+          <q-input class="input1" outlined v-model="data.codigo_presupuestal" label="Codigo presupuestal" type="number"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo presupuestal']"></q-input>
           <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-          <q-input class="input1" outlined v-model="data.nivel_de_formacion" label="Nivel formacion" type="text"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese un nivel de formacion']"></q-input>
-          <q-input class="input1" outlined v-model="data.fecha_inicio" label="Fecha inicio" type="date" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una fecha inicio']"></q-input>
-          <q-input class="input1" outlined v-model="data.fecha_fin" label="Fecha fin" type="date" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una fecha fin']"></q-input>
-          <q-input class="input2" outlined v-model="data.codigo_area" label="Codigo area" type="number" lazy-rules
-            :rules="[val => val != '' || 'Ingrese el codigo de area', val => val.length < 11 || 'Cedula debe tener 10 o menos carácteres']"
-            maxlength="10"></q-input>
+          <q-input class="input1" outlined v-model="data.presupuesto_inicial" label="Presupuesto inicial" type="number"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
+          <q-input class="input1" outlined v-model="data.año" label="Año" type="text" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
+          <q-input class="input1" outlined v-model="data.modificaciones" label="Modificaciones" type="text" maxlength="15"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese las modificaciones']"></q-input>
+          <q-input class="input1" outlined v-model="data.presupuesto_definitivo" label="Presupuesto definitivo"
+            type="text" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese el presupuesto definitivo']"></q-input>
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
@@ -371,19 +55,19 @@ function notificar(tipo, msg) {
           </q-tr>
         </template>
 
-        <template v-slot:body-cell-Estado="props">
+        <template v-slot:body-cell-status="props">
           <q-td :props="props" class="botones">
-            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.estado === 1
+            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.status == 1
               ? 'Activo'
-              : props.row.estado === 0
+              : props.row.status == 0
                 ? 'Inactivo'
                 : '‎  ‎   ‎   ‎   ‎ '
-              " :color="props.row.estado === 1 ? 'positive' : 'accent'" :loading="props.row.estado === 'load'"
+              " :color="props.row.status == 1 ? 'primary' : 'secondary'" :loading="props.row.status == 'load'"
               loading-indicator-size="small" @click="
-                props.row.estado === 1
-                  ? in_activar.inactivar(props.row._id)
-                  : in_activar.activar(props.row._id);
-              props.row.estado = 'load';
+                props.row.status == 1
+                  ? in_activar.putInactivar(props.row._id)
+                  : in_activar.putActivar(props.row._id);
+              props.row.status = 'load';
               " />
           </q-td>
         </template>
@@ -395,11 +79,293 @@ function notificar(tipo, msg) {
         </template>
       </q-table>
     </div>
-    <router-link to="/Dis_ficha" class="ingresarcont">
-      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Distribucion fichas</q-btn>
+
+    <router-link to="/Dis_presupuesto" class="ingresarcont">
+      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Distribucion de presupuesto</q-btn>
     </router-link>
   </div>
 </template>
+
+<script setup>
+import { onMounted, ref } from "vue";
+import {useFichaStore } from "../stores/ficha.js";
+import { useQuasar } from 'quasar'
+
+const modelo = "Fichas";
+const useFicha = useFichaStore();
+const loadingTable = ref(true)
+const $q = useQuasar()
+const filter = ref("");
+const loadingmodal = ref(false);
+
+const columns = ref([
+  {
+    name: "codigo_presupuestal",
+    label: "Codigo presupuestal",
+    align: "left",
+    field: (row) => row.codigo_presupuestal,
+    sort: true,
+    sortOrder: "da",
+  },
+  {
+    name: "nombre",
+    label: "Nombre",
+    align: "left",
+    field: (row) => row.nombre,
+
+  },
+  {
+    name: "presupuesto_inicial",
+    label: "Presupuesto inicial",
+    align: "left",
+    field: (row) => row.presupuesto_inicial,
+  },
+  {
+    name: "año",
+    label: "Año",
+    align: "left",
+    field: (row) => row.año,
+  },
+  {
+    name: "modificaciones",
+    label: "Modificaciones",
+    align: "left",
+    field: (row) => row.modificaciones,
+  },
+  {
+    name: "presupuesto_definitivo",
+    label: "Presupuesto definitivo",
+    align: "left",
+    field: (row) => row.presupuesto_definitivo,
+  },
+
+  {
+    name: "status",
+    label: "Estado",
+    align: "center",
+    field: (row) => row.status,
+  },
+  {
+    name: "opciones",
+    label: "Opciones",
+    field: "opciones",
+  },
+]);
+const rows = ref([]);
+
+const data = ref({
+  codigo_presupuestal: "",
+  nombre: "",
+  presupuesto_inicial: "",
+  año: "",
+  modificaciones: "",
+  presupuesto_definitivo: "",
+});
+
+const obtenerInfo = async () => {
+  try {
+    const lotes = await useLote.obtenerInfoLotes();
+    console.log("uselote")
+    console.log(useLote)
+    console.log("dentro")
+    console.log(lotes);
+
+    if (!lotes) return
+
+    if (lotes.error) {
+      notificar('negative', lotes.error)
+      return
+    }
+    rows.value = lotes
+
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loadingTable.value = false
+  }
+};
+console.log("Antes de la línea 101");
+
+onMounted(() => {
+  obtenerInfo();
+  console.log("inicio");
+});
+
+
+const estado = ref("guardar");
+const modal = ref(false);
+const opciones = {
+  agregar: () => {
+    data.value = {
+      codigo_presupuestal: "",
+      nombre: "",
+      presupuesto_inicial: "",
+      año: "",
+      modificaciones: "",
+      presupuesto_definitivo: "",
+    };
+    modal.value = true;
+    estado.value = "guardar";
+  },
+  editar: (info) => {
+    data.value = { ...info }
+    modal.value = true;
+    estado.value = "editar";
+  },
+};
+
+function buscarIndexLocal(id) {
+  return rows.value.findIndex((r) => r._id === id);
+}
+
+const enviarInfo = {
+  guardar: async () => {
+    loadingmodal.value = true;
+    try {
+      const response = await useLote.postLotes(data.value);
+      console.log(response);
+      if (!response) return
+      if (response.error) {
+        notificar('negative', response.error)
+        loadingmodal.value = false;
+        return
+      }
+
+      rows.value.unshift(response);
+      notificar('positive', 'Guardado exitosamente')
+      modal.value = false;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      loadingmodal.value = false;
+    }
+  },
+  editar: async () => {
+    loadingmodal.value = true;
+    try {
+      const response = await useLote.putLote(data.value._id, data.value);
+      console.log(response);
+      if (!response) return
+      if (response.error) {
+        notificar('negative', response.error)
+        loadingmodal.value = false;
+        return
+      }
+      console.log(rows.value);
+      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response.data.lotes);
+      notificar('positive', 'Editado exitosamente')
+      modal.value = false;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      loadingmodal.value = false;
+    }
+  },
+};                                          
+
+const in_activar = {
+  putActivar: async (id) => {
+    try {
+      console.log(id);
+      const response = await useLote.putActivar(id);
+      console.log(response);
+      console.log("Activando");
+      if (!response) return
+      if (response.error) {
+        notificar('negative', response.error)
+        return
+      }
+      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response.data.lotes);
+      notificar('positive', 'Activado, exitosamente')
+    } catch (error) {
+      console.log(error);
+    } finally {
+      loadingmodal.value = false;
+    }
+  },
+  putInactivar: async (id) => {
+    console.log("inactivar");
+    try {
+      console.log("Desactivar");
+      const response = await useLote.putInactivar(id);
+      console.log(response);
+      if (!response) return
+      if (response.error) {
+        notificar('negative', response.error)
+
+        return
+      }
+      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response.data.lotes);
+      notificar('negative', 'Inactivado exitosamente')
+    } catch (error) {
+      console.log(error);
+    } finally {
+      loadingmodal.value = false;
+    }
+
+  },
+};
+
+function validarCampos() {
+
+  const arrData = Object.entries(data.value)
+  console.log(arrData);
+  for (const d of arrData) {
+    console.log(d);
+    if (d[1] === null) {
+      notificar('negative', "Por favor complete todos los campos")
+      return
+    }
+    if (typeof d[1] === 'string') {
+      if (d[1].trim() === "") {
+        notificar('negative', "Por favor complete todos los campos")
+        return
+      }
+    }
+
+    if (d[0] === "codigo_presupuestal" && d[1].toString().length < 6) {
+      notificar('negative', "El codigo debe tener más de 6 digitos")
+      return
+    }
+
+    if (d[0] === "nombre" && d[1].length > 15) {
+      notificar('negative', 'El nombre no puede tener más de 15 caracteres')
+      return
+    }
+
+    if (d[0] === "presupuesto_inicial" && d[1].toString().length < 1) {
+      notificar('negative', "El presupuesto inicial debe ser diferente a 0")
+      return
+    }
+
+    if (d[0] === "año" && d[1].length > 4) {
+      notificar('negative', 'El año no puede tener mas de 4 caracteres')
+      return
+    }
+
+    if (d[0] === "presupuesto_definitivo" && d[1].toString().length < 1) {
+      notificar('negative', "El presupuesto definitivo debe ser diferente a 0")
+      return
+    }
+
+   /*  if (d[0] === "email" && !d[1].includes('@')) {
+      notificar('negative', 'Email no válido')
+      return
+    } */
+  }
+  enviarInfo[estado.value]()
+}
+
+function notificar(tipo, msg) {
+  $q.notify({
+    type: tipo,
+    message: msg,
+    position: "top"
+  })
+}
+</script>
+
+
 <style scoped>
 /* 
 primary: Color principal del tema.
@@ -424,7 +390,7 @@ warning: Color para advertencias o mensajes importantes.
 .tabla {
   padding: 0 20px;
   margin: 10px auto;
-  max-width: 1000px;
+  max-width: 1200px;
   /* min-height: 710px; */
   border: 0px solid black;
 }
@@ -445,6 +411,11 @@ warning: Color para advertencias o mensajes importantes.
 .encabezado {
   font-weight: bold;
   font-size: 15px;
+}
+
+.botonv1 {
+  font-size: 10px;
+  font-weight: bold;
 }
 
 .botonv1 {
