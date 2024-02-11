@@ -59,7 +59,7 @@ import axios from 'axios';
 import { ref } from 'vue';
 
 export const useDisFichaStore = defineStore('disFicha', () => {
-    const disFicha = ref([]);
+    const disFichas = ref([]);
 
     const obtenerInfoDisFicha = async () => {
         try {
@@ -67,26 +67,26 @@ export const useDisFichaStore = defineStore('disFicha', () => {
             console.log (responsedisFicha);
             // lotes.value = responseLotes.data; 
             return responsedisFicha.data
-            console.log(disFicha)
+            console.log(disFichas)
         } catch (error) {
             throw error
         }
     };
 
-   /*  const postLotes = async (data) =>{
+ const postDisFicha = async (data) =>{
         try {
             console.log('a');
-            let res = await axios.post("lote/agregar", data);
+            let res = await axios.post("disFicha/agregar", data);
             console.log('a', res);
-            return res.data.lotes
+            return res.data.disFichas
         } catch (error) {
             throw error
         }
     }
 
-    const putLote = async (id, data) => {
+    const putDisFicha = async (id, data) => {
         try {
-            let res = await axios.put(`lote/modificar/${id}`, data);
+            let res = await axios.put(`disFicha/modificar/${id}`, data);
             return res
         } catch (error) {
             throw error;
@@ -95,23 +95,23 @@ export const useDisFichaStore = defineStore('disFicha', () => {
 
     const putInactivar = async (id)=>{
         try {
-            let r = await axios.put(`lote/inactivar/${id}`)
+            let r = await axios.put(`disFicha/inactivar/${id}`)
             return r
         } catch (error) {
-            console.log(error, "Error al cambiar el estado del lote");
+            console.log(error, "Error al cambiar el estado de la distribucion de la ficha");
         }
     }
     const  putActivar = async (id)=>{
         try {
-            let r = await axios.put(`lote/activar/${id}`)
+            let r = await axios.put(`disFicha/activar/${id}`)
             return r
         } catch (error) {
-            console.log(error, "Error al cambiar el estado del lote");
+            console.log(error, "Error al cambiar el estado de la distribucion de la ficha");
         }
     }
- */
+
     return {
-        disFicha,
-        obtenerInfoDisFicha, postLotes, putLote, putInactivar, putActivar
+        disFichas,
+        obtenerInfoDisFicha, postDisFicha, putDisFicha, putInactivar, putActivar
     };
 });

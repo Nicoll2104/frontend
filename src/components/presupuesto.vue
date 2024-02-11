@@ -169,7 +169,7 @@ const in_activar = {
         notificar('negative', response.error)
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.presupuestos._id), 1, response.data.presupuestos);
+      rows.value.splice(buscarIndexLocal(response.data.items._id), 1, response.data.items);
     } catch (error) {
       console.log(error);
     } finally {
@@ -179,7 +179,7 @@ const in_activar = {
   putInactivar: async (id) => {
     console.log("inactivar");
     try {
-      const response = await useLote.putInactivar(id);
+      const response = await usePresup.putInactivar(id);
       console.log("Desactivar");
       console.log(response);
       if (!response) return
@@ -188,7 +188,7 @@ const in_activar = {
 
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.presupuestos._id), 1, response.data.presupuestos);
+      rows.value.splice(buscarIndexLocal(response.data.items._id), 1, response.data.items);
     } catch (error) {
       console.log(error);
     } finally {

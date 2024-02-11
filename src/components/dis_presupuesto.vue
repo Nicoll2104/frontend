@@ -75,19 +75,19 @@ const data = ref({
 
 const obtenerInfo = async () => {
   try {
-    const disPresupues = await useDisPresupuesto.obtenerInfodisPresupues();
+    const disPresupuesto = await useDisPresupuesto.obtenerInfodisPresupues();
     console.log("useDisPresupuesto")
     console.log(useDisPresupuesto)
     console.log("dentro")
-    console.log(disPresupues);
+    console.log(disPresupuesto);
 
-    if (!disPresupues) return
+    if (!disPresupuesto) return
 
-    if (disPresupues.error) {
-      notificar('negative', disPresupues.error)
+    if (disPresupuesto.error) {
+      notificar('negative', disPresupuesto.error)
       return
     }
-    rows.value = disPresupues
+    rows.value = disPresupuesto.distribucion
 
   } catch (error) {
     console.error(error);
@@ -132,7 +132,7 @@ const enviarInfo = {
   guardar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await useDisPresupues.postDisPresupuesto(data.value);
+      const response = await useDisPresupuesto.postDisPresupuesto(data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -153,7 +153,7 @@ const enviarInfo = {
   editar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await useDisPresupues.putDisPresupuesto(data.value._id, data.value);
+      const response = await useDisPresupuesto.putDisPresupuesto(data.value._id, data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -176,7 +176,7 @@ const enviarInfo = {
 const in_activar = {
   putActivar: async (id) => {
     try {
-      const response = await useDisPresupues.putActivar(id);
+      const response = await useDisPresupuesto.putActivar(id);
       console.log(response);
       console.log("Activando");
       if (!response) return
@@ -195,7 +195,7 @@ const in_activar = {
   putInactivar: async (id) => {
     console.log("inactivar");
     try {
-      const response = await useDisPresupues.putInactivar(id);
+      const response = await useDisPresupuesto.putInactivar(id);
       console.log("Desactivar");
       console.log(response);
       if (!response) return

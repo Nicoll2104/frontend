@@ -60,7 +60,7 @@ import axios from 'axios';
 import { ref } from 'vue';
 
 export const usedisPresupuesStore = defineStore('disPresupues', () => {
-    const disPresupues = ref([]);
+    const disPresupuesto = ref([]);
 
     const obtenerInfodisPresupues = async () => {
         try {
@@ -111,7 +111,7 @@ export const usedisPresupuesStore = defineStore('disPresupues', () => {
     }
 
     return {
-        disPresupues,
+        disPresupuesto,
         obtenerInfodisPresupues, postDisPresupuesto, putDisPresupuesto, putInactivar, putActivar
     };
 });
