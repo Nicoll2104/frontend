@@ -8,19 +8,18 @@
         </q-toolbar>
 
         <q-card-section class="q-gutter-md">
-          <q-input class="input1" outlined v-model="data.codigo_presupuestal" label="Codigo presupuestal" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo presupuestal']"></q-input>
+          <q-input class="input1" outlined v-model="data.codigo_ficha" label="Codigo de la Ficha" type="number"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo de la ficha']"></q-input>
           <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-          <q-input class="input1" outlined v-model="data.presupuesto_inicial" label="Presupuesto inicial" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
-          <q-input class="input1" outlined v-model="data.año" label="Año" type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
-          <q-input class="input1" outlined v-model="data.modificaciones" label="Modificaciones" type="text" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese las modificaciones']"></q-input>
-          <q-input class="input1" outlined v-model="data.presupuesto_definitivo" label="Presupuesto definitivo"
-            type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el presupuesto definitivo']"></q-input>
+          <q-input class="input1" outlined v-model="data.nivel_de_formacion" label="Nivel de formación" type="text"
+            maxlength="30" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el nivel de formacion']"></q-input>
+          <q-input class="input1" outlined v-model="data.fecha_inicio" label="Fecha de inicio" type="text" maxlength="8"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de inicio']"></q-input>
+          <q-input class="input1" outlined v-model="data.fecha_fin" label="Fecha de cierre" type="text" maxlength="8"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de cierre']"></q-input>
+          <q-input class="input1" outlined v-model="data.codigo_area" label="Codigo de area" type="number" maxlength="15"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo del area']"></q-input>
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
@@ -88,7 +87,7 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import {useFichaStore } from "../stores/ficha.js";
+import { useFichaStore } from "../stores/ficha.js";
 import { useQuasar } from 'quasar'
 
 const modelo = "Fichas";
@@ -100,10 +99,10 @@ const loadingmodal = ref(false);
 
 const columns = ref([
   {
-    name: "codigo_presupuestal",
-    label: "Codigo presupuestal",
+    name: "codigo_ficha",
+    label: "Codigo",
     align: "left",
-    field: (row) => row.codigo_presupuestal,
+    field: (row) => row.codigo_ficha,
     sort: true,
     sortOrder: "da",
   },
@@ -115,28 +114,28 @@ const columns = ref([
 
   },
   {
-    name: "presupuesto_inicial",
-    label: "Presupuesto inicial",
+    name: "nivel_de_formacion",
+    label: "Nivel de formación",
     align: "left",
-    field: (row) => row.presupuesto_inicial,
+    field: (row) => row.nivel_de_formacion,
   },
   {
-    name: "año",
-    label: "Año",
+    name: "fecha_inicio",
+    label: "Inicio",
     align: "left",
-    field: (row) => row.año,
+    field: (row) => row.fecha_inicio,
   },
   {
-    name: "modificaciones",
-    label: "Modificaciones",
+    name: "fecha_fin",
+    label: "Fin",
     align: "left",
-    field: (row) => row.modificaciones,
+    field: (row) => row.fecha_fin,
   },
   {
-    name: "presupuesto_definitivo",
-    label: "Presupuesto definitivo",
+    name: "codigo_area",
+    label: "area",
     align: "left",
-    field: (row) => row.presupuesto_definitivo,
+    field: (row) => row.codigo_area,
   },
 
   {
@@ -154,29 +153,29 @@ const columns = ref([
 const rows = ref([]);
 
 const data = ref({
-  codigo_presupuestal: "",
+  codigo_ficha: "",
   nombre: "",
-  presupuesto_inicial: "",
-  año: "",
-  modificaciones: "",
-  presupuesto_definitivo: "",
+  nivel_de_formacion: "",
+  fecha_inicio: "",
+  fecha_fin: "",
+  codigo_area: "",
 });
 
 const obtenerInfo = async () => {
   try {
-    const lotes = await useLote.obtenerInfoLotes();
-    console.log("uselote")
-    console.log(useLote)
+    const fichas = await useFicha.obtenerInfoFichas();
+    console.log("useficha")
+    console.log(useFicha)
     console.log("dentro")
-    console.log(lotes);
+    console.log(fichas);
 
-    if (!lotes) return
+    if (!fichas) return
 
-    if (lotes.error) {
-      notificar('negative', lotes.error)
+    if (fichas.error) {
+      notificar('negative', fichas.error)
       return
     }
-    rows.value = lotes
+    rows.value = fichas
 
   } catch (error) {
     console.error(error);
@@ -197,12 +196,12 @@ const modal = ref(false);
 const opciones = {
   agregar: () => {
     data.value = {
-      codigo_presupuestal: "",
+      codigo_ficha: "",
       nombre: "",
-      presupuesto_inicial: "",
-      año: "",
-      modificaciones: "",
-      presupuesto_definitivo: "",
+      nivel_de_formacion: "",
+      fecha_inicio: "",
+      fecha_fin: "",
+      codigo_area: "",
     };
     modal.value = true;
     estado.value = "guardar";
@@ -222,7 +221,7 @@ const enviarInfo = {
   guardar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await useLote.postLotes(data.value);
+      const response = await useFicha.postFicha(data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -243,7 +242,7 @@ const enviarInfo = {
   editar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await useLote.putLote(data.value._id, data.value);
+      const response = await useFicha.putFicha(data.value._id, data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -252,7 +251,7 @@ const enviarInfo = {
         return
       }
       console.log(rows.value);
-      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response.data.lotes);
+      rows.value.splice(buscarIndexLocal(response.data.fichas._id), 1, response.data.fichas);
       notificar('positive', 'Editado exitosamente')
       modal.value = false;
     } catch (error) {
@@ -261,13 +260,13 @@ const enviarInfo = {
       loadingmodal.value = false;
     }
   },
-};                                          
+};
 
 const in_activar = {
   putActivar: async (id) => {
     try {
       console.log(id);
-      const response = await useLote.putActivar(id);
+      const response = await useFicha.putActivar(id);
       console.log(response);
       console.log("Activando");
       if (!response) return
@@ -275,7 +274,7 @@ const in_activar = {
         notificar('negative', response.error)
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response.data.lotes);
+      rows.value.splice(buscarIndexLocal(response.data.fichas._id), 1, response.data.fichas);
       notificar('positive', 'Activado, exitosamente')
     } catch (error) {
       console.log(error);
@@ -287,7 +286,7 @@ const in_activar = {
     console.log("inactivar");
     try {
       console.log("Desactivar");
-      const response = await useLote.putInactivar(id);
+      const response = await useFicha.putInactivar(id);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -295,7 +294,7 @@ const in_activar = {
 
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response.data.lotes);
+      rows.value.splice(buscarIndexLocal(response.data.fichas._id), 1, response.data.fichas);
       notificar('negative', 'Inactivado exitosamente')
     } catch (error) {
       console.log(error);
@@ -323,35 +322,35 @@ function validarCampos() {
       }
     }
 
-    if (d[0] === "codigo_presupuestal" && d[1].toString().length < 6) {
+    if (d[0] === "codigo_ficha" && d[1].toString().length < 6) {
       notificar('negative', "El codigo debe tener más de 6 digitos")
       return
     }
 
-    if (d[0] === "nombre" && d[1].length > 15) {
-      notificar('negative', 'El nombre no puede tener más de 15 caracteres')
+    if (d[0] === "nombre" && d[1].length > 30) {
+      notificar('negative', 'El nombre no puede tener más de 30 caracteres')
       return
     }
 
-    if (d[0] === "presupuesto_inicial" && d[1].toString().length < 1) {
-      notificar('negative', "El presupuesto inicial debe ser diferente a 0")
+    if (d[0] === "nivel_de_formacion" && d[1].length > 15) {
+      notificar('negative', 'El nivel de formacion no puede tener más de 15 caracteres')
       return
     }
 
-    if (d[0] === "año" && d[1].length > 4) {
-      notificar('negative', 'El año no puede tener mas de 4 caracteres')
+    if (d[0] === "fecha_inicio" && d[1].length > 8) {
+      notificar('negative', 'La fecha no puede tener mas de 8 caracteres')
       return
     }
 
-    if (d[0] === "presupuesto_definitivo" && d[1].toString().length < 1) {
-      notificar('negative', "El presupuesto definitivo debe ser diferente a 0")
+    if (d[0] === "fecha_fin" && d[1].length > 8) {
+      notificar('negative', 'La fecha no puede tener mas de 8 caracteres')
       return
     }
 
-   /*  if (d[0] === "email" && !d[1].includes('@')) {
-      notificar('negative', 'Email no válido')
+    if (d[0] === "codigo_area" && d[1].toString().length < 6) {
+      notificar('negative', "El codigo debe tener más de 6 digitos")
       return
-    } */
+    }
   }
   enviarInfo[estado.value]()
 }
