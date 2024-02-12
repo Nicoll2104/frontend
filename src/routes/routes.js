@@ -11,7 +11,7 @@ import Productos from '../components/producto.vue'
 import contraseña from '../components/res_clave.vue'
 import Dis_presupuesto from '../components/dis_presupuesto.vue'
 import Det_pedido from '../components/det_pedido.vue'
-import Dis_ficha from '../components/dis_ficha.vue'
+import presupuesto_ficha from '../components/presupuesto_ficha.vue'
 
 
 
@@ -32,7 +32,7 @@ const routes = [
         {path: '/Productos', component:Productos},
         {path: '/Dis_presupuesto', component:Dis_presupuesto},
         {path: '/Det_pedido', component:Det_pedido},
-        {path: '/Dis_ficha', component:Dis_ficha}
+        {path: '/Presupuesto_de_ficha', component:presupuesto_ficha}
       ],
     }
 ]
