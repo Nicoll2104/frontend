@@ -2,9 +2,13 @@
 import { onMounted, ref } from "vue";
 import { usedisPresupuesStore } from "../stores/dis_presupuesto.js";
 import { useQuasar } from 'quasar'
+import { useLoteStore } from "../stores/lotes.js";
+import { usePresupStore } from "../stores/presupuesto.js"
 
 const modelo = "Dis Presupuesto";
 const useDisPresupuesto = usedisPresupuesStore();
+const useLote = useLoteStore();
+const usePresupes = usePresupStore();
 const loadingTable = ref(true);
 const $q = useQuasar();
 const filter = ref("");
@@ -63,6 +67,7 @@ const columns = ref([
   },
 ]);
 const rows = ref([]);
+let options = ref([]);
 
 const data = ref({
   codigo_presupuestal: "",
@@ -72,6 +77,39 @@ const data = ref({
   lote: "",
   items: "",
 });
+
+async function obtenerLotes() {
+  try {
+    const distribucion = await useLote.obtenerInfoLotes();
+    const LotesAct = distribucion.filter(lote => lote.status === true);
+
+    options.value = LotesAct.map((lote) => ({
+      label: `${lote.nombre}`,
+      value: String(lote._id),
+    }));
+    console.log("distribucion", distribucion);
+    console.log("uselote", useLote);
+    console.log("lotesactivos", LotesAct);
+    console.log("opcions");
+    console.log(options.value);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function obtenerPresupues() {
+  try {
+    await usePresupes.obtenerInfoPresup();
+    const PresupuesAct = usePresupes.presupuestos.filter(items => items.status === true);
+
+    options.value = PresupuesAct.map((items) => ({
+      label: `${items.codigo_presupuesto}`,
+      value: String(items._id),
+    }));
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const obtenerInfo = async () => {
   try {
@@ -106,6 +144,8 @@ const estado = ref("guardar");
 const modal = ref(false);
 const opciones = {
   agregar: () => {
+    obtenerPresupues();
+    obtenerLotes();
     data.value = {
       codigo_presupuestal: "",
       nombre: "",
@@ -291,10 +331,10 @@ function notificar(tipo, msg) {
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
           <q-input class="input1" outlined v-model="data.año" label="Año" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
-          <q-input class="input1" outlined v-model="data.lote" label="Lote" type="text" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el lote']"></q-input>
-          <q-input class="input1" outlined v-model="data.items" label="Items"
-            type="text" maxlength="15" lazy-rules
+          <q-select v-model="data.lote" :options="options" label="Lotes" />
+          <q-input class="input1" outlined v-model="data.lote" label="Lote" type="text" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese el lote']"></q-input>
+          <q-input class="input1" outlined v-model="data.items" label="Items" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese el items de presupuesto']"></q-input>
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
