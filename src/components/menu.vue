@@ -17,7 +17,8 @@ let menu1_content = ref([
 let menu2_content = ref([
     { ruta: "", titulo: "Presupuesto", desplegable: [
         {ruta: "/Presupuesto", titulo: "items"},
-        {ruta: "/Presupuesto", titulo: "Distribucion"},
+        {ruta: "/Dis_presupuesto", titulo: "Distribucion"},
+        {ruta: "/Presupuesto_de_ficha", titulo: "Presupuesto fichas"},
     ]},
     { ruta: "/Fichas", titulo: "Fichas", desplegable: false},
     { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
