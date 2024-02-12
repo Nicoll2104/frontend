@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import { usedisPresupuesStore } from "../stores/dispresupuesto.js";
+import { usedisPresupuesStore } from "../stores/dis_presupuesto.js";
 import { useQuasar } from 'quasar'
 
 const modelo = "Dis Presupuesto";
@@ -162,7 +162,7 @@ const enviarInfo = {
         return
       }
       console.log(rows.value);
-      rows.value.splice(buscarIndexLocal(response.data.disPresupues._id), 1, response.data.disPresupues);
+      rows.value.splice(buscarIndexLocal(response.data.distribucion_id), 1, response.data.distribucion);
       notificar('positive', 'Editado exitosamente')
       modal.value = false;
     } catch (error) {
@@ -184,7 +184,7 @@ const in_activar = {
         notificar('negative', response.error)
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.disPresupues._id), 1, response.data.disPresupues);
+      rows.value.splice(buscarIndexLocal(response.data.distribucion._id), 1, response.data.distribucion);
       notificar('positive', 'Activado, exitosamente')
     } catch (error) {
       console.log(error);
@@ -204,7 +204,7 @@ const in_activar = {
 
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.disPresupues._id), 1, response.data.disPresupues);
+      rows.value.splice(buscarIndexLocal(response.data.distribucion._id), 1, response.data.distribucion);
       notificar('negative', 'Inactivado exitosamente')
     } catch (error) {
       console.log(error);

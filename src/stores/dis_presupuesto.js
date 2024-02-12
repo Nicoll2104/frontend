@@ -73,16 +73,27 @@ export const usedisPresupuesStore = defineStore('disPresupues', () => {
         }
     };
 
-    const postDisPresupuesto = async (data) =>{
+/*     const postDisPresupuesto = async (data) =>{
         try {
             console.log('a');
             let res = await axios.post("disPresupues/agregar", data);
             console.log('a', res);
-            return res.data.disPresupues
+            return res.data.disPresupuesto.distribucion
+        } catch (error) {
+            throw error
+        }
+    } */
+    const postDisPresupuesto = async (data) =>{
+        try {
+            console.log('a');
+            let res = await axios.post("disPresupues/agregar",data);
+            console.log('a', res);
+            return res.data.disPresupuesto
         } catch (error) {
             throw error
         }
     }
+
 
     const putDisPresupuesto = async (id, data) => {
         try {
