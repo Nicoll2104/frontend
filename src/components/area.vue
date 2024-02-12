@@ -78,6 +78,7 @@
     </router-link>
   </div>
 </template>
+
 <script setup>
 import { onMounted, ref } from "vue";
 import { useAreaStore } from "../stores/area.js";
@@ -135,7 +136,7 @@ const obtenerInfo = async () => {
   try {
     const area = await useArea.obtenerInfoAreas();
 
-    console.log(useArea)
+    console.log(area)
 
     if (!area) return
 
@@ -143,7 +144,7 @@ const obtenerInfo = async () => {
       notificar('negative', area.error)
       return
     }
-    rows.value = area
+    rows.value = area.areas
 
   } catch (error) {
     console.error(error);
@@ -238,7 +239,7 @@ const in_activar = {
         notificar('negative', response.error)
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.area._id), 1, response.data.area);
+      rows.value.splice(buscarIndexLocal(response.data.areas._id), 1, response.data.areas);
       notificar('positive', 'Activado, exitosamente')
     } catch (error) {
       console.log(error);
@@ -250,7 +251,7 @@ const in_activar = {
     console.log("inactivar");
     try {
       console.log("Desactivar");
-      const response = await useLote.putInactivar(id);
+      const response = await useArea.putInactivar(id);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -258,7 +259,7 @@ const in_activar = {
 
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.area._id), 1, response.data.area);
+      rows.value.splice(buscarIndexLocal(response.data.areas._id), 1, response.data.areas);
       notificar('negative', 'Inactivado exitosamente')
     } catch (error) {
       console.log(error);

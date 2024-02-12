@@ -1,41 +1,20 @@
-<template>
-    <div class="cont">
-        <div class="olascont">
-            <img class="olaazul" src="../assets/olaazul.svg">
-            <img class="olaverde" src="../assets/olaverde.svg">
-        </div>
-        <div class="q-pa-md row items-start q-gutter-md">
-            <q-card class="my-card" >
-                <q-card-section>
-                    <q-div class="text-h3">Bienvenido</q-div>
-                    <p class="subtittle">Por favor ingrese sus datos de usuario para continuar:</p>
-                </q-card-section>
-                <q-card-section style="max-width: 500px">
-                    <q-input standout v-model="name" label="Nombre de usuario" />
-                </q-card-section>
-                <q-card-section style="max-width: 500px">
-                    <q-input standout v-model="password" label="Contraseña" />
-                    <router-link to="/Restableciemiento" class="ingresarcont">
-                        <button class="contrasenaayuda">¿Olvidaste tu contraseña?</button>
-                    </router-link>
-                </q-card-section>
-                    <q-card-section style="max-width: 500px">
-                        <router-link to="/home" class="ingresarcont">
-                        <q-btn push color="primary" label="Ingresar" />
-                    </router-link>
-                    </q-card-section>
-            </q-card>
-        </div>
-    </div>
-</template>
-  <!-- <script setup>
+<script setup>
   import { ref } from "vue";
-  import { useLoginStore } from "../stores/login.js"
   import { useQuasar } from 'quasar'
-  const loginStore = useLoginStore()
+  import { useRouter } from "vue-router";
+  import { useUsuarioStore } from "../stores/usuario.js"
+  import Cookies from 'js-cookie'
+
+
+
+
+  const UsuarioStore = useUsuarioStore()
+  const router = useRouter()
   
-  const username = ref('');
-  const password = ref('');
+const data = ref({
+  correo: "",
+  contrasena: "",
+});
   const $q = useQuasar();
   let errorMessage = ref("");
     
@@ -49,18 +28,55 @@
   
   let validacion = ref(false);
   let notification = ref(null);
-  async function validar() {
-      if (!username.value && !password.value) {
-          errorMessage.value = "* Ingrese el usuario y la contraseña"
-      }else if(!username.value){
-          errorMessage.value = "* Ingrese el usuario"
-      }else if(!password.value){
-          errorMessage.value = "* Ingrese la contraseña"
-      }else{
-          errorMessage.value =""
-          validacion.value = true;
-  };
-      if (validacion.value==true) {
+  let loading = ref(false)
+
+
+
+  function validarCampos() {
+  const arrData = Object.entries(data.value)
+  console.log(arrData);
+  for (const d of arrData) {
+    console.log(d);
+    if (d[1] === null) {
+      notificar('negative', 'Por favor complete todos los campos')
+      return
+    }
+    if(typeof d[1] === 'string'){if (d[1].trim() === "") {
+      console.log("h");
+      notificar('negative','Por favor complete todos los campos')
+      return
+    }}
+  }
+
+  validarIngreso()
+}
+
+async function validarIngreso() {
+  try {
+    console.log("Esperando confirmación...");
+    loading.value = true;
+    const response = await UsuarioStore.login(data.value);
+    console.log(response);
+  
+    if(!response) return
+    
+    if (response.status != 200) {
+      notificar('negative', response.mensaje)
+      return;
+    }
+    notificar('positive', 'Sección exitosa')
+    router.push("/home");
+  } catch (error) {
+    
+  }finally{
+    loading.value = false
+  }
+}
+
+
+
+
+/*       if (validacion.value==true) {
           try {
             showDefault()
             const res = await loginStore.Login({
@@ -91,9 +107,51 @@
         };
         }
         
-        validacion.value = false  
-    };
-    </script> -->
+        validacion.value = false   */
+
+
+
+
+    function notificar(tipo, msg) {
+  $q.notify({
+    type: tipo,
+    message: msg,
+    position: "top"
+  })
+}
+    </script>
+
+
+
+
+<template>
+    <div class="cont">
+        <div class="olascont">
+            <img class="olaazul" src="../assets/olaazul.svg">
+            <img class="olaverde" src="../assets/olaverde.svg">
+        </div>
+        <div class="q-pa-md row items-start q-gutter-md">
+            <q-card class="my-card" >
+                <q-card-section>
+                    <q-div class="text-h3">Bienvenido</q-div>
+                    <p class="subtittle">Por favor ingrese sus datos de usuario para continuar:</p>
+                </q-card-section>
+                <q-card-section style="max-width: 500px">
+                    <q-input standout v-model="data.correo" label="Correo electronico" />
+                </q-card-section>
+                <q-card-section style="max-width: 500px">
+                    <q-input standout v-model="data.contrasena" label="Contraseña" />
+                    <router-link to="/Restableciemiento" class="ingresarcont">
+                        <button class="contrasenaayuda">¿Olvidaste tu contraseña?</button>
+                    </router-link>
+                </q-card-section>
+                    <q-card-section style="max-width: 500px">
+                        <q-btn push color="primary" label="Ingresar" @click="validarCampos" :loading="loading"/>
+                    </q-card-section>
+            </q-card>
+        </div>
+    </div>
+</template>
     
     <!-- scoped sirve para evitar que los estilos afecte a los
     demas componentes  -->
