@@ -114,7 +114,7 @@ const enviarInfo = {
   guardar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await disFichas.postDisFicha(data.value);
+      const response = await useDisFicha.postDisFicha(data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -135,7 +135,7 @@ const enviarInfo = {
   editar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await disFichas.putDisFicha(data.value._id, data.value);
+      const response = await useDisFicha.putDisFicha(data.value._id, data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -144,7 +144,7 @@ const enviarInfo = {
         return
       }
       console.log(rows.value);
-      rows.value.splice(buscarIndexLocal(response.data.disFichas._id), 1, response.data.disFichas);
+      rows.value.splice(buscarIndexLocal(response.data.distribucion._id), 1, response.data.distribucion);
       notificar('positive', 'Editado exitosamente')
       modal.value = false;
     } catch (error) {
