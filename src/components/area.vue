@@ -12,8 +12,6 @@
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
           <q-input class="input1" outlined v-model="data.presupuesto" label="Presupuesto" type="number"
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto']"></q-input>
-          <q-input class="input1" outlined v-model="data.ficha_id" label="Ficha" type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese la ficha']"></q-input>
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
@@ -105,12 +103,6 @@ const columns = ref([
     align: "left",
     field: (row) => row.presupuesto,
   },
-  {
-    name: "ficha_id",
-    label: "ficha_id",
-    align: "left",
-    field: (row) => row.ficha_id,
-  },
 
   {
     name: "status",
@@ -129,7 +121,6 @@ const rows = ref([]);
 const data = ref({
   nombre: "",
   presupuesto: "",
-  ficha_id: "",
 });
 
 const obtenerInfo = async () => {
@@ -155,7 +146,6 @@ const obtenerInfo = async () => {
 
 onMounted(() => {
   obtenerInfo();
-  console.log("inicio");
 });
 
 
@@ -166,7 +156,6 @@ const opciones = {
     data.value = {
       nombre: "",
       presupuesto: "",
-      ficha_id: "",
     };
     modal.value = true;
     estado.value = "guardar";
@@ -287,11 +276,6 @@ for (const d of arrData) {
     }
   }
 
-  if (d[0] === "codigo_presupuestal" && d[1].toString().length < 6) {
-    notificar('negative', "El codigo debe tener más de 6 digitos")
-    return
-  }
-
   if (d[0] === "nombre" && d[1].length > 15) {
     notificar('negative', 'El nombre no puede tener más de 15 caracteres')
     return
@@ -301,15 +285,6 @@ for (const d of arrData) {
     notificar('negative', "El presupuesto inicial debe ser diferente a 0")
     return
   }
-
-  if (d[0] === "ficha_id" && d[1].length > 10) {
-    notificar('negative', 'La ficha no puede tener mas de 10 caracteres')
-    return
-  }
-
-
-
-
 }
 enviarInfo[estado.value]()
 }
@@ -325,15 +300,7 @@ $q.notify({
 
 
 <style scoped>
-/* 
-primary: Color principal del tema.
-secondary: Color secundario del tema.
-accent: Color de acento.
-positive: Color para indicar una acción positiva o éxito.
-negative: Color para indicar una acción negativa o error.
-info: Color para información o mensajes neutrales.
-warning: Color para advertencias o mensajes importantes. 
-*/
+
 
 * {
   margin: 0px;

@@ -8,19 +8,17 @@ export const useFichaStore = defineStore('ficha', () => {
     const obtenerInfoFichas = async () => {
         try {
             let responFichas = await axios.get('ficha/ver');
-            console.log (responFichas);
-            // lotes.value = responseLotes.data; 
             return responFichas.data
             console.log(lotes)
         } catch (error) {
+            console.log(error);
             throw error
         }
     };
 
     const postFicha = async (data) =>{
         try {
-            console.log('a');
-            let res = await axios.post("ficha/agregar", data);
+            let res = await axios.post('ficha/agregar', data);
             console.log('a', res);
             return res.data.fichas
         } catch (error) {
