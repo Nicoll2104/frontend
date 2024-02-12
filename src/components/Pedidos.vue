@@ -250,7 +250,7 @@ function prompt () {
         
         </q-toolbar>
         <!-- inputs🃏👇-->
-        <q-card-section class="q-gutter-md row items-star justify-center continputs1">
+       <!--  <q-card-section class="q-gutter-md row items-star justify-center continputs1">
             <q-input class="nombreinput modalinputs" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
             
@@ -287,11 +287,8 @@ function prompt () {
               {{data.cantidad * data.precioporunidad }}
             </q-input>
 
-          </q-card-section>
-          <q-card-section class="q-gutter-md row items-star justify-center">
-            <q-input class="descripcioninput modalinputs" outlined v-model="data.descripcion" label="descripcion" type="textarea" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese una descripcion']"></q-input>
-          </q-card-section>
+          </q-card-section> -->
+          
           <!-- inputs🃏☝ -->
 
           <!-- btns 🛑👇 -->
@@ -323,9 +320,6 @@ function prompt () {
         <template v-slot:top>
           <h4 class="titulo-cont">
             {{ modelo +' ' }}
-            <q-btn @click="opciones.agregar" label="Añadir" color="secondary">
-              <q-icon name="style" color="white" right />
-            </q-btn>
           </h4>
           <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar">
             <template v-slot:append>
@@ -367,7 +361,7 @@ function prompt () {
       </q-table>
 
       <router-link to="/Det_pedido" class="ingresarcont">
-        <q-btn class="ingresar opcion" color="primary">Detalle Pedido
+        <q-btn class="ingresar opcion" color="primary">Crear Pedido
           <q-icon name="style" color="white" right />
         </q-btn>
       </router-link>

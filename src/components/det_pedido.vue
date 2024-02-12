@@ -67,7 +67,7 @@ import { ref } from "vue";
 /* import { useClienteStore } from "../stores/presupuesto.js"; */
 import { useQuasar } from 'quasar'
 
-const modelo = "Detalle Pedido";
+const modelo = "Crear Pedido";
 /* const useCliente = useClienteStore(); */
 const loadingTable = ref(true)
 const $q = useQuasar()
@@ -288,7 +288,20 @@ function notificar(tipo, msg) {
 </script>
 
 <template>
-  <div>
+    <div class="q-pa-xl row items-start q-gutter-md justify-center ">
+      <q-card class="my-card">
+        <h4>Crear Pedido</h4>
+      <div class="q-gutter-md" >
+        <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
+          <q-input v-model="date" filled type="date" hint="Fecha de pedido" class="q-mx-auto" style="width: 250px"/>
+          <q-input v-model="text" label="Número del pedido" class="q-mx-auto" style="width: 
+          350px" />
+        </q-card-section>
+        <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
+          <q-input v-model="text" label="Nombre del Instructor" class="q-mx-auto" style="width: 250px" />
+          <q-select filled v-model="model" :options="options" label="Seleccione la ficha" class="q-mx-auto" style="width: 350px" />
+        </q-card-section>
+      </div>
     <q-dialog v-model="modal">
       <q-card class="modal">
         <q-toolbar>
@@ -308,23 +321,14 @@ function notificar(tipo, msg) {
         </q-card-section>
       </q-card>
     </q-dialog>
-
     <div class="q-pa-md">
       <q-table :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
         rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
         no-results-label="No hay resultados para la busqueda" wrap-cells="false">
         <template v-slot:top>
-          <h4 class="titulo-cont">
-            {{ modelo + ' ' }}
             <q-btn @click="opciones.agregar" label="Agregar Producto" color="secondary">
               <q-icon name="style" color="white" right />
             </q-btn>
-          </h4>
-          <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar">
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
         </template>
 
         <template v-slot:header="props">
@@ -359,7 +363,27 @@ function notificar(tipo, msg) {
         </template>
       </q-table>
     </div>
-  </div>
+     <!-- btns 🛑👇 -->
+     <q-card-section class="q-gutter-md row items-end justify-end continputs1">
+          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
+            color="secondary" label="guardar">
+            <q-icon name="style" color="white" right />
+          </q-btn>
+
+          <q-btn :loading="loadingmodal" padding="10px"
+            color="secondary" label="imprimir">
+            <q-icon name="print" color="white" right />
+          </q-btn>
+
+          <q-btn :loading="loadingmodal" padding="10px"
+            color="warning" label="cancelar" text-color="white" v-close-popup >
+            <q-icon name="cancel" color="white" right />
+          </q-btn>
+
+        </q-card-section>
+        <!-- btns 🛑☝ -->
+  </q-card>
+</div>
 </template>
 <style scoped>
 /* 
@@ -389,11 +413,11 @@ warning: Color para advertencias o mensajes importantes.
   /* min-height: 710px; */
   border: 0px solid black;
 }
-
-.titulo-cont {
-  margin: auto;
+.my-card{
+  width: 100%;
+  max-width: 1500px;
+  align-items: center;
 }
-
 .buscar {
   display: inline-block;
   margin: auto;
