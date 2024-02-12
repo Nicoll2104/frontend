@@ -8,9 +8,7 @@ export const useAreaStore = defineStore('area', () => {
     const obtenerInfoAreas = async () => {
         try {
             let responseAreas = await axios.get('area/ver');
-            console.log (responseAreas);
             return responseAreas.data
-            console.log(area)
         } catch (error) {
             throw error
         }
@@ -19,7 +17,7 @@ export const useAreaStore = defineStore('area', () => {
     const postArea = async (data) =>{
         try {
             let res = await axios.post("area/agregar", data);
-            return res.data.areas
+            return res.data
         } catch (error) {
             throw error
         }

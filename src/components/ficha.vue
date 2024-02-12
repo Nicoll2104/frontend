@@ -10,16 +10,15 @@
         <q-card-section class="q-gutter-md">
           <q-input class="input1" outlined v-model="data.codigo_ficha" label="Codigo de la Ficha" type="number"
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo de la ficha']"></q-input>
-          <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
+          <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text"  lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
           <q-input class="input1" outlined v-model="data.nivel_de_formacion" label="Nivel de formación" type="text"
             maxlength="30" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el nivel de formacion']"></q-input>
-          <q-input class="input1" outlined v-model="data.fecha_inicio" label="Fecha de inicio" type="text" maxlength="8"
+          <q-input class="input1" outlined v-model="data.fecha_inicio" label="Fecha de inicio" type="date" 
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de inicio']"></q-input>
-          <q-input class="input1" outlined v-model="data.fecha_fin" label="Fecha de cierre" type="text" maxlength="8"
+          <q-input class="input1" outlined v-model="data.fecha_fin" label="Fecha de cierre" type="date" 
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de cierre']"></q-input>
-          <q-input class="input1" outlined v-model="data.codigo_area" label="Codigo de area" type="number" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo del area']"></q-input>
+            <q-select class="input1" outlined v-model="data.area" label="Área" :options="opcionesArea"></q-select>
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
@@ -86,16 +85,19 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import {  ref } from "vue";
 import { useFichaStore } from "../stores/ficha.js";
+import { useAreaStore } from "../stores/area";
 import { useQuasar } from 'quasar'
 
 const modelo = "Fichas";
 const useFicha = useFichaStore();
+const useArea = useAreaStore();
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
 const loadingmodal = ref(false);
+
 
 const columns = ref([
   {
@@ -132,12 +134,11 @@ const columns = ref([
     field: (row) => row.fecha_fin,
   },
   {
-    name: "codigo_area",
-    label: "area",
+    name: "area",
+    label: "Área",
     align: "left",
-    field: (row) => row.codigo_area,
+    field: (row) => row.area ? row.area.nombre : '',
   },
-
   {
     name: "status",
     label: "Estado",
@@ -158,37 +159,40 @@ const data = ref({
   nivel_de_formacion: "",
   fecha_inicio: "",
   fecha_fin: "",
-  codigo_area: "",
+  area: "",
 });
+
+const opcionesArea = ref([]);
 
 const obtenerInfo = async () => {
   try {
     const fichas = await useFicha.obtenerInfoFichas();
-    console.log("useficha")
-    console.log(useFicha)
-    console.log("dentro")
     console.log(fichas);
 
-    if (!fichas) return
+    if (!fichas) return;
 
     if (fichas.error) {
-      notificar('negative', fichas.error)
-      return
+      notificar('negative', fichas.error);
+      return;
     }
-    rows.value = fichas
+    rows.value = fichas;
+
+    const area = await useArea.obtenerInfoAreas();
+      if (area && Array.isArray(area.areas)) {
+      opcionesArea.value = area.areas.map(areas => ({ label: areas.nombre, value: areas._id }));
+    } else {
+  console.error("El áreas es inválido:", area);
+}
 
   } catch (error) {
     console.error(error);
   } finally {
-    loadingTable.value = false
+    loadingTable.value = false;
   }
 };
-console.log("Antes de la línea 101");
 
-onMounted(() => {
-  obtenerInfo();
-  console.log("inicio");
-});
+
+obtenerInfo();
 
 
 const estado = ref("guardar");
@@ -201,7 +205,7 @@ const opciones = {
       nivel_de_formacion: "",
       fecha_inicio: "",
       fecha_fin: "",
-      codigo_area: "",
+      area: "",
     };
     modal.value = true;
     estado.value = "guardar";
@@ -337,20 +341,20 @@ function validarCampos() {
       return
     }
 
-    if (d[0] === "fecha_inicio" && d[1].length > 8) {
-      notificar('negative', 'La fecha no puede tener mas de 8 caracteres')
+    if (d[0] === "fecha_inicio" && d[1].trim() === "") {
+      notificar('negative', 'Por favor, digite la fecha de inicio')
       return
     }
 
-    if (d[0] === "fecha_fin" && d[1].length > 8) {
-      notificar('negative', 'La fecha no puede tener mas de 8 caracteres')
+    if (d[0] === "fecha_fin" && d[1].trim() === "") {
+      notificar('negative', 'Por favor, digite la fecha de fin')
       return
     }
 
-    if (d[0] === "codigo_area" && d[1].toString().length < 6) {
+/*     if (d[0] === "area" && d[1].toString().length < 6) {
       notificar('negative', "El codigo debe tener más de 6 digitos")
       return
-    }
+    } */
   }
   enviarInfo[estado.value]()
 }
