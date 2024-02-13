@@ -7,27 +7,7 @@
           <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
         </q-toolbar>
 
-<<<<<<< HEAD
-        <q-card-section class="q-gutter-md">
-          <q-input class="input1" outlined v-model="data.codigo" label="Codigo" type="number" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el codigo del producto']"></q-input>
-          <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-          <q-input class="input1" outlined v-model="data.descripcion" label="Descripcion" type="text" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
-          <q-input class="input1" outlined v-model="data.unidad_medida" label="Unidad medida" type="text" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la unidad de medida']"></q-input>
-          <q-input class="input1" outlined v-model="data.precio_unitario" label="Precio unitario" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el precio unitario']"></q-input>
-          <q-input class="input1" outlined v-model="data.impestos" label="Impuestos" type="number" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el impuesto']"></q-input>
-          <q-input class="input1" outlined v-model="data.fecha_creacion" label="Fecha creacion" type="date" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de creacion']"></q-input>
-          <q-input class="input1" outlined v-model="data.fecha_vencimiento" label="Fecha vencimiento" type="date"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de vencimiento']"></q-input>
-=======
         <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
-
           <q-input class="modalinputs" outlined v-model="data.codigo" label="Codigo" type="number" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un codigo']"></q-input>
 
@@ -37,28 +17,22 @@
           <q-input class="descripcioninput modalinputs" outlined v-model="data.descripcion" label="Descripcion" type="textarea" maxlength="30"
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una descripcion']"></q-input>
 
-          </q-card-section>
-
-
-            <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
-
           <q-input class="modalinputs" outlined v-model="data.unidad_medida" label="Unidad Medida" type="text" maxlength="15"
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una unidad de medida']"></q-input>
 
-            <q-input class="modalinputs" outlined v-model="data.precio_unitario" label="Precio Unitario" type="text" maxlength="15"
+          <q-input class="modalinputs" outlined v-model="data.precio_unitario" label="Precio Unitario" type="text" maxlength="15"
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el precio unitario']"></q-input>
 
           <q-input class="modalinputs" outlined v-model="data.impestos" label="Impuestos" type="text" maxlength="15"
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese un impuesto']"></q-input>
 
-            <q-input class="modalinputs" outlined v-model="data.fecha_creacion" label="Fecha creacion" type="date" maxlength="15"
+          <q-input class="modalinputs" outlined v-model="data.fecha_creacion" label="Fecha creacion" type="date" maxlength="15"
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de creacion']"></q-input>
 
-            <q-input class="modalinputs" outlined v-model="data.fecha_vencimiento" label="Fecha vencimiento" type="date" maxlength="15"
+          <q-input class="modalinputs" outlined v-model="data.fecha_vencimiento" label="Fecha vencimiento" type="date" maxlength="15"
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de vencimiento']"></q-input>
         </q-card-section>
         <q-card-section class="q-pr-xl row items-star justify-end continputs1">
->>>>>>> 1858abbb5b7fd9b9147cc414510d610b91606693
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
@@ -505,9 +479,5 @@ warning: Color para advertencias o mensajes importantes.
   font-size: 10px;
   font-weight: bold;
 }
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 1858abbb5b7fd9b9147cc414510d610b91606693
 </style>

@@ -222,27 +222,38 @@ function buscarIndexLocal(id) {
 }
 
 const enviarInfo = {
-  guardar: async () => {
-    loadingmodal.value = true;
-    try {
-      const response = await useFicha.postFicha(data.value);
-      console.log(response);
-      if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
-        loadingmodal.value = false;
-        return
-      }
+  async guardar() {
+  loadingmodal.value = true;
+  try {
+    const areaValue = typeof data.value.area === 'object' && 'value' in data.value.area ? data.value.area.value : data.value.area;
 
-      rows.value.unshift(response);
-      notificar('positive', 'Guardado exitosamente')
-      modal.value = false;
-    } catch (error) {
-      console.log(error);
-    } finally {
+    const response = await useFicha.postFicha({
+      codigo_ficha: data.value.codigo_ficha,
+      nombre: data.value.nombre,
+      nivel_de_formacion: data.value.nivel_de_formacion,
+      fecha_inicio: data.value.fecha_inicio,
+      fecha_fin: data.value.fecha_fin,
+      area: areaValue
+    });
+
+    console.log(response);
+    if (!response) return;
+    if (response.error) {
+      notificar('negative', response.error);
       loadingmodal.value = false;
+      return;
     }
-  },
+
+    rows.value.unshift(response);
+    notificar('positive', 'Guardado exitosamente');
+    modal.value = false;
+  } catch (error) {
+    console.log(error);
+  } finally {
+    loadingmodal.value = false;
+  }
+},
+
   editar: async () => {
     loadingmodal.value = true;
     try {
