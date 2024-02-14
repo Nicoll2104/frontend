@@ -64,7 +64,6 @@ export const useDisFichaStore = defineStore('disFicha', () => {
     const obtenerInfoDisFicha = async () => {
         try {
             let responsedisFicha = await axios.get('disFicha/ver');
-            console.log (responsedisFicha);
             // lotes.value = responseLotes.data; 
             return responsedisFicha.data
             console.log(disFichas)

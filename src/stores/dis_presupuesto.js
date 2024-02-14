@@ -65,7 +65,6 @@ export const usedisPresupuesStore = defineStore('disPresupues', () => {
     const obtenerInfodisPresupues = async () => {
         try {
             let responsedisPresupuesto = await axios.get('disPresupues/ver');
-            console.log (responsedisPresupuesto);
             // lotes.value = responseLotes.data; 
             return responsedisPresupuesto.data
         } catch (error) {
