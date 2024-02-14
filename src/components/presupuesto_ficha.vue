@@ -2,11 +2,13 @@
 import { onMounted, ref } from "vue";
 import { useDisFichaStore } from "../stores/dis_ficha.js";
 import { usedisPresupuesStore } from "../stores/dis_presupuesto.js";
+import { useFichaStore } from "../stores/ficha.js";
 import { useQuasar } from 'quasar'
 
 
 const useDisFicha = useDisFichaStore();
 const useDisPresupuesto = usedisPresupuesStore();
+const useFicha = useFichaStore();
 
 
 const modelo = "presupuesto de las fichas";
@@ -15,7 +17,7 @@ const $q = useQuasar()
 const filter = ref("");
 const loadingmodal = ref(false);
 const loadinpresupuesto = ref(true);
-const loadinficha = ref(false);
+const loadinficha = ref(true);
 
 
 const columns = ref([
@@ -30,7 +32,7 @@ const columns = ref([
   {
     name: "distribucion_presupuesto",
     label: "Distribucion presupuesto",
-    align: "left",
+    align: "center",
     field: (row) => row.distribucion_presupuesto,
     loading: false
 
@@ -38,7 +40,7 @@ const columns = ref([
   {
     name: "ficha",
     label: "Ficha",
-    align: "left",
+    align: "center",
     field: (row) => row.ficha,
   },
   {
@@ -50,6 +52,7 @@ const columns = ref([
   {
     name: "opciones",
     label: "Opciones",
+    align: "center",
     field: "opciones",
   },
 ]);
@@ -68,13 +71,12 @@ onMounted(() => {
 
 let disFichas 
 let disPresupuesto 
+let fichas
 
 
 const obtenerInfo = async () => {
   try {
     disFichas = await useDisFicha.obtenerInfoDisFicha();
-    console.log("datos:")
-    console.log(disFichas.distribucion);
 
     if (!disFichas) return
 
@@ -83,7 +85,7 @@ const obtenerInfo = async () => {
       return
     }
     
-    rows.value = disFichas.distribucion
+    rowbuild()
   } catch (error) {
     console.error(error);
   }
@@ -100,8 +102,25 @@ console.log("Antes de la línea 101");
 const getdisPresupuesto = async () => {
   try {
     disPresupuesto = await useDisPresupuesto.obtenerInfodisPresupues();
-    console.log("dentro de useDisPresupuesto")
-    console.log(disPresupuesto.distribucion);
+
+    if (!disPresupuesto) return
+
+    if (disPresupuesto.error) {
+      notificar('negative', disPresupuesto.error)
+      return
+    }
+    rowbuild()
+  } catch (error) {
+    console.error(error);
+  } finally {
+    getficha()
+    loadinpresupuesto.value = false
+  }
+};
+
+const getficha = async () => {
+  try {
+    fichas = await useFicha.obtenerInfoFichas();
 
     if (!disPresupuesto) return
 
@@ -114,17 +133,82 @@ const getdisPresupuesto = async () => {
     console.error(error);
   } finally {
     rowbuild()
-    loadinpresupuesto.value = false
+    loadinficha.value = false
   }
 };
 
+
 function rowbuild(){
+  const distribucion_fichas = disFichas.distribucion
 
-  console.log(rows.value)
+  if (disPresupuesto == undefined || disPresupuesto.distribucion == undefined) {
+    console.log('rows1:')
+    console.log(distribucion_fichas)
+    rows.value = distribucion_fichas
+    return
+  }
 
-  /*.find(callback)*/
-  rows.value.push({presupuesto:'hola'})
-  
+  const distribucion_presupuesto = disPresupuesto.distribucion
+
+  if (fichas == undefined){
+    const array = []
+    for (let i = 0; i < distribucion_fichas.length; i++) {
+      console.log('segunda consulta')
+      const indexdispresupuesto = distribucion_presupuesto.findIndex(objeto => objeto._id == distribucion_fichas[i].distribucion_presupuesto)
+
+    let campo_dispresupuesto = "- - - - -"
+    if (indexdispresupuesto !== -1){
+      campo_dispresupuesto = distribucion_presupuesto[indexdispresupuesto].nombre
+    }
+    
+        array.push({
+        presupuesto:distribucion_fichas[i].presupuesto,
+        distribucion_presupuesto:campo_dispresupuesto,
+        status:distribucion_fichas[i].status,
+      })
+
+    }
+
+    console.log('rows2:')
+    console.log(distribucion_presupuesto)
+    rows.value = array
+    return
+  }
+
+  const fichasdatos = fichas
+
+  if (true){
+  const array = []
+  for (let i = 0; i < distribucion_fichas.length; i++) {
+    console.log("tercera consulta")
+
+    const indexdispresupuesto = distribucion_presupuesto.findIndex(objeto => objeto._id == distribucion_fichas[i].distribucion_presupuesto)
+    const indexficha = fichasdatos.findIndex(objeto => objeto._id == distribucion_fichas[i].ficha)
+
+    let campo_dispresupuesto = "- - - - -"
+    let campo_ficha = "- - - - -"
+
+    if (indexdispresupuesto !== -1){
+      campo_dispresupuesto = distribucion_presupuesto[indexdispresupuesto].nombre
+    }
+
+    if (indexficha !== -1){
+      campo_ficha = fichasdatos[indexficha].nombre
+    }
+
+    array.push({
+      presupuesto:distribucion_fichas[i].presupuesto,
+      distribucion_presupuesto:campo_dispresupuesto,
+      ficha:campo_ficha,
+      status:distribucion_fichas[i].status,
+    })
+
+    console.log('rows3:')
+    }
+    rows.value = array
+    console.log('TERMINOOOOO')
+    return
+  }
 }
 
 const estado = ref("guardar");
@@ -342,7 +426,7 @@ function notificar(tipo, msg) {
         <template v-slot:body-cell-ficha="props">
           <q-td :props="props" class="botones" >
             <q-btn class="botonv1" size="12px" flat padding="10px"
-            :loading="loadinficha" :label="props.row.distribucion_presupuesto"/>
+            :loading="loadinficha" :label="props.row.ficha"/>
           </q-td>
         </template>
 
