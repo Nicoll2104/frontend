@@ -89,6 +89,7 @@ import {  ref } from "vue";
 import { useFichaStore } from "../stores/ficha.js";
 import { useAreaStore } from "../stores/area";
 import { useQuasar } from 'quasar'
+import { format } from "date-fns";
 
 const modelo = "Fichas";
 const useFicha = useFichaStore();
@@ -123,15 +124,15 @@ const columns = ref([
   },
   {
     name: "fecha_inicio",
-    label: "Inicio",
+    label: "Fecha de inicio",
     align: "left",
-    field: (row) => row.fecha_inicio,
+    field: (row) => convertirFecha(row.fecha_inicio),
   },
   {
     name: "fecha_fin",
-    label: "Fin",
+    label: "Fecha de cierre",
     align: "left",
-    field: (row) => row.fecha_fin,
+    field: (row) => convertirFecha(row.fecha_fin),
   },
   {
     name: "area",
@@ -153,6 +154,18 @@ const columns = ref([
 ]);
 const rows = ref([]);
 
+function convertirFecha(cadenaFecha) {
+  const fecha = new Date(cadenaFecha);
+  const offset = 5 * 60;
+  fecha.setMinutes(fecha.getMinutes() + offset);
+  const año = fecha.getFullYear();
+  const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
+  const dia = fecha.getDate().toString().padStart(2, "0");
+
+  const fechaFormateada = `${dia}/${mes}/${año}`;
+  return fechaFormateada;
+}
+
 const data = ref({
   codigo_ficha: "",
   nombre: "",
@@ -167,23 +180,23 @@ const opcionesArea = ref([]);
 const obtenerInfo = async () => {
   try {
     const fichas = await useFicha.obtenerInfoFichas();
+    const Activa = fichas.filter(ficha => ficha.status === "1")
     console.log(fichas);
 
-    if (!fichas) return;
+    if (!Activa) return;
 
-    if (fichas.error) {
-      notificar('negative', fichas.error);
+    if (Activa.error) {
+      notificar('negative', Activa.error);
       return;
     }
-    rows.value = fichas;
+    rows.value = Activa;
 
     const area = await useArea.obtenerInfoAreas();
       if (area && Array.isArray(area.areas)) {
-      opcionesArea.value = area.areas.map(areas => ({ label: areas.nombre, value: areas._id }));
+      opcionesArea.value = area.areas.map(areas => ({ label: areas.nombre, value: areas._id, disable:areas.status==='0' }));
     } else {
   console.error("El áreas es inválido:", area);
-}
-
+  }
   } catch (error) {
     console.error(error);
   } finally {
@@ -211,7 +224,16 @@ const opciones = {
     estado.value = "guardar";
   },
   editar: (info) => {
-    data.value = { ...info }
+    data.value = { ...info };
+    if (data.value.fecha_inicio) {
+      data.value.fecha_inicio = new Date(data.value.fecha_inicio).toISOString().split('T')[0];
+    }
+    if (data.value.fecha_fin) {
+      data.value.fecha_fin = new Date(data.value.fecha_fin).toISOString().split('T')[0];
+    }
+    if (data.value.area) {
+      data.value.area = { label: info.area.nombre, value: info.area._id };
+    }
     modal.value = true;
     estado.value = "editar";
   },
@@ -254,27 +276,36 @@ const enviarInfo = {
   }
 },
 
-  editar: async () => {
-    loadingmodal.value = true;
-    try {
-      const response = await useFicha.putFicha(data.value._id, data.value);
-      console.log(response);
-      if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
-        loadingmodal.value = false;
-        return
-      }
-      console.log(rows.value);
-      rows.value.splice(buscarIndexLocal(response.data.fichas._id), 1, response.data.fichas);
-      notificar('positive', 'Editado exitosamente')
-      modal.value = false;
-    } catch (error) {
-      console.log(error);
-    } finally {
+editar: async () => {
+  loadingmodal.value = true;
+  try {
+    const areaValue = typeof data.value.area === 'object' && 'value' in data.value.area ? data.value.area.value : data.value.area;
+
+    let response = await useFicha.putFicha(data.value._id, {
+      codigo_ficha: data.value.codigo_ficha,
+      nombre: data.value.nombre,
+      nivel_de_formacion: data.value.nivel_de_formacion,
+      fecha_inicio: data.value.fecha_inicio,
+      fecha_fin: data.value.fecha_fin,
+      area: areaValue
+    });
+    console.log(response);
+    if (!response) return;
+    if (response.error) {
+      notificar('negative', response.error);
       loadingmodal.value = false;
+      return;
     }
-  },
+    console.log(rows.value);
+    rows.value.splice(buscarIndexLocal(response.data.fichas._id), 1, response.data.fichas);
+    notificar('positive', 'Editado exitosamente');
+    modal.value = false;
+  } catch (error) {
+    console.log(error);
+  } finally {
+    loadingmodal.value = false;
+  }
+},
 };
 
 const in_activar = {
@@ -321,54 +352,61 @@ const in_activar = {
 };
 
 function validarCampos() {
+  const arrData = Object.entries(data.value);
 
-  const arrData = Object.entries(data.value)
-  console.log(arrData);
   for (const d of arrData) {
-    console.log(d);
     if (d[1] === null) {
-      notificar('negative', "Por favor complete todos los campos")
-      return
+      notificar('negative', "Por favor complete todos los campos");
+      return;
     }
     if (typeof d[1] === 'string') {
       if (d[1].trim() === "") {
-        notificar('negative', "Por favor complete todos los campos")
-        return
+        notificar('negative', "Por favor complete todos los campos");
+        return;
       }
     }
 
     if (d[0] === "codigo_ficha" && d[1].toString().length < 6) {
-      notificar('negative', "El codigo debe tener más de 6 digitos")
-      return
+      notificar('negative', "El codigo debe tener más de 6 digitos");
+      return;
     }
 
     if (d[0] === "nombre" && d[1].length > 30) {
-      notificar('negative', 'El nombre no puede tener más de 30 caracteres')
-      return
+      notificar('negative', 'El nombre no puede tener más de 30 caracteres');
+      return;
     }
 
     if (d[0] === "nivel_de_formacion" && d[1].length > 15) {
-      notificar('negative', 'El nivel de formacion no puede tener más de 15 caracteres')
-      return
+      notificar('negative', 'El nivel de formacion no puede tener más de 15 caracteres');
+      return;
     }
 
     if (d[0] === "fecha_inicio" && d[1].trim() === "") {
-      notificar('negative', 'Por favor, digite la fecha de inicio')
-      return
+      notificar('negative', 'Por favor, digite la fecha de inicio');
+      return;
     }
 
     if (d[0] === "fecha_fin" && d[1].trim() === "") {
-      notificar('negative', 'Por favor, digite la fecha de fin')
-      return
+      notificar('negative', 'Por favor, digite la fecha de fin');
+      return;
     }
-
-/*     if (d[0] === "area" && d[1].toString().length < 6) {
-      notificar('negative', "El codigo debe tener más de 6 digitos")
-      return
-    } */
   }
-  enviarInfo[estado.value]()
+  if (data.value.fecha_inicio === data.value.fecha_fin) {
+    notificar('negative', 'La fecha de inicio no puede ser igual a la fecha de fin');
+    return;
+  }
+
+
+  const fechaFin = new Date(data.value.fecha_fin);
+  const fechaInicio = new Date(data.value.fecha_inicio);
+  if (fechaInicio > fechaFin) {
+    notificar('negative', `La fecha de inicio no puede ser posterior a la fecha de cierre ${fechaFin.toLocaleDateString()}`);
+    return;
+  }
+
+  enviarInfo[estado.value]();
 }
+
 
 function notificar(tipo, msg) {
   $q.notify({
