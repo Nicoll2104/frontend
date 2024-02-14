@@ -89,6 +89,7 @@ import {  ref } from "vue";
 import { useFichaStore } from "../stores/ficha.js";
 import { useAreaStore } from "../stores/area";
 import { useQuasar } from 'quasar'
+import { format } from "date-fns";
 
 const modelo = "Fichas";
 const useFicha = useFichaStore();
@@ -123,15 +124,15 @@ const columns = ref([
   },
   {
     name: "fecha_inicio",
-    label: "Inicio",
+    label: "Fecha de inicio",
     align: "left",
-    field: (row) => row.fecha_inicio,
+    field: (row) => convertirFecha(row.fecha_inicio),
   },
   {
     name: "fecha_fin",
-    label: "Fin",
+    label: "Fecha de cierre",
     align: "left",
-    field: (row) => row.fecha_fin,
+    field: (row) => convertirFecha(row.fecha_fin),
   },
   {
     name: "area",
@@ -152,6 +153,18 @@ const columns = ref([
   },
 ]);
 const rows = ref([]);
+
+function convertirFecha(cadenaFecha) {
+  const fecha = new Date(cadenaFecha);
+  const offset = 5 * 60;
+  fecha.setMinutes(fecha.getMinutes() + offset);
+  const año = fecha.getFullYear();
+  const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
+  const dia = fecha.getDate().toString().padStart(2, "0");
+
+  const fechaFormateada = `${dia}/${mes}/${año}`;
+  return fechaFormateada;
+}
 
 const data = ref({
   codigo_ficha: "",
@@ -211,8 +224,16 @@ const opciones = {
     estado.value = "guardar";
   },
   editar: (info) => {
-    data.value = { ...info }
-    data.value.area = { label: info.area.nombre, value: info.area._id }
+    data.value = { ...info };
+    if (data.value.fecha_inicio) {
+      data.value.fecha_inicio = new Date(data.value.fecha_inicio).toISOString().split('T')[0];
+    }
+    if (data.value.fecha_fin) {
+      data.value.fecha_fin = new Date(data.value.fecha_fin).toISOString().split('T')[0];
+    }
+    if (data.value.area) {
+      data.value.area = { label: info.area.nombre, value: info.area._id };
+    }
     modal.value = true;
     estado.value = "editar";
   },
@@ -255,27 +276,36 @@ const enviarInfo = {
   }
 },
 
-  editar: async () => {
-    loadingmodal.value = true;
-    try {
-      const response = await useFicha.putFicha(data.value._id, data.value);
-      console.log(response);
-      if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
-        loadingmodal.value = false;
-        return
-      }
-      console.log(rows.value);
-      rows.value.splice(buscarIndexLocal(response.data.fichas._id), 1, response.data.fichas);
-      notificar('positive', 'Editado exitosamente')
-      modal.value = false;
-    } catch (error) {
-      console.log(error);
-    } finally {
+editar: async () => {
+  loadingmodal.value = true;
+  try {
+    const areaValue = typeof data.value.area === 'object' && 'value' in data.value.area ? data.value.area.value : data.value.area;
+
+    let response = await useFicha.putFicha(data.value._id, {
+      codigo_ficha: data.value.codigo_ficha,
+      nombre: data.value.nombre,
+      nivel_de_formacion: data.value.nivel_de_formacion,
+      fecha_inicio: data.value.fecha_inicio,
+      fecha_fin: data.value.fecha_fin,
+      area: areaValue
+    });
+    console.log(response);
+    if (!response) return;
+    if (response.error) {
+      notificar('negative', response.error);
       loadingmodal.value = false;
+      return;
     }
-  },
+    console.log(rows.value);
+    rows.value.splice(buscarIndexLocal(response.data.fichas._id), 1, response.data.fichas);
+    notificar('positive', 'Editado exitosamente');
+    modal.value = false;
+  } catch (error) {
+    console.log(error);
+  } finally {
+    loadingmodal.value = false;
+  }
+},
 };
 
 const in_activar = {
@@ -363,10 +393,6 @@ function validarCampos() {
       return
     }
 
-/*     if (d[0] === "area" && d[1].toString().length < 6) {
-      notificar('negative', "El codigo debe tener más de 6 digitos")
-      return
-    } */
   }
   enviarInfo[estado.value]()
 }

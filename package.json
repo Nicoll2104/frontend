@@ -13,6 +13,7 @@
     "@quasar/extras": "^1.16.8",
     "axios": "^1.6.2",
     "chai": "^5.0.3",
+    "date-fns": "^3.3.1",
     "js-cookie": "^3.0.5",
     "pinia": "^2.1.7",
     "quasar": "^2.14.0",
