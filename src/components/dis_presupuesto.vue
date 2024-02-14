@@ -40,7 +40,7 @@ const columns = ref([
     name: "ano",
     label: "Año",
     align: "left",
-    field: (row) => row.año,
+    field: (row) => row.ano,
   },
   {
     name: "lote",
@@ -108,8 +108,10 @@ async function obtenerPresupuestos() {
     itemsPre.value = PeresuAct.map((items) => ({
       label: `${items.codigo_presupuesto}`,
       value: String(items._id),
+      codigo_presupuesto: items.codigo_presupuesto,
     }));
     sortBy(itemsPre.value, 'label');
+    console.log("presupuestos items", itemsPre);
   } catch (error) {
     console.log(error);
   }
@@ -130,6 +132,7 @@ const obtenerInfo = async () => {
       return
     }
     rows.value = disPresupuesto.distribucion
+    console.log("datos tabla", rows.value);
 
   } catch (error) {
     console.error(error);
@@ -174,9 +177,11 @@ function buscarIndexLocal(id) {
 
 const enviarInfo = {
   guardar: async () => {
+    console.log("data guardar", data);
     loadingmodal.value = true;
     try {
-      const response = await useDisPresupuesto.postDisPresupuesto(data.value);
+      const info = {...data.value, lote:data.value.lote.value, items: data.value.items.value}
+      const response = await useDisPresupuesto.postDisPresupuesto(info);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -197,7 +202,9 @@ const enviarInfo = {
   editar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await useDisPresupuesto.putDisPresupuesto(data.value._id, data.value);
+      const info = {...data.value, lote:data.value.lote, items: data.value.items}
+      console.log("info", data.items);
+      const response = await useDisPresupuesto.putDisPresupuesto(data.value._id, info);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -339,12 +346,12 @@ function notificar(tipo, msg) {
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
           <q-input class="input1" outlined v-model="data.presupuesto_inicial" label="Presupuesto inicial" type="number"
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
-          <q-input class="input1" outlined v-model="data.año" label="Año" type="text" maxlength="15" lazy-rules
+          <q-input class="input1" outlined v-model="data.ano" label="Año" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
           <q-select class="input1" outlined v-model="data.lote" :options="options" label="Lotes" type="number"
-            maxlength="30" lazy-rules :rules="[val => val.trim() != '' || 'Seleccione el lote']" />
+            maxlength="30" lazy-rules :rules="[val => val != '' || 'Seleccione el lote']" />
           <q-select class="input1" outlined v-model="data.items" :options="itemsPre" label="Items presupuesto" type="number"
-            maxlength="30" lazy-rules :rules="[val => val.trim() != '' || 'Seleccione el item de presupuesto']" />
+            maxlength="30" lazy-rules :rules="[val => val != '' || 'Seleccione el item de presupuesto']" />
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
