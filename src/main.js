@@ -9,7 +9,6 @@ import 'quasar/src/css/index.sass';
 import axios from 'axios';
 
 /* axios.defaults.baseURL = "http://localhost:3000/api/"; */
-//axios.defaults.baseURL = "https://transporte-el2a.onrender.com/api/";
 
 const pinia = createPinia()
 const app = createApp(App)
