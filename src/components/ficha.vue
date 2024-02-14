@@ -212,6 +212,7 @@ const opciones = {
   },
   editar: (info) => {
     data.value = { ...info }
+    data.value.area = { label: info.area.nombre, value: info.area._id }
     modal.value = true;
     estado.value = "editar";
   },
