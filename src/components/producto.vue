@@ -7,30 +7,33 @@
           <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
         </q-toolbar>
 
-        <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
-          <q-input class="modalinputs" outlined v-model="data.codigo" label="Codigo" type="number" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese un codigo']"></q-input>
+        <q-card-section class="q-gutter-md row items-star justify-center continputs1">
+          <q-input class="modalinputs" outlined v-model="data.codigo" label="Codigo" type="number" maxlength="15"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese un codigo']"></q-input>
 
           <q-input class="modalinputs" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
 
-          <q-input class="descripcioninput modalinputs" outlined v-model="data.descripcion" label="Descripcion" type="textarea" maxlength="30"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una descripcion']"></q-input>
+          <q-input class="descripcioninput modalinputs" outlined v-model="data.descripcion" label="Descripcion"
+            type="textarea" maxlength="30" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese una descripcion']"></q-input>
 
-          <q-input class="modalinputs" outlined v-model="data.unidad_medida" label="Unidad Medida" type="text" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una unidad de medida']"></q-input>
+          <q-input class="modalinputs" outlined v-model="data.unidad_medida" label="Unidad Medida" type="text"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una unidad de medida']"></q-input>
 
-          <q-input class="modalinputs" outlined v-model="data.precio_unitario" label="Precio Unitario" type="text" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el precio unitario']"></q-input>
+          <q-input class="modalinputs" outlined v-model="data.precio_unitario" label="Precio Unitario" type="text"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el precio unitario']"></q-input>
 
           <q-input class="modalinputs" outlined v-model="data.impestos" label="Impuestos" type="text" maxlength="15"
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese un impuesto']"></q-input>
+            
+          <q-input class="modalinputs" outlined v-model="data.fecha_creacion" label="Fecha creacion" type="text"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de creacion']">
+          </q-input>
 
-          <q-input class="modalinputs" outlined v-model="data.fecha_creacion" label="Fecha creacion" type="date" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de creacion']"></q-input>
 
-          <q-input class="modalinputs" outlined v-model="data.fecha_vencimiento" label="Fecha vencimiento" type="date" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de vencimiento']"></q-input>
+          <q-input class="modalinputs" outlined v-model="data.fecha_vencimiento" label="Fecha vencimiento" type="date"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de vencimiento']"></q-input>
         </q-card-section>
         <q-card-section class="q-pr-xl row items-star justify-end continputs1">
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
@@ -195,7 +198,7 @@ function formatDate(dateString) {
   if (isNaN(date.getTime())) return dateString;
 
   const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-  return date.toLocaleDateString('es-ES', options); 
+  return date.toLocaleDateString('es-ES', options);
 }
 
 
@@ -391,9 +394,13 @@ function validarCampos() {
       notificar('negative', "La fecha de creacion es obligatoria")
       return
     }
-    if (d[0] === "fecha_vencimiento" && d[1].toString().length < 1 ) {
+    if (d[0] === "fecha_vencimiento" && d[1].toString().length < 1) {
       notificar('negative', "La fecha de vencimiento es obligatoria")
       return
+    }
+    if (data.value.fecha_creacion === data.value.fecha_vencimiento) {
+      notificar('negative', 'La fecha de creacion no puede ser igual a la fecha de vencimiento');
+      return;
     }
   }
   enviarInfo[estado.value]()
@@ -442,17 +449,17 @@ warning: Color para advertencias o mensajes importantes.
   margin: auto;
 }
 
-.continputs1{
+.continputs1 {
   border-top: solid 1px rgba(0, 0, 0, 0.212);
-  margin-top: 2px ;
+  margin-top: 2px;
 }
 
-.modalinputs{
+.modalinputs {
   width: 400px;
-  max-width: 80% ;
+  max-width: 80%;
 }
 
-.descripcioninput{
+.descripcioninput {
   width: 100%;
 }
 
@@ -479,5 +486,4 @@ warning: Color para advertencias o mensajes importantes.
   font-size: 10px;
   font-weight: bold;
 }
-
 </style>
