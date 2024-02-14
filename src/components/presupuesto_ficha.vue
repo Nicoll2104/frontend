@@ -1,15 +1,20 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useDisFichaStore } from "../stores/dis_ficha.js";
+import { usedisPresupuesStore } from "../stores/dis_presupuesto.js";
 import { useQuasar } from 'quasar'
 
-const modelo = "presupuesto de las fichas";
+
 const useDisFicha = useDisFichaStore();
+const useDisPresupuesto = usedisPresupuesStore();
+
+
+const modelo = "presupuesto de las fichas";
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
 const loadingmodal = ref(false);
-const loadinpresupuesto = ref(false);
+const loadinpresupuesto = ref(true);
 const loadinficha = ref(false);
 
 
@@ -56,11 +61,20 @@ const data = ref({
   ficha: "",
 });
 
+onMounted(() => {
+  obtenerInfo();
+  console.log("inicio");
+});
+
+let disFichas 
+let disPresupuesto 
+
+
 const obtenerInfo = async () => {
   try {
-    const disFichas = await useDisFicha.obtenerInfoDisFicha();
+    disFichas = await useDisFicha.obtenerInfoDisFicha();
     console.log("datos:")
-    console.log(disFichas);
+    console.log(disFichas.distribucion);
 
     if (!disFichas) return
 
@@ -75,17 +89,43 @@ const obtenerInfo = async () => {
   }
 
 
-  
+    getdisPresupuesto()
     loadingTable.value = false
 
 };
 console.log("Antes de la línea 101");
 
-onMounted(() => {
-  obtenerInfo();
-  console.log("inicio");
-});
 
+
+const getdisPresupuesto = async () => {
+  try {
+    disPresupuesto = await useDisPresupuesto.obtenerInfodisPresupues();
+    console.log("dentro de useDisPresupuesto")
+    console.log(disPresupuesto.distribucion);
+
+    if (!disPresupuesto) return
+
+    if (disPresupuesto.error) {
+      notificar('negative', disPresupuesto.error)
+      return
+    }
+
+  } catch (error) {
+    console.error(error);
+  } finally {
+    rowbuild()
+    loadinpresupuesto.value = false
+  }
+};
+
+function rowbuild(){
+
+  console.log(rows.value)
+
+  /*.find(callback)*/
+  rows.value.push({presupuesto:'hola'})
+  
+}
 
 const estado = ref("guardar");
 const modal = ref(false);
