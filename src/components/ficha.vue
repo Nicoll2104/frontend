@@ -180,23 +180,23 @@ const opcionesArea = ref([]);
 const obtenerInfo = async () => {
   try {
     const fichas = await useFicha.obtenerInfoFichas();
+    const Activa = fichas.filter(ficha => ficha.status === "1")
     console.log(fichas);
 
-    if (!fichas) return;
+    if (!Activa) return;
 
-    if (fichas.error) {
-      notificar('negative', fichas.error);
+    if (Activa.error) {
+      notificar('negative', Activa.error);
       return;
     }
-    rows.value = fichas;
+    rows.value = Activa;
 
     const area = await useArea.obtenerInfoAreas();
       if (area && Array.isArray(area.areas)) {
-      opcionesArea.value = area.areas.map(areas => ({ label: areas.nombre, value: areas._id }));
+      opcionesArea.value = area.areas.map(areas => ({ label: areas.nombre, value: areas._id, disable:areas.status==='0' }));
     } else {
   console.error("El áreas es inválido:", area);
-}
-
+  }
   } catch (error) {
     console.error(error);
   } finally {
