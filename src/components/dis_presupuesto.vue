@@ -37,7 +37,7 @@ const columns = ref([
     field: (row) => row.presupuesto_inicial,
   },
   {
-    name: "año",
+    name: "ano",
     label: "Año",
     align: "left",
     field: (row) => row.año,
@@ -68,44 +68,48 @@ const columns = ref([
 ]);
 const rows = ref([]);
 let options = ref([]);
+let itemsPre = ref([]);
 
 const data = ref({
   codigo_presupuestal: "",
   nombre: "",
   presupuesto_inicial: "",
-  año: "",
+  ano: "",
   lote: "",
   items: "",
 });
 
+function sortBy(array, key) {
+  return array.sort((a, b) => (a[key] > b[key] ? 1 : -1));
+}
+
 async function obtenerLotes() {
   try {
     const distribucion = await useLote.obtenerInfoLotes();
-    const LotesAct = distribucion.filter(lote => lote.status === true);
-
+    const LotesAct = distribucion.filter(lote => lote.status === "1")
+    console.log("distribucion", distribucion);
+    console.log("lotes activos", LotesAct);
     options.value = LotesAct.map((lote) => ({
       label: `${lote.nombre}`,
       value: String(lote._id),
     }));
-    console.log("distribucion", distribucion);
-    console.log("uselote", useLote);
-    console.log("lotesactivos", LotesAct);
-    console.log("opcions");
-    console.log(options.value);
+    sortBy(options.value, 'label');
+    console.log("options", options);
   } catch (error) {
     console.log(error);
   }
 }
 
-async function obtenerPresupues() {
+async function obtenerPresupuestos() {
   try {
-    await usePresupes.obtenerInfoPresup();
-    const PresupuesAct = usePresupes.presupuestos.filter(items => items.status === true);
-
-    options.value = PresupuesAct.map((items) => ({
+    const presupuestos = await usePresupes.obtenerInfoPresup();
+    const PeresuAct = presupuestos.filter(lote => lote.status === "1")
+    console.log("presupueto activo", PeresuAct);
+    itemsPre.value = PeresuAct.map((items) => ({
       label: `${items.codigo_presupuesto}`,
       value: String(items._id),
     }));
+    sortBy(itemsPre.value, 'label');
   } catch (error) {
     console.log(error);
   }
@@ -144,13 +148,13 @@ const estado = ref("guardar");
 const modal = ref(false);
 const opciones = {
   agregar: () => {
-    obtenerPresupues();
+    obtenerPresupuestos()
     obtenerLotes();
     data.value = {
       codigo_presupuestal: "",
       nombre: "",
       presupuesto_inicial: "",
-      año: "",
+      ano: "",
       lote: "",
       items: "",
     };
@@ -301,7 +305,13 @@ function validarCampos() {
       return
     }
   }
+
   enviarInfo[estado.value]()
+  data.value = {
+  ...data.value,
+  lote: data.value.lote.value._id,
+  items: data.value.items.value._id
+};
 }
 
 function notificar(tipo, msg) {
@@ -331,11 +341,10 @@ function notificar(tipo, msg) {
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
           <q-input class="input1" outlined v-model="data.año" label="Año" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
-          <q-select v-model="data.lote" :options="options" label="Lotes" />
-          <q-input class="input1" outlined v-model="data.lote" label="Lote" type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el lote']"></q-input>
-          <q-input class="input1" outlined v-model="data.items" label="Items" type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el items de presupuesto']"></q-input>
+          <q-select class="input1" outlined v-model="data.lote" :options="options" label="Lotes" type="number"
+            maxlength="30" lazy-rules :rules="[val => val.trim() != '' || 'Seleccione el lote']" />
+          <q-select class="input1" outlined v-model="data.items" :options="itemsPre" label="Items presupuesto" type="number"
+            maxlength="30" lazy-rules :rules="[val => val.trim() != '' || 'Seleccione el item de presupuesto']" />
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
