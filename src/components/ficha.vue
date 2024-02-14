@@ -352,50 +352,61 @@ const in_activar = {
 };
 
 function validarCampos() {
+  const arrData = Object.entries(data.value);
 
-  const arrData = Object.entries(data.value)
-  console.log(arrData);
   for (const d of arrData) {
-    console.log(d);
     if (d[1] === null) {
-      notificar('negative', "Por favor complete todos los campos")
-      return
+      notificar('negative', "Por favor complete todos los campos");
+      return;
     }
     if (typeof d[1] === 'string') {
       if (d[1].trim() === "") {
-        notificar('negative', "Por favor complete todos los campos")
-        return
+        notificar('negative', "Por favor complete todos los campos");
+        return;
       }
     }
 
     if (d[0] === "codigo_ficha" && d[1].toString().length < 6) {
-      notificar('negative', "El codigo debe tener más de 6 digitos")
-      return
+      notificar('negative', "El codigo debe tener más de 6 digitos");
+      return;
     }
 
     if (d[0] === "nombre" && d[1].length > 30) {
-      notificar('negative', 'El nombre no puede tener más de 30 caracteres')
-      return
+      notificar('negative', 'El nombre no puede tener más de 30 caracteres');
+      return;
     }
 
     if (d[0] === "nivel_de_formacion" && d[1].length > 15) {
-      notificar('negative', 'El nivel de formacion no puede tener más de 15 caracteres')
-      return
+      notificar('negative', 'El nivel de formacion no puede tener más de 15 caracteres');
+      return;
     }
 
     if (d[0] === "fecha_inicio" && d[1].trim() === "") {
-      notificar('negative', 'Por favor, digite la fecha de inicio')
-      return
+      notificar('negative', 'Por favor, digite la fecha de inicio');
+      return;
     }
 
     if (d[0] === "fecha_fin" && d[1].trim() === "") {
-      notificar('negative', 'Por favor, digite la fecha de fin')
-      return
+      notificar('negative', 'Por favor, digite la fecha de fin');
+      return;
     }
-
   }
-  enviarInfo[estado.value]()
+  if (data.value.fecha_inicio === data.value.fecha_fin) {
+    notificar('negative', 'La fecha de inicio no puede ser igual a la fecha de fin');
+    return;
+  }
+
+
+  const fechaFin = new Date(data.value.fecha_fin);
+  const fechaInicio = new Date(data.value.fecha_inicio);
+  if (fechaInicio > fechaFin) {
+    notificar('negative', `La fecha de inicio no puede ser posterior a la fecha de cierre ${fechaFin.toLocaleDateString()}`);
+    return;
+  }
+
+  enviarInfo[estado.value]();
 }
+
 
 function notificar(tipo, msg) {
   $q.notify({
