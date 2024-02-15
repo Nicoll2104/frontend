@@ -97,7 +97,7 @@ export const useDisFichaStore = defineStore('disFicha', () => {
             let r = await axios.put(`disFicha/inactivar/${id}`)
             return r
         } catch (error) {
-            console.log(error, "Error al cambiar el estado de la distribucion de la ficha");
+            return error
         }
     }
     const  putActivar = async (id)=>{
@@ -105,7 +105,7 @@ export const useDisFichaStore = defineStore('disFicha', () => {
             let r = await axios.put(`disFicha/activar/${id}`)
             return r
         } catch (error) {
-            console.log(error, "Error al cambiar el estado de la distribucion de la ficha");
+            return error
         }
     }
 

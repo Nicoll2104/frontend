@@ -251,6 +251,9 @@ const opciones = {
   },
   editar: (info) => {
     data.value = { ...info }
+    console.log(data.value)
+    data.value.fecha_creacion = data.value.fecha_creacion.slice(0, 16);
+    data.value.fecha_vencimiento = data.value.fecha_vencimiento.slice(0, 10);
     modal.value = true;
     estado.value = "editar";
   },
@@ -322,27 +325,24 @@ const in_activar = {
     } catch (error) {
       console.log(error);
     } finally {
-      loadingmodal.value = false;
     }
   },
   putInactivar: async (id) => {
     console.log("inactivar");
+    console.log(id);
     try {
-      console.log("Desactivar");
       const response = await useProducto.putInactivar(id);
       console.log(response);
       if (!response) return
       if (response.error) {
         notificar('negative', response.error)
-
         return
       }
       rows.value.splice(buscarIndexLocal(response.data.productos._id), 1, response.data.productos);
-      notificar('negative', 'Inactivado exitosamente')
+      notificar('positive', 'Inactivado exitosamente')
     } catch (error) {
       console.log(error);
     } finally {
-      loadingmodal.value = false;
     }
   },
 };
@@ -416,6 +416,110 @@ function notificar(tipo, msg) {
 </script>
 
 
+<template>
+  <div>
+    <q-dialog v-model="modal" persistent>
+      <q-card class="modal">
+        <q-toolbar class=" q-pr-xl q-pl-xl">
+          <q-toolbar-title class="text-h5">Agregar {{ modelo }}</q-toolbar-title>
+          <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
+        </q-toolbar>
+
+        <q-card-section class="row items-center justify-center continputs1" >
+
+          <q-div class="q-gutter-sm q-mx-auto  colum items-center justify-center modalinputs" >
+            <q-input class="q-mx-auto" outlined v-model="data.codigo" label="Codigo" type="number" maxlength="45" lazy-rules
+              :rules="[val => val.trim() != '' || 'Ingrese un codigo']"></q-input>
+            <q-input class="q-mx-auto" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="45" lazy-rules
+              :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
+          </q-div>
+
+          <q-input class="descripcioninput modalinputs q-mx-auto " outlined v-model="data.descripcion" label="Descripcion" type="textarea" maxlength="999"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una descripcion']"></q-input>
+
+        </q-card-section>
+
+
+          <q-card-section class=" q-gutter-md row items-star justify-center continputs1">
+            <q-input class="modalinputs" outlined v-model="data.unidad_medida" label="Unidad Medida" type="text" maxlength="5"
+              lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una unidad de medida']"></q-input>
+
+            <q-input class="modalinputs" outlined v-model="data.precio_unitario" label="Precio Unitario" type="text" maxlength="5"
+              lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el precio unitario']"></q-input>
+
+            <q-input class="modalinputs" outlined v-model="data.impestos" label="Impuestos" type="text" maxlength="6"
+              lazy-rules :rules="[val => val.trim() != '' || 'Ingrese un impuesto']"></q-input>
+
+            <q-input class="modalinputs" outlined v-model="data.fecha_creacion" label="Fecha creacion" type="datetime-local" maxlength="15"
+              lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de creacion']"></q-input>
+
+            <q-input class="modalinputs" outlined v-model="data.fecha_vencimiento" label="Fecha vencimiento" type="date" maxlength="15"
+              lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de vencimiento']"></q-input>
+          </q-card-section>
+          <q-card-section class="q-pr-xl row items-star justify-end continputs1">
+            <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
+              :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
+              <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
+            </q-btn>
+          </q-card-section>
+      </q-card>
+    </q-dialog>
+
+    <div class="q-p-md">
+      <q-table :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
+        rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
+        no-results-label="No hay resultados para la busqueda" wrap-cells="false">
+        <template v-slot:top>
+          <h4 class="titulo-cont">
+            {{ modelo + ' ' }}
+            <q-btn @click="opciones.agregar" label="Añadir" color="secondary">
+              <q-icon name="style" color="white" right />
+            </q-btn>
+          </h4>
+          <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar">
+            <template v-slot:append>
+              <q-icon name="search" />
+            </template>
+          </q-input>
+        </template>
+
+        <template v-slot:header="props">
+          <q-tr :props="props">
+            <q-th v-for="col in props.cols" :key="col.name" :props="props" class="encabezado">
+              {{ col.label }}
+            </q-th>
+          </q-tr>
+        </template>
+
+        <template v-slot:body-cell-status="props">
+          <q-td :props="props" class="botones">
+            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.status == 1
+              ? 'Activo'
+              : props.row.status == 0
+                ? 'Inactivo'
+                : '‎  ‎   ‎   ‎   ‎ '
+              " :color="props.row.status == 1 ? 'primary' : 'secondary'" :loading="props.row.status == 'load'"
+              loading-indicator-size="small" @click="
+                props.row.status == 1
+                  ? in_activar.putInactivar(props.row._id)
+                  : in_activar.putActivar(props.row._id);
+              props.row.status = 'load';
+              " />
+          </q-td>
+        </template>
+
+        <template v-slot:body-cell-opciones="props">
+          <q-td :props="props" class="botones">
+            <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
+          </q-td>
+        </template>
+      </q-table>
+    </div>
+  </div>
+</template>
+
+
+
 <style scoped>
 /* 
 primary: Color principal del tema.
@@ -434,7 +538,7 @@ warning: Color para advertencias o mensajes importantes.
 
 .modal {
   width: 100%;
-  max-width: 1500px;
+  max-width: 1300px;
 }
 
 .tabla {
@@ -459,8 +563,9 @@ warning: Color para advertencias o mensajes importantes.
   max-width: 80%;
 }
 
-.descripcioninput {
-  width: 100%;
+.descripcioninput{
+  width: 500px;
+  max-width: 80% ;
 }
 
 .buscar {
