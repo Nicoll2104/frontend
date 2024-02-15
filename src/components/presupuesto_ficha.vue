@@ -364,6 +364,14 @@ function validarCampos() {
       notificar('negative', 'La ficha es obligatoria')
       return
     }
+    if (d[0] === "fecha_vencimiento" && d[1].toString().length < 1) {
+      notificar('negative', "La fecha de vencimiento es obligatoria")
+      return
+    }
+    if (data.value.fecha_creacion === data.value.fecha_vencimiento) {
+      notificar('negative', 'La fecha de creacion no puede ser igual a la fecha de vencimiento');
+      return;
+    }
   }
   enviarInfo[estado.value]()
 }
