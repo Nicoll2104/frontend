@@ -89,7 +89,6 @@ import {  ref } from "vue";
 import { useFichaStore } from "../stores/ficha.js";
 import { useAreaStore } from "../stores/area";
 import { useQuasar } from 'quasar'
-import { format } from "date-fns";
 
 const modelo = "Fichas";
 const useFicha = useFichaStore();

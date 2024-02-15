@@ -99,7 +99,7 @@ function formatDate(dateString) {
   if (isNaN(date.getTime())) return dateString;
 
   const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-  return date.toLocaleDateString('es-ES', options); 
+  return date.toLocaleDateString('es-ES', options);
 }
 
 
@@ -295,9 +295,13 @@ function validarCampos() {
       notificar('negative', "La fecha de creacion es obligatoria")
       return
     }
-    if (d[0] === "fecha_vencimiento" && d[1].toString().length < 1 ) {
+    if (d[0] === "fecha_vencimiento" && d[1].toString().length < 1) {
       notificar('negative', "La fecha de vencimiento es obligatoria")
       return
+    }
+    if (data.value.fecha_creacion === data.value.fecha_vencimiento) {
+      notificar('negative', 'La fecha de creacion no puede ser igual a la fecha de vencimiento');
+      return;
     }
   }
   enviarInfo[estado.value]()
@@ -450,14 +454,14 @@ warning: Color para advertencias o mensajes importantes.
   margin: auto;
 }
 
-.continputs1{
+.continputs1 {
   border-top: solid 1px rgba(0, 0, 0, 0.212);
-  margin-top: 2px ;
+  margin-top: 2px;
 }
 
-.modalinputs{
+.modalinputs {
   width: 400px;
-  max-width: 80% ;
+  max-width: 80%;
 }
 
 .descripcioninput{
@@ -488,5 +492,4 @@ warning: Color para advertencias o mensajes importantes.
   font-size: 10px;
   font-weight: bold;
 }
-
 </style>

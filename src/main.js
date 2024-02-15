@@ -10,9 +10,10 @@ import axios from 'axios';
 
 /* axios.defaults.baseURL = "http://localhost:3000/api/"; */
 
+
 const pinia = createPinia()
 const app = createApp(App)
-axios.defaults.baseURL="https://backend-5ahx.onrender.com/api/"
+ axios.defaults.baseURL="https://backend-5ahx.onrender.com/api/" 
 
 app.use(router);
 app.use(pinia);

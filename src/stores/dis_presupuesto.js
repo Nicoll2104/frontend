@@ -87,7 +87,7 @@ export const usedisPresupuesStore = defineStore('disPresupues', () => {
             console.log('a');
             let res = await axios.post("disPresupues/agregar",data);
             console.log('a', res);
-            return res.data.disPresupuesto
+            return res.data.distribucion
         } catch (error) {
             throw error
         }

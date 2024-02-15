@@ -8,8 +8,9 @@ export const useFichaStore = defineStore('ficha', () => {
     const obtenerInfoFichas = async () => {
         try {
             let responFichas = await axios.get('ficha/ver');
+            console.log(responFichas)
             return responFichas.data
-            console.log(lotes)
+            
         } catch (error) {
             console.log(error);
             throw error

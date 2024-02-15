@@ -78,7 +78,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useAreaStore } from "../stores/area.js";
 import { useQuasar } from 'quasar'
 
@@ -144,9 +144,9 @@ const obtenerInfo = async () => {
   }
 };
 
-onMounted(() => {
+
   obtenerInfo();
-});
+
 
 
 const estado = ref("guardar");
@@ -176,15 +176,13 @@ const enviarInfo = {
     loadingmodal.value = true;
     try {
       const response = await useArea.postArea(data.value);
-      console.log(response);
       if (!response) return
       if (response.error) {
         notificar('negative', response.error)
         loadingmodal.value = false;
         return
       }
-
-      rows.value.unshift(response);
+      rows.value.unshift(response.areas);
       notificar('positive', 'Guardado exitosamente')
       modal.value = false;
     } catch (error) {
@@ -281,10 +279,13 @@ for (const d of arrData) {
     return
   }
 
-  if (d[0] === "presupuesto_inicial" && d[1].toString().length < 1) {
-    notificar('negative', "El presupuesto inicial debe ser diferente a 0")
-    return
-  }
+  if (d[0] === "presupuesto") {
+      const presupuesto = parseFloat(d[1]);
+      if (isNaN(presupuesto) || presupuesto <= 0) {
+        notificar('negative', "El presupuesto inicial debe ser mayor que cero");
+        return;
+      }
+    }
 }
 enviarInfo[estado.value]()
 }

@@ -1,70 +1,10 @@
-<!-- <template>
-  <div class="q-pa-md">
-    <q-table
-      flat bordered
-      title="Treats"
-      :rows="rows"
-      :columns="columns"
-      row-key="name"
-      binary-state-sort
-    >
-      <template v-slot:body="props">
-        <q-tr :props="props">
-          <q-td key="name" :props="props">
-            {{ props.row.name }}
-            <q-popup-edit v-model="props.row.name" v-slot="scope">
-              <q-input v-model="scope.value" dense autofocus counter @keyup.enter="scope.set" />
-            </q-popup-edit>
-          </q-td>
-          <q-td key="calories" :props="props">
-            {{ props.row.calories }}
-            <q-popup-edit v-model="props.row.calories" title="Update calories" buttons v-slot="scope">
-              <q-input type="number" v-model="scope.value" dense autofocus />
-            </q-popup-edit>
-          </q-td>
-          <q-td key="fat" :props="props">
-            <div class="text-pre-wrap">{{ props.row.fat }}</div>
-            <q-popup-edit v-model="props.row.fat" v-slot="scope">
-              <q-input type="textarea" v-model="scope.value" dense autofocus />
-            </q-popup-edit>
-          </q-td>
-          <q-td key="carbs" :props="props">
-            {{ props.row.carbs }}
-            <q-popup-edit v-model="props.row.carbs" title="Update carbs" buttons persistent v-slot="scope">
-              <q-input type="number" v-model="scope.value" dense autofocus hint="Use buttons to close" />
-            </q-popup-edit>
-          </q-td>
-          <q-td key="protein" :props="props">{{ props.row.protein }}</q-td>
-          <q-td key="sodium" :props="props">{{ props.row.sodium }}</q-td>
-          <q-td key="calcium" :props="props">{{ props.row.calcium }}</q-td>
-          <q-td key="iron" :props="props">{{ props.row.iron }}</q-td>
-        </q-tr>
-      </template>
-    </q-table>
-  </div>
-</template>
 
-<script setup>
-import { ref } from "vue";
-
-const columns = [
-  { name: 'Cantidad', align: 'center', label: 'Cantidad', field: 'cantidad', sortable: true },
-  { name: 'Pedido', align: 'center', label: 'Pedido', field: 'pedido_id', sortable: true },
-  { name: 'Producto',align: 'center',  label: 'Producto', field: 'producto_id' },
-  { name: 'Estado',align: 'center',  label: 'Estado', field: 'status' },
-]
-
-const rows = []
-</script>
-
-<style scoped>
-</style> -->
 
 
 
 <script setup>
 import { ref } from "vue";
-/* import { useClienteStore } from "../stores/presupuesto.js"; */
+import { useFichaStore } from "../stores/ficha.js";
 import { useQuasar } from 'quasar'
 
 const modelo = "Crear Pedido";
@@ -73,13 +13,27 @@ const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
 const loadingmodal = ref(false);
+const fichaStore = useFichaStore();
+
+/* function opcionesFecha(fecha) {
+  console.log(fecha);
+  const fechaA = fechaActual()
+  return fecha >= fechaA
+}
+
+function fechaActual() {
+  const fecha = new Date
+  const formatoFecha = `${fecha.getFullYear()}/${(fecha.getMonth() + 1).toString().padStart(2, '0')}/${fecha.getDate().toString().padStart(2, '0')}`
+
+  return formatoFecha
+} */
 
 const columns = ref([
   {
-    name: "pedido_id",
+    name: "items",
     label: "Items",
     align: "left",
-    field: (row) => row.pedido_id,
+    field: (row) => row.items,
 
   },
   {
@@ -93,42 +47,82 @@ const columns = ref([
     label: "Cantidad",
     align: "left",
     field: (row) => row.cantidad,
-    sort: true,
-    sortOrder: "da",
+
+ 
   },
   {
-    name: "Precio",
+    name: "precio",
     label: "Precio",
     align: "center",
-    field: (row) => row.estado,
+    field: (row) => row.precio,
   },
   {
-    name: "Subtotal",
+    name: "subtotal",
     label: "Subtotal",
-    field: "opciones",
+    field: "subtotal",
   },
 ]);
 const rows = ref([]);
 
 const data = ref({
-  cantidad: "",
-  pedido_id: "",
+  items: "",
   producto_id: "",
+  cantidad: "",
+  precio: "",
+  subtotal: "",
 });
 
+/* async function obtenerInfo() {
+  await fichaStore.obtenerInfoFichas();
+  ficha.value = fichaStore.fichas;
+
+  await rutaStore.obtenerInfoRutas();
+  rutas.value = rutaStore.rutas;
+
+  await clienteStore.obtenerInfoClientes();
+  clientes.value = clienteStore.clientes;
+}; */
+
+/*  async function obtenerInfo() {
+  await fichaStore.obtenerInfoFichas();
+  console.log(fichaStore)
+  ficha.value = fichaStore.fichas;
+
+  await rutaStore.obtenerInfoRutas();
+  rutas.value = rutaStore.rutas;
+
+  await clienteStore.obtenerInfoClientes();
+  clientes.value = clienteStore.clientes;
+  try {
+    await fichaStore.obtenerInfoFichas();
+    const fichaActivos = fichaStore.buses.filter(ficha => ficha.estado === true);
+    optionsFicha.value = fichaActivos.map((ficha) => ({
+      label: `${ficha.id} - ${ficha.nombre}`,
+      value: String(ficha._id),
+    }));
+  } catch (error) {
+    console.log(error);
+  };
+}; 
+
+
+
+obtenerInfo(); */
 const obtenerInfo = async () => {
   try {
-    const cliente = await useCliente.obtener();
+    const lotes = await useLote.obtenerInfoLotes();
+    console.log("uselote")
+    console.log(useLote)
+    console.log("dentro")
+    console.log(lotes);
 
-    console.log(cliente);
+    if (!lotes) return
 
-    if (!cliente) return
-
-    if (cliente.error) {
-      notificar('negative', cliente.error)
+    if (lotes.error) {
+      notificar('negative', lotes.error)
       return
     }
-    rows.value = cliente.cliente;
+    rows.value = lotes
 
   } catch (error) {
     console.error(error);
@@ -136,8 +130,14 @@ const obtenerInfo = async () => {
     loadingTable.value = false
   }
 };
+console.log("Antes de la línea 101");
 
-obtenerInfo();
+/* onMounted(() => {
+  obtenerInfo();
+  console.log("inicio");
+}); */
+
+
 
 const estado = ref("guardar");
 const modal = ref(false);
@@ -293,9 +293,8 @@ function notificar(tipo, msg) {
         <h4>Crear Pedido</h4>
       <div class="q-gutter-md" >
         <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
-          <q-input v-model="date" filled type="date" hint="Fecha de pedido" class="q-mx-auto" style="width: 250px"/>
-          <q-input v-model="text" label="Número del pedido" class="q-mx-auto" style="width: 
-          350px" />
+          <q-input v-model="date" filled type="date" hint="Fecha de pedido" class="q-mx-auto" style="width: 200px"/>
+          <q-input v-model="date" filled type="date" hint="Fecha de entrega" class="q-mx-auto" style="width: 200px"/>
         </q-card-section>
         <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
           <q-input v-model="text" label="Nombre del Instructor" class="q-mx-auto" style="width: 250px" />
@@ -363,6 +362,13 @@ function notificar(tipo, msg) {
         </template>
       </q-table>
     </div>
+    <div class="q-gutter-md" >
+        <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
+          <q-input v-model="text" filled hint="SUBTOTAL" class="q-mx-auto" style="width: 250px"/>
+          <q-input v-model="text" filled hint="IIMPUESTOS" class="q-mx-auto" style="width: 250px"/>
+          <q-input v-model="text" filled hint="TOTAL" class="q-mx-auto" style="width: 250px"/>
+        </q-card-section>
+      </div>
      <!-- btns 🛑👇 -->
      <q-card-section class="q-gutter-md row items-end justify-end continputs1">
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
