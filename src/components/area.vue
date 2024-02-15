@@ -78,7 +78,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useAreaStore } from "../stores/area.js";
 import { useQuasar } from 'quasar'
 
@@ -144,9 +144,9 @@ const obtenerInfo = async () => {
   }
 };
 
-onMounted(() => {
+
   obtenerInfo();
-});
+
 
 
 const estado = ref("guardar");
@@ -183,7 +183,6 @@ const enviarInfo = {
         loadingmodal.value = false;
         return
       }
-
       rows.value.unshift(response);
       notificar('positive', 'Guardado exitosamente')
       modal.value = false;

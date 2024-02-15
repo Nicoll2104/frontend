@@ -46,13 +46,13 @@ const columns = ref([
     name: "lote",
     label: "lote",
     align: "left",
-    field: (row) => row.lote,
+    field: (row) => row.lote.nombre,
   },
   {
     name: "items",
     label: "items",
     align: "left",
-    field: (row) => row.items,
+    field: (row) => row.items.codigo_presupuesto,
   },
   {
     name: "status",
@@ -140,12 +140,10 @@ const obtenerInfo = async () => {
     loadingTable.value = false
   }
 };
-console.log("Antes de la línea 101");
 
-onMounted(() => {
+
   obtenerInfo();
-  console.log("inicio");
-});
+
 
 const estado = ref("guardar");
 const modal = ref(false);
@@ -165,7 +163,15 @@ const opciones = {
     estado.value = "guardar";
   },
   editar: (info) => {
+    obtenerPresupuestos()
+    obtenerLotes();
     data.value = { ...info }
+    if(data.value.lote){
+      data.value.lote = { label: info.lote.nombre, value: info.lote._id}
+    }
+    if(data.value.items){
+      data.value.items = { label: info.items.codigo_presupuesto, value: info.items._id}
+    }
     modal.value = true;
     estado.value = "editar";
   },
@@ -202,7 +208,7 @@ const enviarInfo = {
   editar: async () => {
     loadingmodal.value = true;
     try {
-      const info = {...data.value, lote:data.value.lote, items: data.value.items}
+      const info = {...data.value, lote:data.value.lote.value, items: data.value.items.value}//esto
       console.log("info", data.items);
       const response = await useDisPresupuesto.putDisPresupuesto(data.value._id, info);
       console.log(response);
