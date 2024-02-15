@@ -363,6 +363,13 @@ function notificar(tipo, msg) {
         </template>
       </q-table>
     </div>
+    <div class="q-gutter-md" >
+        <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
+          <q-input v-model="text" filled hint="SUBTOTAL" class="q-mx-auto" style="width: 250px"/>
+          <q-input v-model="text" filled hint="IIMPUESTOS" class="q-mx-auto" style="width: 250px"/>
+          <q-input v-model="text" filled hint="TOTAL" class="q-mx-auto" style="width: 250px"/>
+        </q-card-section>
+      </div>
      <!-- btns 🛑👇 -->
      <q-card-section class="q-gutter-md row items-end justify-end continputs1">
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
