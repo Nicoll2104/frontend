@@ -6,8 +6,6 @@
   import Cookies from 'js-cookie'
 
 
-
-
   const UsuarioStore = useUsuarioStore()
   const router = useRouter()
   
