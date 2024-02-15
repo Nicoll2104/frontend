@@ -233,8 +233,8 @@ function validarCampos() {
       }
     }
 
-    if (d[0] === "año" && d[1].length > 4) {
-      notificar('negative', 'El año no puede tener mas de 4 caracteres')
+    if (d[0] === "año" && d[1].length !== 4) {
+      notificar('negative', 'El año tiene que tener 4 caracteres')
       return
     }
   }
