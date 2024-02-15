@@ -293,9 +293,8 @@ function notificar(tipo, msg) {
         <h4>Crear Pedido</h4>
       <div class="q-gutter-md" >
         <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
-          <q-input v-model="date" filled type="date" hint="Fecha de pedido" class="q-mx-auto" style="width: 250px"/>
-          <q-input v-model="text" label="Número del pedido" class="q-mx-auto" style="width: 
-          350px" />
+          <q-input v-model="date" filled type="date" hint="Fecha de pedido" class="q-mx-auto" style="width: 200px"/>
+          <q-input v-model="date" filled type="date" hint="Fecha de entrega" class="q-mx-auto" style="width: 200px"/>
         </q-card-section>
         <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
           <q-input v-model="text" label="Nombre del Instructor" class="q-mx-auto" style="width: 250px" />
