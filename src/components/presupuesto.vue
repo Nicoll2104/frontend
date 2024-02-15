@@ -225,9 +225,12 @@ function validarCampos() {
       return
     }
 
-    if (d[0] === "presupuesto_inicial" && d[1].toString().length < 1) {
-      notificar('negative', "El presupuesto inicial debe ser diferente a 0")
-      return
+    if (d[0] === "presupuesto_inicial") {
+      const presupuesto = parseFloat(d[1]);
+      if (isNaN(presupuesto) || presupuesto <= 0) {
+        notificar('negative', "El presupuesto inicial debe ser mayor que cero");
+        return;
+      }
     }
 
     if (d[0] === "año" && d[1].length > 4) {
