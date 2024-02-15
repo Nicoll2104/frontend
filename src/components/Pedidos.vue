@@ -1,60 +1,105 @@
 <script setup>
 import { ref } from "vue";
-/* import { useClienteStore } from "../stores/presupuesto.js"; */
+import { usePedidoStore } from "../stores/pedido.js";
 import { useQuasar } from 'quasar'
 
 const modelo = "Pedidos";
-/* const useCliente = useClienteStore(); */
+const usePedido = usePedidoStore();
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
 const loadingmodal = ref(false);
 
-const columns = ref([
-  { name: 'Fecha creacion', align: 'center', label: 'Fecha creacion', field: 'fecha creacion'},
-  { name: 'Fecha entrega', align: 'center', label: 'Fecha entrega', field: 'fecha entrega'},
-  { name: 'Distribucion ficha',align: 'center',  label: 'Distribucion ficha', field: 'distribucion ficha' },
-  { name: 'Instructor encargado',align: 'center',  label: 'Instructor encargado', field: 'instructor encargado' },
-  { name: 'Subtotal',align: 'center',  label: 'Subtotal', field: 'subtotal' },
-  { name: 'Total',align: 'center',  label: 'Total', field: 'total' },
+/* const columns = ref([
+  { name: 'fecha_creacion', align: 'center', label: 'Fecha creacion', field: 'fecha creacion'},
+  { name: 'fecha_entrega', align: 'center', label: 'Fecha entrega', field: 'fecha entrega'},
+  { name: 'ficha',align: 'center',  label: 'Ficha', field: 'ficha' },
+  { name: 'instructor_encargado',align: 'center',  label: 'Instructor encargado', field: 'instructor encargado' },
+  { name: 'subtotal',align: 'center',  label: 'Subtotal', field: 'subtotal' },
+  { name: 'total',align: 'center',  label: 'Total', field: 'total' },
+  { name: 'impuestos',align: 'center',  label: 'Impuestos', field: 'Impuestos' },
   { name: 'Items',align: 'center',  label: 'Items', field: 'items' },
   { name: 'Estado',align: 'center',  label: 'Estado', field: 'status' },
+]); */
+const columns = ref([
+  {
+    name: "fecha_creacion",
+    label: "Fecha creacion",
+    align: "left",
+    field: (row) => row.fecha_creacion,
+    sort: true,
+    sortOrder: "da",
+  },
+  {
+    name: "fecha_entrega",
+    label: "fecha entrega",
+    align: "left",
+    field: (row) => row.fecha_entrega,
+
+  },
+  {
+    name: "subtotal",
+    label: "subtotal",
+    align: "left",
+    field: (row) => row.subtotal,
+  },
+  {
+    name: "total",
+    label: "total",
+    align: "left",
+    field: (row) => row.total,
+  },
+  {
+    name: "impuestos",
+    label: "impuestos",
+    align: "left",
+    field: (row) => row.impuestos,
+  },
+  {
+    name: "ficha",
+    label: "ficha",
+    align: "left",
+    field: (row) => row.ficha,
+  },
+  {
+    name: "status",
+    label: "Estado",
+    align: "center",
+    field: (row) => row.status,
+  },
+  {
+    name: "opciones",
+    label: "Opciones",
+    field: "opciones",
+  },
 ]);
 
 const rows = ref([]);
-const selectunidadmedida = [
-        { label: 'Unidades', value: 'unidades' },
-        { label: 'Kilogramos', value: 'kg' },
-        { label: 'Libras', value: 'lb' },
-        { label: 'Litros', value: 'l' },
-      ]
 
 const data = ref({
-  nombre: "",
-  cedula: "",
-  fecha: "",
+  fecha_creacion: "",
+  fecha_entrega: "",
   ficha: "",
-  producto: "",
-  descripcion: "",
-  unidadmedida: "",
-  cantidad: "",
+  subtotal: "",
+  total: "",
+  impuestos: "",
 });
 
-const preciototal = data.cantidad * data.precioporunidad;
+/* const preciototal = data.cantidad * data.precioporunidad; */
 
 const obtenerInfo = async () => {
   try {
-    const cliente = await useCliente.obtener();
+    const pedidos = await usePedido.obtenerInfoPedido();
 
-    console.log(cliente);
+    console.log(pedidos);
 
-    if (!cliente) return
+    if (!pedidos) return
 
-    if (cliente.error) {
-      notificar('negative', cliente.error)
+    if (pedidos.error) {
+      notificar('negative', pedidos.error)
       return
     }
-    rows.value = cliente.cliente;
+    rows.value = pedidos;
 
   } catch (error) {
     console.error(error);
@@ -70,16 +115,12 @@ const modal = ref(false);
 const opciones = {
   agregar: () => {
     data.value = {
-    nombre: "",
-    cedula: "",
-    fecha: "",
-    ficha: "",
-    producto: "",
-    descripcion: "",
-    unidadmedida: "",
-    cantidad: "",
-    precioporunidad: "",
-    impuesto: "",
+      fecha_creacion: "",
+      fecha_entrega: "",
+      ficha: "",
+      subtotal: "",
+      total: "",
+      impuestos: "",
 
     };
     modal.value = true;
@@ -194,8 +235,20 @@ function validarCampos() {
       }
     }
 
-    if (d[0] === "nombre" && d[1].length > 15) {
-      notificar('negative', 'El nombre no puede tener más de 15 caracteres')
+    if (d[0] === "fecha_creacion" && d[1].toString().length < 1) {
+      notificar('negative', "La fecha de creacion es obligatoria")
+      return
+    }
+    if (d[0] === "fecha_entrega" && d[1].toString().length < 1) {
+      notificar('negative', "La fecha de entrega es obligatoria")
+      return
+    }
+    if (d[0] === "subtotal" && d[1].toString().length < 1) {
+      notificar('negative', "El subtotal es obligatorio")
+      return
+    }
+    if (d[0] === "total" && d[1].toString().length < 1) {
+      notificar('negative', "El subtotal es obligatorio")
       return
     }
 
@@ -220,24 +273,24 @@ function notificar(tipo, msg) {
   })
 }
 
-function prompt () {
-      $q.dialog({
-        title: 'Prompt',
-        message: 'What is your name?',
-        prompt: {
-          model: '',
-          type: 'text' // optional
-        },
-        cancel: true,
-        persistent: true
-      }).onOk(data => {
-        // console.log('>>>> OK, received', data)
-      }).onCancel(() => {
-        // console.log('>>>> Cancel')
-      }).onDismiss(() => {
-        // console.log('I am triggered on both OK and Cancel')
-      })
-    }
+function prompt() {
+  $q.dialog({
+    title: 'Prompt',
+    message: 'What is your name?',
+    prompt: {
+      model: '',
+      type: 'text' // optional
+    },
+    cancel: true,
+    persistent: true
+  }).onOk(data => {
+    // console.log('>>>> OK, received', data)
+  }).onCancel(() => {
+    // console.log('>>>> Cancel')
+  }).onDismiss(() => {
+    // console.log('I am triggered on both OK and Cancel')
+  })
+}
 </script>
 
 <template>
@@ -247,10 +300,10 @@ function prompt () {
         <q-toolbar>
           <q-toolbar-title> Agregar {{ modelo }}</q-toolbar-title>
           <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
-        
+
         </q-toolbar>
         <!-- inputs🃏👇-->
-       <!--  <q-card-section class="q-gutter-md row items-star justify-center continputs1">
+        <!--  <q-card-section class="q-gutter-md row items-star justify-center continputs1">
             <q-input class="nombreinput modalinputs" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
             
@@ -288,23 +341,20 @@ function prompt () {
             </q-input>
 
           </q-card-section> -->
-          
-          <!-- inputs🃏☝ -->
 
-          <!-- btns 🛑👇 -->
-          <q-card-section class="q-gutter-md row items-end justify-end continputs1">
-          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
-            color="secondary" label="guardar">
+        <!-- inputs🃏☝ -->
+
+        <!-- btns 🛑👇 -->
+        <q-card-section class="q-gutter-md row items-end justify-end continputs1">
+          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px" color="secondary" label="guardar">
             <q-icon name="style" color="white" right />
           </q-btn>
 
-          <q-btn :loading="loadingmodal" padding="10px"
-            color="secondary" label="imprimir">
+          <q-btn :loading="loadingmodal" padding="10px" color="secondary" label="imprimir">
             <q-icon name="print" color="white" right />
           </q-btn>
 
-          <q-btn :loading="loadingmodal" padding="10px"
-            color="warning" label="cancelar" text-color="white" v-close-popup >
+          <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white" v-close-popup>
             <q-icon name="cancel" color="white" right />
           </q-btn>
 
@@ -319,7 +369,7 @@ function prompt () {
         no-results-label="No hay resultados para la busqueda" wrap-cells="false">
         <template v-slot:top>
           <h4 class="titulo-cont">
-            {{ modelo +' ' }}
+            {{ modelo + ' ' }}
           </h4>
           <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar">
             <template v-slot:append>
@@ -386,27 +436,27 @@ warning: Color para advertencias o mensajes importantes.
 
 .modal {
   width: 100%;
-  max-width: none;
+  max-width: 600px;
 }
 
-.continputs1{
+.continputs1 {
   border-top: solid 1px rgba(0, 0, 0, 0.212);
-  margin-top: 2px ;
+  margin-top: 2px;
 }
 
-.modalinputs{
+.modalinputs {
   width: 400px;
-  max-width: 80% ;
+  max-width: 80%;
 }
 
-.descripcioninput{
+.descripcioninput {
   width: 100%;
 }
 
 .tabla {
   padding: 0 20px;
   margin: 10px auto;
-  max-width: 1000px;
+  max-width: 1200px;
   /* min-height: 710px; */
   border: 0px solid black;
 }

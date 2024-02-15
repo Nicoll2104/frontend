@@ -32,7 +32,7 @@
           </q-input>
 
 
-          <q-input class="modalinputs" outlined v-model="data.fecha_vencimiento" label="Fecha vencimiento" type="date"
+          <q-input class="modalinputs" outlined v-model="data.fecha_vencimiento" label="Fecha vencimiento" type="text"
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de vencimiento']"></q-input>
         </q-card-section>
         <q-card-section class="q-pr-xl row items-star justify-end continputs1">
