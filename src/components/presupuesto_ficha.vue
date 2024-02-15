@@ -6,6 +6,7 @@ import { useFichaStore } from "../stores/ficha.js";
 import { useQuasar } from 'quasar'
 
 
+
 const useDisFicha = useDisFichaStore();
 const useDisPresupuesto = usedisPresupuesStore();
 const useFicha = useFichaStore();
@@ -103,16 +104,18 @@ const getdisPresupuesto = async () => {
   try {
     disPresupuesto = await useDisPresupuesto.obtenerInfodisPresupues();
 
+
     if (!disPresupuesto) return
 
     if (disPresupuesto.error) {
       notificar('negative', disPresupuesto.error)
       return
     }
-    rowbuild()
   } catch (error) {
+    notificar('negative', error.response.data.error)
     console.error(error);
   } finally {
+    rowbuild()
     getficha()
     loadinpresupuesto.value = false
   }
@@ -122,6 +125,7 @@ const getficha = async () => {
   try {
     fichas = await useFicha.obtenerInfoFichas();
 
+
     if (!disPresupuesto) return
 
     if (disPresupuesto.error) {
@@ -130,6 +134,7 @@ const getficha = async () => {
     }
 
   } catch (error) {
+    notificar('negative', error.response.data.error)
     console.error(error);
   } finally {
     rowbuild()
@@ -141,14 +146,26 @@ const getficha = async () => {
 function rowbuild(){
   const distribucion_fichas = disFichas.distribucion
 
-  if (disPresupuesto == undefined || disPresupuesto.distribucion == undefined) {
+  if (disPresupuesto == undefined && fichas == undefined) {
     console.log('rows1:')
-    console.log(distribucion_fichas)
-    rows.value = distribucion_fichas
+    
+    
+    const array = []
+    for (let i = 0; i < distribucion_fichas.length; i++) {
+      console.log(distribucion_fichas)
+
+        array.push({
+        presupuesto:distribucion_fichas[i].presupuesto,
+        distribucion_presupuesto:"",
+        ficha:"",
+        status:distribucion_fichas[i].status,
+      })
+    }
+    rows.value = array
     return
   }
 
-  const distribucion_presupuesto = disPresupuesto.distribucion
+  const distribucion_presupuesto = disPresupuesto.distribucion || []
 
   if (fichas == undefined){
     const array = []
@@ -156,11 +173,11 @@ function rowbuild(){
       console.log('segunda consulta')
       const indexdispresupuesto = distribucion_presupuesto.findIndex(objeto => objeto._id == distribucion_fichas[i].distribucion_presupuesto)
 
-    let campo_dispresupuesto = "- - - - -"
+    let campo_dispresupuesto = ""
     if (indexdispresupuesto !== -1){
       campo_dispresupuesto = distribucion_presupuesto[indexdispresupuesto].nombre
     }
-    
+
         array.push({
         presupuesto:distribucion_fichas[i].presupuesto,
         distribucion_presupuesto:campo_dispresupuesto,
@@ -175,7 +192,7 @@ function rowbuild(){
     return
   }
 
-  const fichasdatos = fichas
+  const fichasdatos = fichas || []
 
   if (true){
   const array = []
@@ -184,9 +201,8 @@ function rowbuild(){
 
     const indexdispresupuesto = distribucion_presupuesto.findIndex(objeto => objeto._id == distribucion_fichas[i].distribucion_presupuesto)
     const indexficha = fichasdatos.findIndex(objeto => objeto._id == distribucion_fichas[i].ficha)
-
-    let campo_dispresupuesto = "- - - - -"
-    let campo_ficha = "- - - - -"
+    let campo_dispresupuesto = ""
+    let campo_ficha = ""
 
     if (indexdispresupuesto !== -1){
       campo_dispresupuesto = distribucion_presupuesto[indexdispresupuesto].nombre
@@ -203,7 +219,6 @@ function rowbuild(){
       status:distribucion_fichas[i].status,
     })
 
-    console.log('rows3:')
     }
     rows.value = array
     console.log('TERMINOOOOO')
@@ -264,7 +279,6 @@ const enviarInfo = {
       if (!response) return
       if (response.error) {
         notificar('negative', response.error)
-        loadingmodal.value = false;
         return
       }
       console.log(rows.value);
@@ -274,7 +288,6 @@ const enviarInfo = {
     } catch (error) {
       console.log(error);
     } finally {
-      loadingmodal.value = false;
     }
   },
 };
@@ -282,43 +295,43 @@ const enviarInfo = {
 const in_activar = {
   putActivar: async (id) => {
     try {
-      console.log(id);
-      const response = await useLote.putActivar(id);
+      const response = await useDisFicha.putActivar(id);
       console.log(response);
       console.log("Activando");
       if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
+      if (response.response.data.error) {
+        notificar('negative', response.response.data.error)
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response.data.lotes);
+      rows.value.splice(buscarIndexLocal(response.data.DisFicha._id), 1, response.data.DisFicha);
       notificar('positive', 'Activado, exitosamente')
     } catch (error) {
       console.log(error);
+      notificar('negative', response.error.data.error)
     } finally {
       loadingmodal.value = false;
     }
   },
   putInactivar: async (id) => {
     console.log("inactivar");
+    console.log(id);
     try {
-      console.log("Desactivar");
-      const response = await useLote.putInactivar(id);
-      console.log(response);
-      if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
+      const response = await useDisFicha.putInactivar(id);
+      if (!response) {loadingmodal.value = false; return}
 
+      if (response.response.data.error) {
+        notificar('negative', response.response.data.error)
+        console.log('fin')
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.lotes._id), 1, response.data.lotes);
-      notificar('negative', 'Inactivado exitosamente')
+      rows.value.splice(buscarIndexLocal(response.data.DisFicha._id), 1, response.data.DisFicha);
+      notificar('positive', 'Inactivado exitosamente')
     } catch (error) {
       console.log(error);
+      notificar('negative', response.data.error)
     } finally {
       loadingmodal.value = false;
     }
-
   },
 };
 
