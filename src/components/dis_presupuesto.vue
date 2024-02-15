@@ -299,13 +299,16 @@ function validarCampos() {
       return
     }
 
-    if (d[0] === "presupuesto_inicial" && d[1].toString().length < 1) {
-      notificar('negative', "El presupuesto inicial debe ser diferente a 0")
-      return
+    if (d[0] === "presupuesto_inicial") {
+      const presupuesto = parseFloat(d[1]);
+      if (isNaN(presupuesto) || presupuesto <= 0) {
+        notificar('negative', "El presupuesto inicial debe ser mayor que cero");
+        return;
+      }
     }
 
-    if (d[0] === "año" && d[1].length > 4) {
-      notificar('negative', 'El año no puede tener mas de 4 caracteres')
+    if (d[0] === "año" && d[1].length !== 4) {
+      notificar('negative', 'El año tiene que tener 4 caracteres')
       return
     }
 
@@ -352,7 +355,7 @@ function notificar(tipo, msg) {
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
           <q-input class="input1" outlined v-model="data.presupuesto_inicial" label="Presupuesto inicial" type="number"
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
-          <q-input class="input1" outlined v-model="data.ano" label="Año" type="text" maxlength="15" lazy-rules
+          <q-input class="input1" outlined v-model="data.ano" label="Año" type="number" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
           <q-select class="input1" outlined v-model="data.lote" :options="options" label="Lotes" type="number"
             maxlength="30" lazy-rules :rules="[val => val != '' || 'Seleccione el lote']" />
