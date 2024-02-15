@@ -1,11 +1,9 @@
-
-
-
-
 <script setup>
 import { ref } from "vue";
 import { useFichaStore } from "../stores/ficha.js";
 import { useQuasar } from 'quasar'
+import { format } from "date-fns";
+
 
 const modelo = "Crear Pedido";
 /* const useCliente = useClienteStore(); */
@@ -70,7 +68,41 @@ const data = ref({
   cantidad: "",
   precio: "",
   subtotal: "",
+  fecha_pedido: "",
+  fecha_entrega: "",
+  ficha: "",
 });
+
+function convertirFecha(cadenaFecha) {
+  const fecha = new Date(cadenaFecha);
+  const offset = 5 * 60;
+  fecha.setMinutes(fecha.getMinutes() + offset);
+  const año = fecha.getFullYear();
+  const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
+  const dia = fecha.getDate().toString().padStart(2, "0");
+
+  const fechaFormateada = `${dia}/${mes}/${año}`;
+  return fechaFormateada;
+}
+
+/* const fecha_pedido = new Date(data.value.fecha_pedido);
+  const fecha_entrega = new Date(data.value.fecha_entrega);
+  if (fecha_pedido > fecha_entrega) {
+    notificar('negative', `La fecha del pedido no puede ser posterior a la fecha de entrega ${fechaFin.toLocaleDateString()}`);
+    return;
+  }
+
+  enviarInfo[estado.value]();
+
+
+
+function notificar(tipo, msg) {
+  $q.notify({
+    type: tipo,
+    message: msg,
+    position: "top"
+  })
+} */
 
 /* async function obtenerInfo() {
   await fichaStore.obtenerInfoFichas();
@@ -83,54 +115,43 @@ const data = ref({
   clientes.value = clienteStore.clientes;
 }; */
 
-/*  async function obtenerInfo() {
+/* async function obtenerInfo() {
   await fichaStore.obtenerInfoFichas();
   console.log(fichaStore)
   ficha.value = fichaStore.fichas;
 
-  await rutaStore.obtenerInfoRutas();
-  rutas.value = rutaStore.rutas;
-
-  await clienteStore.obtenerInfoClientes();
-  clientes.value = clienteStore.clientes;
   try {
     await fichaStore.obtenerInfoFichas();
-    const fichaActivos = fichaStore.buses.filter(ficha => ficha.estado === true);
-    optionsFicha.value = fichaActivos.map((ficha) => ({
+    const fichaActivos = fichaStore.fichas.filter(ficha => ficha.estado === true);
+    opcionesFicha.value = fichaActivos.map((ficha) => ({
       label: `${ficha.id} - ${ficha.nombre}`,
       value: String(ficha._id),
     }));
   } catch (error) {
     console.log(error);
   };
-}; 
+};  */
 
+const opcionesFicha = ref([]);
 
-
-obtenerInfo(); */
 const obtenerInfo = async () => {
   try {
-    const lotes = await useLote.obtenerInfoLotes();
-    console.log("uselote")
-    console.log(useLote)
-    console.log("dentro")
-    console.log(lotes);
-
-    if (!lotes) return
-
-    if (lotes.error) {
-      notificar('negative', lotes.error)
-      return
-    }
-    rows.value = lotes
-
+    const ficha = await useFichaStore.obtenerInfoFichas();
+      if (ficha && Array.isArray(ficha.fichas)) {
+      opcionesFicha.value = ficha.fichas.map(areas => ({ label: fichas.nombre, value: fichas._id, disable:fichas.status==='0' }));
+    } else {
+  console.error("El áreas es inválido:", area);
+  }
+    
   } catch (error) {
     console.error(error);
   } finally {
-    loadingTable.value = false
+    loadingTable.value = false;
   }
 };
-console.log("Antes de la línea 101");
+
+obtenerInfo();
+
 
 /* onMounted(() => {
   obtenerInfo();
@@ -293,12 +314,14 @@ function notificar(tipo, msg) {
         <h4>Crear Pedido</h4>
       <div class="q-gutter-md" >
         <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
-          <q-input v-model="date" filled type="date" hint="Fecha de pedido" class="q-mx-auto" style="width: 200px"/>
-          <q-input v-model="date" filled type="date" hint="Fecha de entrega" class="q-mx-auto" style="width: 200px"/>
+          <q-input v-model="data.fecha_pedido" filled type="date" hint="Fecha de pedido" class="q-mx-auto" 
+          style="width: 200px" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de pedido' ] "/>
+          <q-input v-model="data.fecha_entrega" filled type="date" hint="Fecha de entrega" class="q-mx-auto" 
+          style="width: 200px" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de entrega']  "/>
         </q-card-section>
         <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
           <q-input v-model="text" label="Nombre del Instructor" class="q-mx-auto" style="width: 250px" />
-          <q-select filled v-model="model" :options="options" label="Seleccione la ficha" class="q-mx-auto" style="width: 350px" />
+          <q-select filled v-model="data.ficha" :options="optionesFicha" label="Seleccione la ficha" class="q-mx-auto" style="width: 350px" />
         </q-card-section>
       </div>
     <q-dialog v-model="modal">
@@ -362,13 +385,6 @@ function notificar(tipo, msg) {
         </template>
       </q-table>
     </div>
-    <div class="q-gutter-md" >
-        <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
-          <q-input v-model="text" filled hint="SUBTOTAL" class="q-mx-auto" style="width: 250px"/>
-          <q-input v-model="text" filled hint="IIMPUESTOS" class="q-mx-auto" style="width: 250px"/>
-          <q-input v-model="text" filled hint="TOTAL" class="q-mx-auto" style="width: 250px"/>
-        </q-card-section>
-      </div>
      <!-- btns 🛑👇 -->
      <q-card-section class="q-gutter-md row items-end justify-end continputs1">
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
