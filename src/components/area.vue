@@ -176,14 +176,13 @@ const enviarInfo = {
     loadingmodal.value = true;
     try {
       const response = await useArea.postArea(data.value);
-      console.log(response);
       if (!response) return
       if (response.error) {
         notificar('negative', response.error)
         loadingmodal.value = false;
         return
       }
-      rows.value.unshift(response);
+      rows.value.unshift(response.areas);
       notificar('positive', 'Guardado exitosamente')
       modal.value = false;
     } catch (error) {
