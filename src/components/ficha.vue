@@ -390,14 +390,16 @@ function validarCampos() {
       return;
     }
   }
-  if (data.value.fecha_inicio === data.value.fecha_fin) {
-    notificar('negative', 'La fecha de inicio no puede ser igual a la fecha de fin');
+  const fechaInicio = new Date(data.value.fecha_inicio);
+  const fechaFin = new Date(data.value.fecha_fin);
+
+  if (fechaInicio > fechaFin) {
+    notificar('negative', 'La fecha de inicio no puede ser posterior a la fecha de fin');
     return;
   }
 
   enviarInfo[estado.value]();
 }
-
 
 
 function notificar(tipo, msg) {
