@@ -36,7 +36,7 @@
         lazy-rules :rules="[val => val != '' || 'Seleccione el producto']"/>
         <q-input class="input1" outlined v-model="data.cantidad" label="Cantidad" type="number"
           maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
-        <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
+        <q-btn @click="agregarProducto" :loading="loadingmodal" padding="10px"
           :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
           <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
         </q-btn>
@@ -128,18 +128,6 @@ const fichaStore = useFichaStore();
 const productoStore = useProductoStore();
 const usuarioStore = useUsuarioStore();
 
-/* function opcionesFecha(fecha) {
-  console.log(fecha);
-  const fechaA = fechaActual()
-  return fecha >= fechaA
-}
-
-function fechaActual() {
-  const fecha = new Date
-  const formatoFecha = `${fecha.getFullYear()}/${(fecha.getMonth() + 1).toString().padStart(2, '0')}/${fecha.getDate().toString().padStart(2, '0')}`
-
-  return formatoFecha
-} */
 
 const columns = ref([
   {
@@ -149,30 +137,26 @@ const columns = ref([
     field: (row) => row.items,
 
   },
+  
+  {
+    name: "codigo",
+    label: "Código",
+    align: "left",
+    field: (row) => row.id,
+  },
   {
     name: "producto_id",
     label: "Producto",
     align: "left",
-    field: (row) => row.producto_id,
+    field: (row) => row.nombre,
+
+ 
   },
   {
     name: "cantidad",
     label: "Cantidad",
     align: "left",
     field: (row) => row.cantidad,
-
- 
-  },
-  {
-    name: "precio",
-    label: "Precio",
-    align: "center",
-    field: (row) => row.precio,
-  },
-  {
-    name: "subtotal",
-    label: "Subtotal",
-    field: "subtotal",
   },
 ]);
 const rows = ref([]);
@@ -186,11 +170,7 @@ const data = ref({
   items: "",
   producto_id: "",
   cantidad: "",
-  precio: "",
-  subtotal: "",
-  fecha_pedido: "",
-  fecha_entrega: "",
-  ficha: "",
+  nombre_id: "",
 });
 
 const validateDate = (value) => {
@@ -231,27 +211,12 @@ function convertirFecha(cadenaFecha) {
   return fechaFormateada;
 }
 
-/* const fecha_pedido = new Date(data.value.fecha_pedido);
-  const fecha_entrega = new Date(data.value.fecha_entrega);
-  if (fecha_pedido > fecha_entrega) {
-    notificar('negative', `La fecha del pedido no puede ser posterior a la fecha de entrega ${fechaFin.toLocaleDateString()}`);
-    return;
-  }
-
-  enviarInfo[estado.value]();
-
-
-
-function notificar(tipo, msg) {
-  $q.notify({
-    type: tipo,
-    message: msg,
-    position: "top"
-  })
-} */
-
 async function generarPedido() {
   showDetalleDiv.value = true;
+};
+
+const agregarPedido = (pedido) => {
+  rows.value.push(pedido);
 };
 
 function sortBy(array, key) {
@@ -317,7 +282,7 @@ const obtenerInfo = async () => {
   }
 };
 
-const estado = ref("guardar");
+const estado = ref("agregarProducto");
 const modal = ref(false);
 const opciones = {
   agregar: () => {
@@ -420,7 +385,6 @@ const in_activar = {
 
   },
 };
-
 </script>
 <style scoped>
 
