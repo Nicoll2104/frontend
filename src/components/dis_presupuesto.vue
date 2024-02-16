@@ -191,7 +191,7 @@ const enviarInfo = {
       console.log(response);
       if (!response) return
       if (response.error) {
-        notificar('negative', response.error)
+        notificar('negative', response.data.error.errors[0].msg)
         loadingmodal.value = false;
         return
       }

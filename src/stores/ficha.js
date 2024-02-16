@@ -23,7 +23,7 @@ export const useFichaStore = defineStore('ficha', () => {
             console.log('a', res);
             return res.data.fichas
         } catch (error) {
-            throw error
+            return error.response.data
         }
     }
 
@@ -32,7 +32,7 @@ export const useFichaStore = defineStore('ficha', () => {
             let res = await axios.put(`ficha/modificar/${id}`, data);
             return res
         } catch (error) {
-            throw error;
+            return error.response.data
         }
     };
 
