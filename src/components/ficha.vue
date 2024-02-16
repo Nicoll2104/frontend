@@ -260,7 +260,7 @@ const enviarInfo = {
     console.log(response);
     if (!response) return;
     if (response.error) {
-      notificar('negative', response.error);
+      notificar('negative', response.error.errors[0].msg);
       loadingmodal.value = false;
       return;
     }
@@ -291,7 +291,7 @@ editar: async () => {
     console.log(response);
     if (!response) return;
     if (response.error) {
-      notificar('negative', response.error);
+      notificar('negative', response.error.errors[0].msg);
       loadingmodal.value = false;
       return;
     }
@@ -395,16 +395,9 @@ function validarCampos() {
     return;
   }
 
-
-  const fechaFin = new Date(data.value.fecha_fin);
-  const fechaInicio = new Date(data.value.fecha_inicio);
-  if (fechaInicio > fechaFin) {
-    notificar('negative', `La fecha de inicio no puede ser posterior a la fecha de cierre ${fechaFin.toLocaleDateString()}`);
-    return;
-  }
-
   enviarInfo[estado.value]();
 }
+
 
 
 function notificar(tipo, msg) {

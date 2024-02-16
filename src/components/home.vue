@@ -19,16 +19,23 @@
 
 <script setup>
 import { ref } from "vue";
+import presupuesto from "../assets/presupuesto.png";
+import fichas2 from "../assets/fichas2.png"; 
+import lotes from "../assets/lotes.png";
+import areas from "../assets/areas.png";
+import pedido from "../assets/pedido.png"; 
+import producto from "../assets/producto.png"; 
 
 let content = ref([
-  { ruta: "/Presupuesto", titulo: "Presupuesto", img: "src/assets/presupuesto.png" },
-  { ruta: "/Fichas", titulo: "Fichas", img: "src/assets/fichas2.png" },
-  { ruta: "/Lotes", titulo: "Lotes", img: "src/assets/lotes.png" },
-  { ruta: "/Areas", titulo: "Areas", img: "src/assets/areas.png" },
-  { ruta: "/Pedidos", titulo: "Pedido", img: "src/assets/pedido.png" },
-  { ruta: "/Productos", titulo: "Producto", img: "src/assets/producto.png" },
+  { ruta: "/Presupuesto", titulo: "Presupuesto", img: presupuesto },
+  { ruta: "/Fichas", titulo: "Fichas", img: fichas2 },
+  { ruta: "/Lotes", titulo: "Lotes", img: lotes },
+  { ruta: "/Areas", titulo: "Areas", img: areas },
+  { ruta: "/Pedidos", titulo: "Pedido", img: pedido },
+  { ruta: "/Productos", titulo: "Producto", img: producto },
 ]);
 </script>
+
 
 <style>
 
@@ -42,9 +49,6 @@ let content = ref([
 .img {
   margin: 10px;
   height: 150px;
-}
-
-.link-card {
 }
 
 

@@ -203,7 +203,7 @@ const enviarInfo = {
         return
       }
       console.log(rows.value);
-      rows.value.splice(buscarIndexLocal(response.data.area._id), 1, response.data.area);
+      rows.value.splice(buscarIndexLocal(response.data.areas._id), 1, response.data.areas);
       notificar('positive', 'Editado exitosamente')
       modal.value = false;
     } catch (error) {
