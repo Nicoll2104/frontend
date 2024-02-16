@@ -22,7 +22,7 @@ export const usedisPresupuesStore = defineStore('disPresupues', () => {
             console.log('a', res);
             return res.data.distribucion
         } catch (error) {
-            throw error
+            return error.response.data
         }
     }
 
