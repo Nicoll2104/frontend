@@ -158,6 +158,8 @@ const columns = ref([
   },
 ]);
 const rows = ref([]);
+let options = ref([]);
+let itemsPre = ref([]);
 
 let selectProdut = ref([]);
 let seletFicha = ref([]);
