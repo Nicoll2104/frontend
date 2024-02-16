@@ -6,6 +6,28 @@ import Cookies from "js-cookie";
 
 
 export const useUsuarioStore = defineStore("usuario", () => {
+    
+  const obtenerInfoUsuarios = async () => {
+    try {
+      const x = insertarToken();
+      if (!x) return null;
+      const response = await x.get(`${model}obtenerInfoUsuarios`);
+      console.log("iformacion del usuario",response);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      if (error.message === "Network Error") {
+        notificar("Sin conexión, por favor intente recargar");
+        return null;
+      }
+  
+      if (error.response.data.error === "Token no valido") {
+        salir();
+      }
+      return error.response.data;
+    }
+  };
+
     const model = "usuario/";
     const router = useRouter();
     const $q = useQuasar();
@@ -176,6 +198,7 @@ export const useUsuarioStore = defineStore("usuario", () => {
     };
   
     return {
+      obtenerInfoUsuarios,
       obtener,
       guardar,
       editar,

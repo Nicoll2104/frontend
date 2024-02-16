@@ -1,10 +1,12 @@
 <script setup>
 import { ref } from "vue";
 import { usePedidoStore } from "../stores/pedido.js";
+import { useFichaStore } from "../stores/ficha.js";
 import { useQuasar } from 'quasar'
 
 const modelo = "Pedidos";
 const usePedido = usePedidoStore();
+const useFicha = useFichaStore();
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
@@ -32,40 +34,22 @@ const columns = ref([
   },
   {
     name: "fecha_entrega",
-    label: "fecha entrega",
+    label: "Fecha entrega",
     align: "left",
     field: (row) => row.fecha_entrega,
 
   },
   {
-    name: "subtotal",
-    label: "subtotal",
-    align: "left",
-    field: (row) => row.subtotal,
-  },
-  {
-    name: "total",
-    label: "total",
-    align: "left",
-    field: (row) => row.total,
-  },
-  {
-    name: "impuestos",
-    label: "impuestos",
-    align: "left",
-    field: (row) => row.impuestos,
-  },
-  {
     name: "ficha",
-    label: "ficha",
+    label: "Ficha",
     align: "left",
     field: (row) => row.ficha,
   },
   {
-    name: "status",
-    label: "Estado",
+    name: "instructor_encargado",
+    label: "Instructor",
     align: "center",
-    field: (row) => row.status,
+    field: (row) => row.instructor_encargado,
   },
   {
     name: "opciones",
@@ -80,9 +64,7 @@ const data = ref({
   fecha_creacion: "",
   fecha_entrega: "",
   ficha: "",
-  subtotal: "",
-  total: "",
-  impuestos: "",
+  instructor_encargado: "",
 });
 
 /* const preciototal = data.cantidad * data.precioporunidad; */
