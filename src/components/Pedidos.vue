@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { usePedidoStore } from "../stores/pedido.js";
-import { useFichaStore } from "../stores/pedido.js";
+import { useFichaStore } from "../stores/ficha.js";
 import { useQuasar } from 'quasar'
 
 const modelo = "Pedidos";

@@ -113,6 +113,7 @@
 import { ref } from "vue";
 import { useFichaStore } from "../stores/ficha.js";
 import { useProductoStore } from "../stores/producto.js";
+import { useUsuarioStore} from "../stores/usuario.js";
 import { useQuasar } from 'quasar';
 import { isAfter, isValid, parse } from 'date-fns';
 import { format } from "date-fns"
@@ -125,6 +126,7 @@ const filter = ref("");
 const loadingmodal = ref(false);
 const fichaStore = useFichaStore();
 const productoStore = useProductoStore();
+const usuarioStore = useUsuarioStore();
 
 
 const columns = ref([
@@ -163,6 +165,7 @@ let itemsPre = ref([]);
 
 let selectProdut = ref([]);
 let seletFicha = ref([]);
+let seletusuario = ref([]);
 let showDetalleDiv = ref(false);
 
 const data = ref({
