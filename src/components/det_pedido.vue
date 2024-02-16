@@ -1,3 +1,112 @@
+<template>
+  <div class="q-pa-xl row items-start q-gutter-md justify-center ">
+    <q-card class="my-card">
+      <h5>Crear Pedido</h5>
+    <div class="q-gutter-md" >
+      <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
+        <q-input v-model="data.fecha_pedido" filled type="date" hint="Fecha de pedido" class="q-mx-auto" 
+        style="width: 200px" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de pedido' ] "/>
+        <q-input v-model="data.fecha_entrega" filled type="date" hint="Fecha de entrega" class="q-mx-auto" 
+        style="width: 200px" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de entrega']  "/>
+      </q-card-section>
+      <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
+        <q-input v-model="text" label="Nombre del Instructor" class="q-mx-auto" style="width: 250px" />
+        <q-select filled v-model="data.ficha" :options="optionesFicha" label="Seleccione la ficha" class="q-mx-auto" style="width: 350px" />
+      </q-card-section>
+      <q-card-section class="q-gutter-md row items-end justify-center continputs1">
+        <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
+          color="secondary" label="guardar">
+          <q-icon name="style" color="white" right />
+        </q-btn>
+      </q-card-section>
+    </div>
+  </q-card>
+  <q-card class="my-card">
+    <h5>Detalle Pedido</h5>
+  <q-dialog v-model="modal">
+    <q-card class="modal">
+      <q-toolbar>
+        <q-toolbar-title>Agregar producto</q-toolbar-title>
+        <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
+      </q-toolbar>
+
+      <q-card-section class="q-gutter-md">
+        <q-select class="productoinput modalinputs" outlined v-model="data.unidadmedida" :options="selectunidadmedida" label="Producto" 
+          lazy-rules :rules="[val => val.trim() != '' || 'Selecciones un producto']"/>
+        <q-input class="input1" outlined v-model="data.cantidad" label="Cantidad" type="number"
+          maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
+        <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
+          :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
+          <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
+        </q-btn>
+      </q-card-section>
+    </q-card>
+  </q-dialog>
+  <div class="q-pa-md">
+    <q-table :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
+      rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
+      no-results-label="No hay resultados para la busqueda" wrap-cells="false">
+      <template v-slot:top>
+          <q-btn @click="opciones.agregar" label="Agregar Producto" color="secondary">
+            <q-icon name="style" color="white" right />
+          </q-btn>
+      </template>
+
+      <template v-slot:header="props">
+        <q-tr :props="props">
+          <q-th v-for="col in props.cols" :key="col.name" :props="props" class="encabezado">
+            {{ col.label }}
+          </q-th>
+        </q-tr>
+      </template>
+
+      <template v-slot:body-cell-Estado="props">
+        <q-td :props="props" class="botones">
+          <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.estado === 1
+            ? 'Activo'
+            : props.row.estado === 0
+              ? 'Inactivo'
+              : '‎  ‎   ‎   ‎   ‎ '
+            " :color="props.row.estado === 1 ? 'positive' : 'accent'" :loading="props.row.estado === 'load'"
+            loading-indicator-size="small" @click="
+              props.row.estado === 1
+                ? in_activar.inactivar(props.row._id)
+                : in_activar.activar(props.row._id);
+            props.row.estado = 'load';
+            " />
+        </q-td>
+      </template>
+
+      <template v-slot:body-cell-opciones="props">
+        <q-td :props="props" class="botones">
+          <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
+        </q-td>
+      </template>
+    </q-table>
+  </div>
+   <!-- btns 🛑👇 -->
+   <q-card-section class="q-gutter-md row items-end justify-end continputs1">
+        <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
+          color="secondary" label="guardar">
+          <q-icon name="style" color="white" right />
+        </q-btn>
+
+        <q-btn :loading="loadingmodal" padding="10px"
+          color="secondary" label="imprimir">
+          <q-icon name="print" color="white" right />
+        </q-btn>
+
+        <q-btn :loading="loadingmodal" padding="10px"
+          color="warning" label="cancelar" text-color="white" v-close-popup >
+          <q-icon name="cancel" color="white" right />
+        </q-btn>
+
+      </q-card-section>
+      <!-- btns 🛑☝ -->
+</q-card>
+</div>
+</template>
+
 <script setup>
 import { ref } from "vue";
 import { useFichaStore } from "../stores/ficha.js";
@@ -307,106 +416,6 @@ function notificar(tipo, msg) {
   })
 } */
 </script>
-
-<template>
-    <div class="q-pa-xl row items-start q-gutter-md justify-center ">
-      <q-card class="my-card">
-        <h4>Crear Pedido</h4>
-      <div class="q-gutter-md" >
-        <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
-          <q-input v-model="data.fecha_pedido" filled type="date" hint="Fecha de pedido" class="q-mx-auto" 
-          style="width: 200px" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de pedido' ] "/>
-          <q-input v-model="data.fecha_entrega" filled type="date" hint="Fecha de entrega" class="q-mx-auto" 
-          style="width: 200px" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de entrega']  "/>
-        </q-card-section>
-        <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
-          <q-input v-model="text" label="Nombre del Instructor" class="q-mx-auto" style="width: 250px" />
-          <q-select filled v-model="data.ficha" :options="optionesFicha" label="Seleccione la ficha" class="q-mx-auto" style="width: 350px" />
-        </q-card-section>
-      </div>
-    <q-dialog v-model="modal">
-      <q-card class="modal">
-        <q-toolbar>
-          <q-toolbar-title>Agregar producto</q-toolbar-title>
-          <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
-        </q-toolbar>
-
-        <q-card-section class="q-gutter-md">
-          <q-select class="productoinput modalinputs" outlined v-model="data.unidadmedida" :options="selectunidadmedida" label="Producto" 
-            lazy-rules :rules="[val => val.trim() != '' || 'Selecciones un producto']"/>
-          <q-input class="input1" outlined v-model="data.cantidad" label="Cantidad" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
-          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
-            :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
-            <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
-          </q-btn>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
-    <div class="q-pa-md">
-      <q-table :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
-        rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
-        no-results-label="No hay resultados para la busqueda" wrap-cells="false">
-        <template v-slot:top>
-            <q-btn @click="opciones.agregar" label="Agregar Producto" color="secondary">
-              <q-icon name="style" color="white" right />
-            </q-btn>
-        </template>
-
-        <template v-slot:header="props">
-          <q-tr :props="props">
-            <q-th v-for="col in props.cols" :key="col.name" :props="props" class="encabezado">
-              {{ col.label }}
-            </q-th>
-          </q-tr>
-        </template>
-
-        <template v-slot:body-cell-Estado="props">
-          <q-td :props="props" class="botones">
-            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.estado === 1
-              ? 'Activo'
-              : props.row.estado === 0
-                ? 'Inactivo'
-                : '‎  ‎   ‎   ‎   ‎ '
-              " :color="props.row.estado === 1 ? 'positive' : 'accent'" :loading="props.row.estado === 'load'"
-              loading-indicator-size="small" @click="
-                props.row.estado === 1
-                  ? in_activar.inactivar(props.row._id)
-                  : in_activar.activar(props.row._id);
-              props.row.estado = 'load';
-              " />
-          </q-td>
-        </template>
-
-        <template v-slot:body-cell-opciones="props">
-          <q-td :props="props" class="botones">
-            <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
-          </q-td>
-        </template>
-      </q-table>
-    </div>
-     <!-- btns 🛑👇 -->
-     <q-card-section class="q-gutter-md row items-end justify-end continputs1">
-          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
-            color="secondary" label="guardar">
-            <q-icon name="style" color="white" right />
-          </q-btn>
-
-          <q-btn :loading="loadingmodal" padding="10px"
-            color="secondary" label="imprimir">
-            <q-icon name="print" color="white" right />
-          </q-btn>
-
-          <q-btn :loading="loadingmodal" padding="10px"
-            color="warning" label="cancelar" text-color="white" v-close-popup >
-            <q-icon name="cancel" color="white" right />
-          </q-btn>
-
-        </q-card-section>
-        <!-- btns 🛑☝ -->
-  </q-card>
-</div>
-</template>
 <style scoped>
 /* 
 primary: Color principal del tema.
