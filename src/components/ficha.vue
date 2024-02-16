@@ -395,16 +395,6 @@ function validarCampos() {
     return;
   }
 
-  const fechaFin = new Date(data.value.fecha_fin);
-  const fechaInicio = new Date(data.value.fecha_inicio);
-
-  const diffMeses = (fechaFin.getFullYear() - fechaInicio.getFullYear()) * 12 + fechaFin.getMonth() - fechaInicio.getMonth();
-
-  if (diffMeses < 6) {
-    notificar('negative', 'Debe haber al menos 6 meses de diferencia entre la fecha de inicio y la fecha de fin');
-    return;
-  }
-
   enviarInfo[estado.value]();
 }
 
