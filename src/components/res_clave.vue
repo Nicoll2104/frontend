@@ -8,7 +8,10 @@
       <q-card class="my-card">
         <q-card-section>
           <q-div class="text-h3">Restablecer Contraseña</q-div>
-          <p class="subtittle">Por favor ingrese una nueva contraseña</p>
+          <p class="subtittle">Por favor digite su correo y asigne una nueva contraseña</p>
+        </q-card-section>
+        <q-card-section style="max-width: 500px">
+          <q-input standout v-model="data.correo" label="Correo electronico" />
         </q-card-section>
         <q-card-section style="max-width: 500px">
           <q-input standout v-model="data.contrasena" label="Nueva Contraseña" />
