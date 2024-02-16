@@ -32,7 +32,7 @@ export const usedisPresupuesStore = defineStore('disPresupues', () => {
             let res = await axios.put(`disPresupues/modificar/${id}`, data);
             return res
         } catch (error) {
-            throw error;
+            return error.response.data
         }
     };
 
