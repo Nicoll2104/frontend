@@ -1,10 +1,12 @@
 <script setup>
 import { ref } from "vue";
 import { usePedidoStore } from "../stores/pedido.js";
+import { useFichaStore } from "../stores/pedido.js";
 import { useQuasar } from 'quasar'
 
 const modelo = "Pedidos";
 const usePedido = usePedidoStore();
+const useFicha = useFichaStore();
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
