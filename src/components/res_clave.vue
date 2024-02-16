@@ -11,13 +11,13 @@
           <p class="subtittle">Por favor digite su correo y asigne una nueva contraseña</p>
         </q-card-section>
         <q-card-section style="max-width: 500px">
-          <q-input standout v-model="data.correo" label="Correo electronico" />
+          <q-input standout="bg-secondary text-white" v-model="data.correo" label="Correo electronico" />
         </q-card-section>
         <q-card-section style="max-width: 500px">
-          <q-input standout v-model="data.contrasena" label="Nueva Contraseña" />
+          <q-input standout="bg-secondary text-white" v-model="data.contrasena" label="Nueva Contraseña" type="password"/>
         </q-card-section>
         <q-card-section style="max-width: 500px">
-          <q-input standout v-model="data.contrasena2" label="Confirmar Contraseña" />
+          <q-input standout="bg-secondary text-white" v-model="data.contrasena2" label="Confirmar Contraseña" type="password"/>
         </q-card-section>
         <q-card-section style="max-width: 500px">
           <q-btn push color="primary" label="RESTABLECER" @click="cambiar" :loading="loading"/>

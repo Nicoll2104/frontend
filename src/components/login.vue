@@ -135,10 +135,10 @@ async function validarIngreso() {
                     <p class="subtittle">Por favor ingrese sus datos de usuario para continuar:</p>
                 </q-card-section>
                 <q-card-section style="max-width: 500px">
-                    <q-input standout v-model="data.correo" label="Correo electronico" />
+                    <q-input standout="bg-secondary text-white" v-model="data.correo" label="Correo electronico" />
                 </q-card-section>
                 <q-card-section style="max-width: 500px">
-                    <q-input standout v-model="data.contrasena" label="Contraseña" />
+                    <q-input standout="bg-secondary text-white" v-model="data.contrasena" label="Contraseña" type="password"/>
                     <router-link to="/Restableciemiento" class="ingresarcont">
                         <button class="contrasenaayuda">¿Olvidaste tu contraseña?</button>
                     </router-link>
@@ -164,7 +164,6 @@ async function validarIngreso() {
     padding: 0;
 }
 .my-card{
-    background-color: accent;
     transform: translate(0px, -50px);
 }
 

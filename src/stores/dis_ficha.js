@@ -68,7 +68,7 @@ export const useDisFichaStore = defineStore('disFicha', () => {
             return responsedisFicha.data
             console.log(disFichas)
         } catch (error) {
-            throw error
+            return error
         }
     };
 
@@ -79,7 +79,7 @@ export const useDisFichaStore = defineStore('disFicha', () => {
             console.log('a', res);
             return res.data.disFichas
         } catch (error) {
-            throw error
+            return error
         }
     }
 
@@ -88,7 +88,7 @@ export const useDisFichaStore = defineStore('disFicha', () => {
             let res = await axios.put(`disFicha/modificar/${id}`, data);
             return res
         } catch (error) {
-            throw error;
+            return error;
         }
     };
 

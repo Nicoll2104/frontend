@@ -17,8 +17,8 @@ const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
 const loadingmodal = ref(false);
-const loadinpresupuesto = ref(true);
-const loadinficha = ref(true);
+const loadingpresupuesto = ref(true);
+const loadingficha = ref(true);
 
 
 const columns = ref([
@@ -60,10 +60,15 @@ const columns = ref([
 const rows = ref([]);
 
 const data = ref({
-  presupuesto: "",
-  distribucion_presupuesto: "",
-  ficha: "",
-});
+      presupuesto: "",
+      distribucion_presupuesto: {
+        nombre:"",
+        presupuesto_inicial:"",
+        lote:{nombre:""}},
+      ficha: {
+        nombre:"",
+        codigo_ficha:""}
+    });
 
 onMounted(() => {
   obtenerInfo();
@@ -81,10 +86,7 @@ const obtenerInfo = async () => {
 
     if (!disFichas) return
 
-    if (disFichas.error) {
-      notificar('negative', disFichas.error)
-      return
-    }
+
     
     rowbuild()
   } catch (error) {
@@ -117,7 +119,7 @@ const getdisPresupuesto = async () => {
   } finally {
     rowbuild()
     getficha()
-    loadinpresupuesto.value = false
+    loadingpresupuesto.value = false
   }
 };
 
@@ -138,7 +140,7 @@ const getficha = async () => {
     console.error(error);
   } finally {
     rowbuild()
-    loadinficha.value = false
+    loadingficha.value = false
   }
 };
 
@@ -156,8 +158,13 @@ function rowbuild(){
 
         array.push({
         presupuesto:distribucion_fichas[i].presupuesto,
-        distribucion_presupuesto:"",
-        ficha:"",
+        distribucion_presupuesto: {
+          nombre:"",
+          presupuesto_inicial:"",
+          lote:{nombre:""}},
+        ficha: {
+          nombre:"",
+          codigo_ficha:""},
         status:distribucion_fichas[i].status,
       })
     }
@@ -173,14 +180,22 @@ function rowbuild(){
       console.log('segunda consulta')
       const indexdispresupuesto = distribucion_presupuesto.findIndex(objeto => objeto._id == distribucion_fichas[i].distribucion_presupuesto)
 
-    let campo_dispresupuesto = ""
+    let campo_dispresupuesto = {
+          nombre:"",
+          presupuesto_inicial:"",
+          lote:{nombre:""}}
     if (indexdispresupuesto !== -1){
-      campo_dispresupuesto = distribucion_presupuesto[indexdispresupuesto].nombre
+      campo_dispresupuesto = distribucion_presupuesto[indexdispresupuesto]
+    } else {
+      notificar('negative', 'Ficha inexistente' )
     }
 
         array.push({
         presupuesto:distribucion_fichas[i].presupuesto,
         distribucion_presupuesto:campo_dispresupuesto,
+        ficha: {
+          nombre:"",
+          codigo_ficha:""},
         status:distribucion_fichas[i].status,
       })
 
@@ -191,8 +206,8 @@ function rowbuild(){
     rows.value = array
     return
   }
-
   const fichasdatos = fichas || []
+
 
   if (true){
   const array = []
@@ -201,15 +216,26 @@ function rowbuild(){
 
     const indexdispresupuesto = distribucion_presupuesto.findIndex(objeto => objeto._id == distribucion_fichas[i].distribucion_presupuesto)
     const indexficha = fichasdatos.findIndex(objeto => objeto._id == distribucion_fichas[i].ficha)
-    let campo_dispresupuesto = ""
-    let campo_ficha = ""
+    let campo_dispresupuesto = {
+          nombre:"",
+          presupuesto_inicial:"",
+          lote:{nombre:""}}
+    let campo_ficha = {
+          nombre:"",
+          codigo_ficha:""
+        }
 
     if (indexdispresupuesto !== -1){
-      campo_dispresupuesto = distribucion_presupuesto[indexdispresupuesto].nombre
+      campo_dispresupuesto = distribucion_presupuesto[indexdispresupuesto]
+    } else {
+      notificar('negative', 'Distribucion de presupuesto inexistente' )
     }
 
+
     if (indexficha !== -1){
-      campo_ficha = fichasdatos[indexficha].nombre
+      campo_ficha = fichasdatos[indexficha]
+    } else {
+      notificar('negative', 'Distribucion de presupuesto inexistente' )
     }
 
     array.push({
@@ -232,8 +258,13 @@ const opciones = {
   agregar: () => {
     data.value = {
       presupuesto: "",
-      distribucion_presupuesto: "",
-      ficha: "",
+      distribucion_presupuesto: {
+        nombre:"",
+        presupuesto_inicial:"",
+        lote:{nombre:""}},
+      ficha: {
+        nombre:"",
+        codigo_ficha:""}
     };
     modal.value = true;
     estado.value = "guardar";
@@ -256,9 +287,8 @@ const enviarInfo = {
       const response = await useDisFicha.postDisFicha(data.value);
       console.log(response);
       if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
-        loadingmodal.value = false;
+      if (response.response.data.error) {
+        notificar('negative', response.response.data.error)
         return
       }
 
@@ -277,8 +307,8 @@ const enviarInfo = {
       const response = await useDisFicha.putDisFicha(data.value._id, data.value);
       console.log(response);
       if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
+      if (response.response.data.error) {
+        notificar('negative', response.response.data.error)
         return
       }
       console.log(rows.value);
@@ -397,16 +427,25 @@ function notificar(tipo, msg) {
         </q-toolbar>
 
         <q-card-section class="q-gutter-md">
+
           <q-input class="input1" outlined v-model="data.presupuesto" label="Presupuesto" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto']"></q-input>
-          <q-input class="input1" outlined v-model="data.distribucion_presupuesto" label="Distribucion presupuesto" type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese un distribucion presupuesto']"></q-input>
-          <q-input class="input1" outlined v-model="data.ficha" label="Ficha" type="text"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la ficha']"></q-input>
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el nombre del presupuesto']"></q-input>
+
+          <q-select outlined options-dense label="Distribucion de presupuesto" lazy-rules
+          v-model="data.distribucion_presupuesto" :options="disPresupuesto.distribucion" 
+          :option-label="item => item.nombre ? 'Nombre: ' + item.nombre + ' Valor: ' + item.presupuesto_inicial : '' "
+          :rules="[val => val.nombre !== '' || 'Seleccione un presupuesto']"/>
+
+          <q-select outlined options-dense label="ficha" 
+          v-model="data.ficha" :options="fichas" 
+          :option-label="item => item.nombre ? item.nombre + ' #' + item.codigo_ficha : '' "
+          :rules="[val => val.nombre !== '' || 'Seleccione un presupuesto']"/>
+
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
           </q-btn>
+          
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -418,7 +457,7 @@ function notificar(tipo, msg) {
         <template v-slot:top>
           <h4 class="titulo-cont">
             {{ modelo + ' ' }}
-            <q-btn @click="opciones.agregar" label="Añadir" color="secondary">
+            <q-btn @click="opciones.agregar" label="Añadir" color="secondary" :loading="loadingficha">
               <q-icon name="style" color="white" right />
             </q-btn>
           </h4>
@@ -440,14 +479,14 @@ function notificar(tipo, msg) {
         <template v-slot:body-cell-distribucion_presupuesto="props">
           <q-td :props="props" class="botones" >
             <q-btn class="botonv1" size="12px" flat padding="10px"
-            :loading="loadinpresupuesto" :label="props.row.distribucion_presupuesto"/>
+            :loading="loadingpresupuesto" :label="props.row.distribucion_presupuesto.nombre"/>
           </q-td>
         </template>
 
         <template v-slot:body-cell-ficha="props">
           <q-td :props="props" class="botones" >
             <q-btn class="botonv1" size="12px" flat padding="10px"
-            :loading="loadinficha" :label="props.row.ficha"/>
+            :loading="loadingficha" :label="props.row.ficha.nombre"/>
           </q-td>
         </template>
 
@@ -464,13 +503,13 @@ function notificar(tipo, msg) {
                   ? in_activar.putInactivar(props.row._id)
                   : in_activar.putActivar(props.row._id);
               props.row.status = 'load';
-              " />
+              "/>
           </q-td>
         </template>
 
         <template v-slot:body-cell-opciones="props">
           <q-td :props="props" class="botones">
-            <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
+            <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" :loading="loadingficha" />
           </q-td>
         </template>
       </q-table>
