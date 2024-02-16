@@ -5,23 +5,24 @@
     <div class="q-gutter-md" >
       <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
         <q-input v-model="data.fecha_pedido" filled type="date" hint="Fecha de pedido" class="q-mx-auto" 
-        style="width: 200px" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de pedido' ] "/>
+          style="width: 200px" lazy-rules :rules="[validateDate]" @update:model-value="validateDates"/>
         <q-input v-model="data.fecha_entrega" filled type="date" hint="Fecha de entrega" class="q-mx-auto" 
-        style="width: 200px" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de entrega']  "/>
+          style="width: 200px" lazy-rules :rules="[validateDate]" @update:model-value="validateDates"/>
       </q-card-section>
-      <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
+      <q-card-section class="q-gutter-md row items-star justify-center continputs1" style="margin-top: 0px;" >
         <q-input v-model="text" label="Nombre del Instructor" class="q-mx-auto" style="width: 250px" />
         <q-select filled v-model="data.ficha" :options="seletFicha" label="Seleccione la ficha" class="q-mx-auto" style="width: 350px" />
       </q-card-section>
-      <q-card-section class="q-gutter-md row items-end justify-center continputs1">
-        <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
+      <q-card-section class="q-gutter-md row items-end justify-center continputs1" style="margin-top: 0px;">
+        <q-btn @click="generarPedido" :loading="loadingmodal" padding="10px"
           color="secondary" label="guardar">
           <q-icon name="style" color="white" right />
         </q-btn>
       </q-card-section>
     </div>
   </q-card>
-  <q-card class="my-card">
+  <div v-if="showDetalleDiv" class="my-card">
+  <q-card>
     <h5>Detalle Pedido</h5>
   <q-dialog v-model="modal">
     <q-card class="modal">
@@ -105,14 +106,16 @@
       <!-- btns 🛑☝ -->
 </q-card>
 </div>
+</div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useFichaStore } from "../stores/ficha.js";
 import { useProductoStore } from "../stores/producto.js";
-import { useQuasar } from 'quasar'
-import { format } from "date-fns";
+import { useQuasar } from 'quasar';
+import { isAfter, isValid, parse } from 'date-fns';
+import { format } from "date-fns"
 
 
 const modelo = "Crear Pedido";
@@ -174,6 +177,7 @@ const rows = ref([]);
 
 let selectProdut = ref([]);
 let seletFicha = ref([]);
+let showDetalleDiv = ref(false);
 
 const data = ref({
   items: "",
@@ -185,6 +189,32 @@ const data = ref({
   fecha_entrega: "",
   ficha: "",
 });
+
+const validateDate = (value) => {
+  const today = new Date();
+  const selectedDate = parse(value, 'yyyy-MM-dd', new Date());
+  const isValidDate = isValid(selectedDate);
+
+  if (!isValidDate) {
+    return 'Ingrese una fecha válida.';
+  }
+
+  if (!isAfter(selectedDate, today)) {
+    return 'La fecha no puede ser anterior a la actual.';
+  }
+
+  return true;
+};
+
+const validateDates = () => {
+  if (data.fecha_pedido && data.fecha_entrega) {
+    if (parse(data.fecha_pedido, 'yyyy-MM-dd', new Date()) > parse(data.fecha_entrega, 'yyyy-MM-dd', new Date())) {
+      notificar('negative', 'La fecha de pedido no puede ser posterior a la fecha de entrega.');
+      data.fecha_pedido = '';
+      data.fecha_entrega = '';
+    }
+  }
+};
 
 function convertirFecha(cadenaFecha) {
   const fecha = new Date(cadenaFecha);
@@ -217,33 +247,9 @@ function notificar(tipo, msg) {
   })
 } */
 
-/* async function obtenerInfo() {
-  await fichaStore.obtenerInfoFichas();
-  ficha.value = fichaStore.fichas;
-
-  await rutaStore.obtenerInfoRutas();
-  rutas.value = rutaStore.rutas;
-
-  await clienteStore.obtenerInfoClientes();
-  clientes.value = clienteStore.clientes;
-}; */
-
-/* async function obtenerInfo() {
-  await fichaStore.obtenerInfoFichas();
-  console.log(fichaStore)
-  ficha.value = fichaStore.fichas;
-
-  try {
-    await fichaStore.obtenerInfoFichas();
-    const fichaActivos = fichaStore.fichas.filter(ficha => ficha.estado === true);
-    opcionesFicha.value = fichaActivos.map((ficha) => ({
-      label: `${ficha.id} - ${ficha.nombre}`,
-      value: String(ficha._id),
-    }));
-  } catch (error) {
-    console.log(error);
-  };
-};  */
+async function generarPedido() {
+  showDetalleDiv.value = true;
+};
 
 function sortBy(array, key) {
   return array.sort((a, b) => (a[key] > b[key] ? 1 : -1));
@@ -412,59 +418,8 @@ const in_activar = {
   },
 };
 
-/* function validarCampos() {
-
-  const arrData = Object.entries(data.value)
-  console.log(arrData);
-  for (const d of arrData) {
-    console.log(d);
-    if (d[1] === null) {
-      notificar('negative', "Por favor complete todos los campos")
-      return
-    }
-    if (typeof d[1] === 'string') {
-      if (d[1].trim() === "") {
-        notificar('negative', "Por favor complete todos los campos")
-        return
-      }
-    }
-
-    if (d[0] === "nombre" && d[1].length > 15) {
-      notificar('negative', 'El nombre no puede tener más de 15 caracteres')
-      return
-    }
-
-    if (d[0] === "cedula" && d[1].toString().length < 8) {
-      notificar('negative', "La cedula debe tener más de 8 digitos")
-      return
-    }
-
-    if (d[0] === "email" && !d[1].includes('@')) {
-      notificar('negative', 'Email no válido')
-      return
-    }
-  }
-  enviarInfo[estado.value]()
-}
-
-function notificar(tipo, msg) {
-  $q.notify({
-    type: tipo,
-    message: msg,
-    position: "top"
-  })
-} */
 </script>
 <style scoped>
-/* 
-primary: Color principal del tema.
-secondary: Color secundario del tema.
-accent: Color de acento.
-positive: Color para indicar una acción positiva o éxito.
-negative: Color para indicar una acción negativa o error.
-info: Color para información o mensajes neutrales.
-warning: Color para advertencias o mensajes importantes. 
-*/
 
 * {
   margin: 0px;
