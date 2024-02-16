@@ -11,7 +11,7 @@
       </q-card-section>
       <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
         <q-input v-model="text" label="Nombre del Instructor" class="q-mx-auto" style="width: 250px" />
-        <q-select filled v-model="data.ficha" :options="optionesFicha" label="Seleccione la ficha" class="q-mx-auto" style="width: 350px" />
+        <q-select filled v-model="data.ficha" :options="seletFicha" label="Seleccione la ficha" class="q-mx-auto" style="width: 350px" />
       </q-card-section>
       <q-card-section class="q-gutter-md row items-end justify-center continputs1">
         <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
@@ -31,8 +31,8 @@
       </q-toolbar>
 
       <q-card-section class="q-gutter-md">
-        <q-select class="productoinput modalinputs" outlined v-model="data.unidadmedida" :options="selectunidadmedida" label="Producto" 
-          lazy-rules :rules="[val => val.trim() != '' || 'Selecciones un producto']"/>
+        <q-select class="productoinput modalinputs" outlined v-model="data.producto_id" :options="selectProdut" label="Producto" 
+        lazy-rules :rules="[val => val != '' || 'Seleccione el producto']"/>
         <q-input class="input1" outlined v-model="data.cantidad" label="Cantidad" type="number"
           maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
         <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
@@ -48,7 +48,7 @@
       no-results-label="No hay resultados para la busqueda" wrap-cells="false">
       <template v-slot:top>
           <q-btn @click="opciones.agregar" label="Agregar Producto" color="secondary">
-            <q-icon name="style" color="white" right />
+            <q-icon name="shopping_cart" color="white" right />
           </q-btn>
       </template>
 
@@ -110,17 +110,18 @@
 <script setup>
 import { ref } from "vue";
 import { useFichaStore } from "../stores/ficha.js";
+import { useProductoStore } from "../stores/producto.js";
 import { useQuasar } from 'quasar'
 import { format } from "date-fns";
 
 
 const modelo = "Crear Pedido";
-/* const useCliente = useClienteStore(); */
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
 const loadingmodal = ref(false);
 const fichaStore = useFichaStore();
+const productoStore = useProductoStore();
 
 /* function opcionesFecha(fecha) {
   console.log(fecha);
@@ -170,6 +171,9 @@ const columns = ref([
   },
 ]);
 const rows = ref([]);
+
+let selectProdut = ref([]);
+let seletFicha = ref([]);
 
 const data = ref({
   items: "",
@@ -241,33 +245,68 @@ function notificar(tipo, msg) {
   };
 };  */
 
-const opcionesFicha = ref([]);
+function sortBy(array, key) {
+  return array.sort((a, b) => (a[key] > b[key] ? 1 : -1));
+}
+
+
+// funcion traer informacion de producto
+const obtenerProducto = async () => {
+  try{
+    const producto = await productoStore.obtenerInfoProducto();
+    const productAct = producto.filter(producto=> producto.status === "1")
+    selectProdut.value = productAct.map((items) => ({
+      label: `${items.nombre}` + `${ - items.codigo}`,
+      value: String(items._id)
+    }));
+    sortBy(selectProdut.value, 'label');
+    console.log("select de productos",selectProdut);
+  }catch (error) {
+    console.error(error);
+  }
+}
+obtenerProducto();
+
+const obtenerFicha = async () => {
+  try{
+    const ficha = await fichaStore.obtenerInfoFichas();
+    const fichaAct = ficha.filter(fichas=> fichas.status === "1")
+    console.log("fichas activas",fichaAct);
+    seletFicha.value = fichaAct.map((items) => ({
+      label: `${items.codigo_ficha}`,
+      value: String(items._id)
+    }));
+    sortBy(seletFicha.value, 'label');
+  }catch (error) {
+    console.error(error);
+  }
+}
+
+obtenerFicha();
 
 const obtenerInfo = async () => {
   try {
-    const ficha = await useFichaStore.obtenerInfoFichas();
-      if (ficha && Array.isArray(ficha.fichas)) {
-      opcionesFicha.value = ficha.fichas.map(areas => ({ label: fichas.nombre, value: fichas._id, disable:fichas.status==='0' }));
-    } else {
-  console.error("El áreas es inválido:", area);
-  }
-    
+    const disPresupuesto = await useDisPresupuesto.obtenerInfodisPresupues();
+    console.log("useDisPresupuesto")
+    console.log(useDisPresupuesto)
+    console.log("dentro")
+    console.log(disPresupuesto);
+
+    if (!disPresupuesto) return
+
+    if (disPresupuesto.error) {
+      notificar('negative', disPresupuesto.error)
+      return
+    }
+    rows.value = disPresupuesto.distribucion
+    console.log("datos tabla", rows.value);
+
   } catch (error) {
     console.error(error);
   } finally {
-    loadingTable.value = false;
+    loadingTable.value = false
   }
 };
-
-obtenerInfo();
-
-
-/* onMounted(() => {
-  obtenerInfo();
-  console.log("inicio");
-}); */
-
-
 
 const estado = ref("guardar");
 const modal = ref(false);
