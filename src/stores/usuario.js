@@ -9,24 +9,14 @@ export const useUsuarioStore = defineStore("usuario", () => {
     
   const obtenerInfoUsuarios = async () => {
     try {
-      const x = insertarToken();
-      if (!x) return null;
-      const response = await x.get(`${model}obtenerInfoUsuarios`);
-      console.log("iformacion del usuario",response);
-      return response.data;
+        let responseUsuarios = await axios.get('usuario/ver');
+        console.log (responseUsuarios);
+        // lotes.value = responseLotes.data; 
+        return responseUsuarios.data
     } catch (error) {
-      console.log(error);
-      if (error.message === "Network Error") {
-        notificar("Sin conexión, por favor intente recargar");
-        return null;
-      }
-  
-      if (error.response.data.error === "Token no valido") {
-        salir();
-      }
-      return error.response.data;
+        throw error
     }
-  };
+};
 
     const model = "usuario/";
     const router = useRouter();

@@ -10,7 +10,7 @@
           style="width: 200px" lazy-rules :rules="[validateDate]" @update:model-value="validateDates"/>
       </q-card-section>
       <q-card-section class="q-gutter-md row items-star justify-center continputs1" style="margin-top: 0px;" >
-        <q-input v-model="text" label="Nombre del Instructor" class="q-mx-auto" style="width: 250px" />
+        <q-select filled v-model="data.usuario" :options="seletusuario" label="Seleccione el usuario" class="q-mx-auto" style="width: 350px" />
         <q-select filled v-model="data.ficha" :options="seletFicha" label="Seleccione la ficha" class="q-mx-auto" style="width: 350px" />
       </q-card-section>
       <q-card-section class="q-gutter-md row items-end justify-center continputs1" style="margin-top: 0px;">
@@ -259,6 +259,23 @@ const obtenerFicha = async () => {
 }
 
 obtenerFicha();
+
+const obtenerUsuarios = async () => {
+  try{
+    const usuario = await usuarioStore.obtenerInfoUsuarios();
+    const usuarioAct = usuario.filter(usuarios=> usuarios.status === "1")
+    console.log("usuarios activos", usuarioAct);
+    seletusuario.value = usuarioAct.map((items) => ({
+      label: `${items.nombre}+${items.rol}`,
+      value: String(items._id)
+    }));
+    sortBy(seletusuario.value, 'label');
+  }catch (error) {
+    console.error(error);
+  }
+}
+
+obtenerUsuarios();
 
 const obtenerInfo = async () => {
   try {
