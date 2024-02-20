@@ -157,6 +157,7 @@ function rowbuild(){
       console.log(distribucion_fichas)
 
         array.push({
+        _id:distribucion_fichas[i]._id,
         presupuesto:distribucion_fichas[i].presupuesto,
         distribucion_presupuesto: {
           nombre:"",
@@ -191,6 +192,7 @@ function rowbuild(){
     }
 
         array.push({
+          _id:distribucion_fichas[i]._id,
         presupuesto:distribucion_fichas[i].presupuesto,
         distribucion_presupuesto:campo_dispresupuesto,
         ficha: {
@@ -239,6 +241,7 @@ function rowbuild(){
     }
 
     array.push({
+      _id:distribucion_fichas[i]._id,
       presupuesto:distribucion_fichas[i].presupuesto,
       distribucion_presupuesto:campo_dispresupuesto,
       ficha:campo_ficha,
@@ -326,39 +329,43 @@ const in_activar = {
   putActivar: async (id) => {
     try {
       const response = await useDisFicha.putActivar(id);
-      console.log(response);
       console.log("Activando");
+      console.log(response);
       if (!response) return
-      if (response.response.data.error) {
-        notificar('negative', response.response.data.error)
+      if (response.error) {
+        notificar('negative', response.data.error)
+        loadingmodal.value = false
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.DisFicha._id), 1, response.data.DisFicha);
+
+      console.log(response.data.distribucion._id)
+      rows.value[buscarIndexLocal(response.data.distribucion._id)].status = response.data.distribucion.status;
       notificar('positive', 'Activado, exitosamente')
     } catch (error) {
       console.log(error);
-      notificar('negative', response.error.data.error)
+      notificar('negative', error)
     } finally {
       loadingmodal.value = false;
     }
   },
   putInactivar: async (id) => {
-    console.log("inactivar");
-    console.log(id);
     try {
       const response = await useDisFicha.putInactivar(id);
-      if (!response) {loadingmodal.value = false; return}
-
-      if (response.response.data.error) {
-        notificar('negative', response.response.data.error)
-        console.log('fin')
+      console.log("Activando");
+      console.log(response);
+      if (!response) return
+      if (response.error) {
+        notificar('negative', response.data.error)
+        loadingmodal.value = false
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.DisFicha._id), 1, response.data.DisFicha);
+
+      console.log(response.data.distribucion._id)
+      rows.value[buscarIndexLocal(response.data.distribucion._id)].status = response.data.distribucion.status;
       notificar('positive', 'Inactivado exitosamente')
     } catch (error) {
       console.log(error);
-      notificar('negative', response.data.error)
+      notificar('negative', error)
     } finally {
       loadingmodal.value = false;
     }
@@ -366,7 +373,6 @@ const in_activar = {
 };
 
 function validarCampos() {
-
   const arrData = Object.entries(data.value)
   console.log(arrData);
   for (const d of arrData) {
@@ -381,27 +387,17 @@ function validarCampos() {
         return
       }
     }
-
-    if (d[0] === "presupuesto" && d[1].toString().length < 1 ) {
+    if (typeof d[1] === 'object') {
+      if (d[1].nombre.trim() === "") {
+        notificar('negative', "Por favor complete todos los campos")
+        return
+      }
+    }
+    if (d[0] === "presupuesto" && d[1] < 1) {
       notificar('negative', "El presupuesto debe ser diferente a 0")
       return
     }
-    if (d[0] === "distribucion_presupuesto" && d[1].toString().length < 1) {
-      notificar('negative', "La distribucion de presupuesto es obligatorio")
-      return
-    }
-    if (d[0] === "ficha" && d[1].toString().length < 1) {
-      notificar('negative', 'La ficha es obligatoria')
-      return
-    }
-    if (d[0] === "fecha_vencimiento" && d[1].toString().length < 1) {
-      notificar('negative', "La fecha de vencimiento es obligatoria")
-      return
-    }
-    if (data.value.fecha_creacion === data.value.fecha_vencimiento) {
-      notificar('negative', 'La fecha de creacion no puede ser igual a la fecha de vencimiento');
-      return;
-    }
+    console.log('paso la prueba')
   }
   enviarInfo[estado.value]()
 }

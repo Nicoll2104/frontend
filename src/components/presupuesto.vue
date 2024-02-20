@@ -170,8 +170,10 @@ const in_activar = {
         return
       }
       rows.value.splice(buscarIndexLocal(response.data.items._id), 1, response.data.items);
+      notificar('positive', 'Activado, exitosamente')
     } catch (error) {
       console.log(error);
+      notificar('negative', response.error.data.error)
     } finally {
       loadingmodal.value = false;
     }
