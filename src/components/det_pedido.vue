@@ -2,118 +2,117 @@
   <div class="q-pa-xl row items-start q-gutter-md justify-center ">
     <q-card class="my-card">
       <h5>Crear Pedido</h5>
-    <div class="q-gutter-md" >
-      <q-card-section class="q-gutter-md row items-star justify-center continputs1" >
-        <q-input v-model="data.fecha_pedido" filled type="date" hint="Fecha de pedido" class="q-mx-auto" 
-          style="width: 200px" lazy-rules :rules="[validateDate]" @update:model-value="validateDates"/>
-        <q-input v-model="data.fecha_entrega" filled type="date" hint="Fecha de entrega" class="q-mx-auto" 
-          style="width: 200px" lazy-rules :rules="[validateDate]" @update:model-value="validateDates"/>
-      </q-card-section>
-      <q-card-section class="q-gutter-md row items-star justify-center continputs1" style="margin-top: 0px;" >
-        <q-select filled v-model="data.usuario" :options="seletusuario" label="Seleccione el usuario" class="q-mx-auto" style="width: 350px" />
-        <q-select filled v-model="data.ficha" :options="seletFicha" label="Seleccione la ficha" class="q-mx-auto" style="width: 350px" />
-      </q-card-section>
-      <q-card-section class="q-gutter-md row items-end justify-center continputs1" style="margin-top: 0px;">
-        <q-btn @click="generarPedido" :loading="loadingmodal" padding="10px"
-          color="secondary" lbael="guardar">
-          <q-icon name="style" color="white" right />
-        </q-btn>
-      </q-card-section>
-    </div>
-  </q-card>
-  <div v-if="showDetalleDiv" class="my-card">
-  <q-card>
-    <h5>Detalle Pedido</h5>
-  <q-dialog v-model="modal">
-    <q-card class="modal">
-      <q-toolbar>
-        <q-toolbar-title>Agregar producto</q-toolbar-title>
-        <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
-      </q-toolbar>
-
-      <q-card-section class="q-gutter-md">
-        <q-select class="productoinput modalinputs" outlined v-model="data.producto_id" :options="selectProdut" label="Producto" 
-        lazy-rules :rules="[val => val != '' || 'Seleccione el producto']"/>
-        <q-input class="input1" outlined v-model="data.cantidad" label="Cantidad" type="number"
-          maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
-        <q-btn @click="agregarProducto" :loading="loadingmodal" padding="10px"
-          :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
-          <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
-        </q-btn>
-      </q-card-section>
-    </q-card>
-  </q-dialog>
-  <div class="q-pa-md">
-    <q-table :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
-      rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
-      no-results-label="No hay resultados para la busqueda" wrap-cells="false">
-      <template v-slot:top>
-          <q-btn @click="opciones.agregar" label="Agregar Producto" color="secondary">
-            <q-icon name="shopping_cart" color="white" right />
+      <div class="q-gutter-md">
+        <q-card-section class="q-gutter-md row items-star justify-center continputs1">
+          <q-input v-model="data.fecha_pedido" filled type="date" hint="Fecha de pedido" class="q-mx-auto"
+            style="width: 200px" lazy-rules :rules="[validateDate]" @update:model-value="validateDates" />
+          <q-input v-model="data.fecha_entrega" filled type="date" hint="Fecha de entrega" class="q-mx-auto"
+            style="width: 200px" lazy-rules :rules="[validateDate]" @update:model-value="validateDates" />
+        </q-card-section>
+        <q-card-section class="q-gutter-md row items-star justify-center continputs1" style="margin-top: 0px;">
+          <q-select filled v-model="data.usuario" :options="seletusuario" label="Seleccione el usuario" class="q-mx-auto"
+            style="width: 350px" />
+          <q-select filled v-model="data.ficha" :options="seletFicha" label="Seleccione la ficha" class="q-mx-auto"
+            style="width: 350px" />
+        </q-card-section>
+        <q-card-section class="q-gutter-md row items-end justify-center continputs1" style="margin-top: 0px;">
+          <q-btn @click="validarCamposPedidos" :loading="loadingmodal" padding="10px" color="secondary" label="guardar">
+            <q-icon name="style" color="white" right />
           </q-btn>
-      </template>
+        </q-card-section>
+      </div>
+    </q-card>
+    <div v-if="showDetalleDiv" class="my-card">
+      <q-card>
+        <h5>Detalle Pedido</h5>
+        <q-dialog v-model="modal">
+          <q-card class="modal">
+            <q-toolbar>
+              <q-toolbar-title>Agregar producto</q-toolbar-title>
+              <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
+            </q-toolbar>
 
-      <template v-slot:header="props">
-        <q-tr :props="props">
-          <q-th v-for="col in props.cols" :key="col.name" :props="props" class="encabezado">
-            {{ col.label }}
-          </q-th>
-        </q-tr>
-      </template>
+            <q-card-section class="q-gutter-md">
+              <q-select class="productoinput modalinputs" outlined v-model="data.producto_id" :options="selectProdut"
+                label="Producto" lazy-rules :rules="[val => val != '' || 'Seleccione el producto']" />
+              <q-input class="input1" outlined v-model="data.cantidad" label="Cantidad" type="number" maxlength="15"
+                lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
+              <q-btn @click="agregarProducto" :loading="loadingmodal" padding="10px"
+                :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
+                <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
+              </q-btn>
+            </q-card-section>
+          </q-card>
+        </q-dialog>
+        <div class="q-pa-md">
+          <q-table :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
+            rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
+            no-results-label="No hay resultados para la busqueda" wrap-cells="false">
+            <template v-slot:top>
+              <q-btn @click="opciones.agregar" label="Agregar Producto" color="secondary">
+                <q-icon name="shopping_cart" color="white" right />
+              </q-btn>
+            </template>
 
-      <template v-slot:body-cell-Estado="props">
-        <q-td :props="props" class="botones">
-          <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.estado === 1
-            ? 'Activo'
-            : props.row.estado === 0
-              ? 'Inactivo'
-              : '‎  ‎   ‎   ‎   ‎ '
-            " :color="props.row.estado === 1 ? 'positive' : 'accent'" :loading="props.row.estado === 'load'"
-            loading-indicator-size="small" @click="
-              props.row.estado === 1
-                ? in_activar.inactivar(props.row._id)
-                : in_activar.activar(props.row._id);
-            props.row.estado = 'load';
-            " />
-        </q-td>
-      </template>
+            <template v-slot:header="props">
+              <q-tr :props="props">
+                <q-th v-for="col in props.cols" :key="col.name" :props="props" class="encabezado">
+                  {{ col.label }}
+                </q-th>
+              </q-tr>
+            </template>
 
-      <template v-slot:body-cell-opciones="props">
-        <q-td :props="props" class="botones">
-          <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
-        </q-td>
-      </template>
-    </q-table>
+            <template v-slot:body-cell-Estado="props">
+              <q-td :props="props" class="botones">
+                <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.estado === 1
+                  ? 'Activo'
+                  : props.row.estado === 0
+                    ? 'Inactivo'
+                    : '‎  ‎   ‎   ‎   ‎ '
+                  " :color="props.row.estado === 1 ? 'positive' : 'accent'" :loading="props.row.estado === 'load'"
+                  loading-indicator-size="small" @click="
+                    props.row.estado === 1
+                      ? in_activar.inactivar(props.row._id)
+                      : in_activar.activar(props.row._id);
+                  props.row.estado = 'load';
+                  " />
+              </q-td>
+            </template>
+
+            <template v-slot:body-cell-opciones="props">
+              <q-td :props="props" class="botones">
+                <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
+              </q-td>
+            </template>
+          </q-table>
+        </div>
+        <!-- btns 🛑👇 -->
+        <q-card-section class="q-gutter-md row items-end justify-end continputs1">
+          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px" color="secondary" label="guardar">
+            <q-icon name="style" color="white" right />
+          </q-btn>
+
+          <q-btn :loading="loadingmodal" padding="10px" color="secondary" label="imprimir">
+            <q-icon name="print" color="white" right />
+          </q-btn>
+
+          <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white" v-close-popup>
+            <q-icon name="cancel" color="white" right />
+          </q-btn>
+
+        </q-card-section>
+        <!-- btns 🛑☝ -->
+      </q-card>
+    </div>
   </div>
-   <!-- btns 🛑👇 -->
-   <q-card-section class="q-gutter-md row items-end justify-end continputs1">
-        <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
-          color="secondary" label="guardar">
-          <q-icon name="style" color="white" right />
-        </q-btn>
-
-        <q-btn :loading="loadingmodal" padding="10px"
-          color="secondary" label="imprimir">
-          <q-icon name="print" color="white" right />
-        </q-btn>
-
-        <q-btn :loading="loadingmodal" padding="10px"
-          color="warning" label="cancelar" text-color="white" v-close-popup >
-          <q-icon name="cancel" color="white" right />
-        </q-btn>
-
-      </q-card-section>
-      <!-- btns 🛑☝ -->
-</q-card>
-</div>
-</div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useFichaStore } from "../stores/ficha.js";
 import { useProductoStore } from "../stores/producto.js";
-import { useUsuarioStore} from "../stores/usuario.js";
+import { useUsuarioStore } from "../stores/usuario.js";
+import { usedetPedidoStore } from "../stores/det_pedido.js";
 import { useQuasar } from 'quasar';
 import { isAfter, isValid, parse } from 'date-fns';
 import { format } from "date-fns"
@@ -127,37 +126,31 @@ const loadingmodal = ref(false);
 const fichaStore = useFichaStore();
 const productoStore = useProductoStore();
 const usuarioStore = useUsuarioStore();
+const detPedidoStore = usedetPedidoStore();
 
 
 const columns = ref([
-  {
-    name: "items",
-    label: "Items",
-    align: "left",
-    field: (row) => row.items,
-
-  },
-  
-  {
-    name: "codigo",
-    label: "Código",
-    align: "left",
-    field: (row) => row.id,
-  },
-  {
-    name: "producto_id",
-    label: "Producto",
-    align: "left",
-    field: (row) => row.nombre,
-
- 
-  },
   {
     name: "cantidad",
     label: "Cantidad",
     align: "left",
     field: (row) => row.cantidad,
   },
+  {
+    name: "pedido_id",
+    label: "Pedido",
+    align: "left",
+    field: (row) => row.pedido_id,
+  },
+  {
+    name: "producto_id",
+    label: "Producto",
+    align: "left",
+    field: (row) => row.producto_id,
+
+
+  },
+
 ]);
 const rows = ref([]);
 let options = ref([]);
@@ -168,11 +161,18 @@ let seletFicha = ref([]);
 let seletusuario = ref([]);
 let showDetalleDiv = ref(false);
 
+const dataPedido = ref({
+  fecha_pedido: "",
+  fecha_entrega: "",
+  usuario: "",
+  ficha: "",
+});
+
+
 const data = ref({
-  items: "",
-  producto_id: "",
   cantidad: "",
-  nombre_id: "",
+  pedido_id: "",
+  producto_id: "",
 });
 
 const validateDate = (value) => {
@@ -213,10 +213,6 @@ function convertirFecha(cadenaFecha) {
   return fechaFormateada;
 }
 
-async function generarPedido() {
-  showDetalleDiv.value = true;
-};
-
 const agregarPedido = (pedido) => {
   rows.value.push(pedido);
 };
@@ -228,32 +224,32 @@ function sortBy(array, key) {
 
 // funcion traer informacion de producto
 const obtenerProducto = async () => {
-  try{
+  try {
     const producto = await productoStore.obtenerInfoProducto();
-    const productAct = producto.filter(producto=> producto.status === "1")
+    const productAct = producto.filter(producto => producto.status === "1")
     selectProdut.value = productAct.map((items) => ({
-      label: `${items.nombre}` + `${ - items.codigo}`,
+      label: `${items.nombre}` + `${- items.codigo}`,
       value: String(items._id)
     }));
     sortBy(selectProdut.value, 'label');
-    console.log("select de productos",selectProdut);
-  }catch (error) {
+    console.log("select de productos", selectProdut);
+  } catch (error) {
     console.error(error);
   }
 }
 obtenerProducto();
 
 const obtenerFicha = async () => {
-  try{
+  try {
     const ficha = await fichaStore.obtenerInfoFichas();
-    const fichaAct = ficha.filter(fichas=> fichas.status === "1")
-    console.log("fichas activas",fichaAct);
+    const fichaAct = ficha.filter(fichas => fichas.status === "1")
+    console.log("fichas activas", fichaAct);
     seletFicha.value = fichaAct.map((items) => ({
       label: `${items.codigo_ficha}`,
       value: String(items._id)
     }));
     sortBy(seletFicha.value, 'label');
-  }catch (error) {
+  } catch (error) {
     console.error(error);
   }
 }
@@ -261,9 +257,9 @@ const obtenerFicha = async () => {
 obtenerFicha();
 
 const obtenerUsuarios = async () => {
-  try{
+  try {
     const usuario = await usuarioStore.obtenerInfoUsuarios();
-    const usuarioAct = usuario.filter(usuarios=> usuarios.status === "1")
+    const usuarioAct = usuario.filter(usuarios => usuarios.status === "1")
     const instructores = usuarioAct.filter(usuario => usuario.rol.toLowerCase() === "instructor");
     console.log("usuarios activos", usuarioAct);
     console.log("instuctores", instructores);
@@ -272,61 +268,52 @@ const obtenerUsuarios = async () => {
       value: String(items._id)
     }));
     sortBy(seletusuario.value, 'label');
-  }catch (error) {
+  } catch (error) {
     console.error(error);
   }
 }
 
 obtenerUsuarios();
 
-const obtenerInfo = async () => {
-  try {
-    const disPresupuesto = await useDisPresupuesto.obtenerInfodisPresupues();
-    console.log("useDisPresupuesto")
-    console.log(useDisPresupuesto)
-    console.log("dentro")
-    console.log(disPresupuesto);
+function validarCamposPedidos() {
+  console.log("----------------------------------------------------------------")
 
-    if (!disPresupuesto) return
-
-    if (disPresupuesto.error) {
-      notificar('negative', disPresupuesto.error)
+  const arrData = Object.entries(dataPedido.value)
+  console.log(arrData);
+  for (const items of arrData) {
+    console.log(items);
+    if (items[1] === null) {
+      notificar('negative', "Por favor complete todos los campos")
       return
     }
-    rows.value = disPresupuesto.distribucion
-    console.log("datos tabla", rows.value);
-
-  } catch (error) {
-    console.error(error);
-  } finally {
-    loadingTable.value = false
+    if (typeof items[1] === 'string') {
+      if (items[1].trim() === "") {
+        notificar('negative', "Por favor complete todos los campos")
+        return
+      }
+    }
+    if (items[0] === "fecha_pedido" && items[1].toString().length < 1) {
+      notificar('negative', "La fecha de pedido es obligatoria")
+      return
+    }
+    if (items[0] === "fecha_entrega" && items[1].toString().length < 1) {
+      notificar('negative', "La fecha de entrega es obligatoria")
+      return
+    }
+    if (items[0] === "usuario" && items[1].toString().length < 1) {
+      notificar('negative', 'El usuario es obligatorio')
+      return
+    }
+    if (items[0] === "ficha" && items[1].toString().length < 1) {
+      notificar('negative', "La ficha  obligatoria")
+      return
+    }
   }
-};
-
-const estado = ref("agregarProducto");
-const modal = ref(false);
-const opciones = {
-  agregar: () => {
-    data.value = {
-      cantidad: "",
-      pedido_id: "",
-      producto_id: "",
-    };
-    modal.value = true;
-    estado.value = "guardar";
-  },
-  editar: (info) => {
-    data.value = { ...info }
-    modal.value = true;
-    estado.value = "editar";
-  },
-};
-
-function buscarIndexLocal(id) {
-  return rows.value.findIndex((r) => r._id === id);
+  enviarInfo[estado.value]()
 }
 
-const enviarInfo = {
+
+const enviarInfoPedido = {
   guardar: async () => {
     loadingmodal.value = true;
     try {
@@ -346,6 +333,7 @@ const enviarInfo = {
       console.log(error);
     } finally {
       loadingmodal.value = false;
+      showDetalleDiv.value = true;
     }
   },
   editar: async () => {
@@ -369,6 +357,35 @@ const enviarInfo = {
     }
   },
 };
+const obtenerInfo = async () => {
+  try {
+    // Esperar a que se completen todas las promesas
+    await Promise.all([obtenerProducto(), obtenerFicha(), obtenerUsuarios()]);
+
+    const detPedido = await detPedidoStore.obtenerInfodetPedido();
+    console.log("detPedidoStore")
+    console.log(detPedidoStore)
+    console.log("dentro")
+    console.log(detPedido);
+
+    if (!detPedido) return
+
+    if (detPedido.error) {
+      notificar('negative', detPedido.error)
+      return
+    }
+    rows.value = detPedido.Det_pedido
+
+
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loadingTable.value = false
+  }
+};
+
+obtenerInfo();
+
 
 const in_activar = {
   activar: async (id) => {
@@ -408,7 +425,6 @@ const in_activar = {
 };
 </script>
 <style scoped>
-
 * {
   margin: 0px;
   padding: 0px;
@@ -426,11 +442,13 @@ const in_activar = {
   /* min-height: 710px; */
   border: 0px solid black;
 }
-.my-card{
+
+.my-card {
   width: 100%;
   max-width: 1500px;
   align-items: center;
 }
+
 .buscar {
   display: inline-block;
   margin: auto;
