@@ -15,7 +15,7 @@
       </q-card-section>
       <q-card-section class="q-gutter-md row items-end justify-center continputs1" style="margin-top: 0px;">
         <q-btn @click="generarPedido" :loading="loadingmodal" padding="10px"
-          color="secondary" label="guardar">
+          color="secondary" lbael="guardar">
           <q-icon name="style" color="white" right />
         </q-btn>
       </q-card-section>
@@ -264,7 +264,9 @@ const obtenerUsuarios = async () => {
   try{
     const usuario = await usuarioStore.obtenerInfoUsuarios();
     const usuarioAct = usuario.filter(usuarios=> usuarios.status === "1")
+    const instructores = usuarioAct.filter(usuario => usuario.rol.toLowerCase() === "instructor");
     console.log("usuarios activos", usuarioAct);
+    console.log("instuctores", instructores);
     seletusuario.value = usuarioAct.map((items) => ({
       label: `${items.nombre}+${items.rol}`,
       value: String(items._id)
