@@ -15,7 +15,7 @@
       </q-card-section>
       <q-card-section class="q-gutter-md row items-end justify-center continputs1" style="margin-top: 0px;">
         <q-btn @click="generarPedido" :loading="loadingmodal" padding="10px"
-          color="secondary" lbael="guardar">
+          color="secondary" label="guardar">
           <q-icon name="style" color="white" right />
         </q-btn>
       </q-card-section>
@@ -114,6 +114,7 @@ import { ref } from "vue";
 import { useFichaStore } from "../stores/ficha.js";
 import { useProductoStore } from "../stores/producto.js";
 import { useUsuarioStore} from "../stores/usuario.js";
+import {usedetPedidoStore } from "../stores/det_pedido.js";
 import { useQuasar } from 'quasar';
 import { isAfter, isValid, parse } from 'date-fns';
 import { format } from "date-fns"
@@ -127,37 +128,31 @@ const loadingmodal = ref(false);
 const fichaStore = useFichaStore();
 const productoStore = useProductoStore();
 const usuarioStore = useUsuarioStore();
+const detPedidoStore = usedetPedidoStore();
 
 
 const columns = ref([
-  {
-    name: "items",
-    label: "Items",
-    align: "left",
-    field: (row) => row.items,
-
-  },
-  
-  {
-    name: "codigo",
-    label: "Código",
-    align: "left",
-    field: (row) => row.id,
-  },
-  {
-    name: "producto_id",
-    label: "Producto",
-    align: "left",
-    field: (row) => row.nombre,
-
- 
-  },
-  {
+{
     name: "cantidad",
     label: "Cantidad",
     align: "left",
     field: (row) => row.cantidad,
   },
+  {
+    name: "pedido_id",
+    label: "Pedido",
+    align: "left",
+    field: (row) => row.pedido_id,
+  },
+  {
+    name: "producto_id",
+    label: "Producto",
+    align: "left",
+    field: (row) => row.producto_id,
+
+ 
+  },
+  
 ]);
 const rows = ref([]);
 let options = ref([]);
@@ -169,10 +164,9 @@ let seletusuario = ref([]);
 let showDetalleDiv = ref(false);
 
 const data = ref({
-  items: "",
-  producto_id: "",
   cantidad: "",
-  nombre_id: "",
+  pedido_id: "",
+  producto_id: "",
 });
 
 const validateDate = (value) => {
@@ -281,20 +275,23 @@ obtenerUsuarios();
 
 const obtenerInfo = async () => {
   try {
-    const disPresupuesto = await useDisPresupuesto.obtenerInfodisPresupues();
-    console.log("useDisPresupuesto")
-    console.log(useDisPresupuesto)
+    // Esperar a que se completen todas las promesas
+    await Promise.all([obtenerProducto(), obtenerFicha(), obtenerUsuarios()]);
+
+    const detPedido = await detPedidoStore.obtenerInfodetPedido();
+    console.log("detPedidoStore")
+    console.log(detPedidoStore)
     console.log("dentro")
-    console.log(disPresupuesto);
+    console.log(detPedido);
 
-    if (!disPresupuesto) return
+    if (!detPedido) return
 
-    if (disPresupuesto.error) {
-      notificar('negative', disPresupuesto.error)
+    if (detPedido.error) {
+      notificar('negative', detPedido.error)
       return
     }
-    rows.value = disPresupuesto.distribucion
-    console.log("datos tabla", rows.value);
+    rows.value = detPedido.Det_pedido
+
 
   } catch (error) {
     console.error(error);
@@ -302,6 +299,8 @@ const obtenerInfo = async () => {
     loadingTable.value = false
   }
 };
+
+obtenerInfo();
 
 const estado = ref("agregarProducto");
 const modal = ref(false);

@@ -387,7 +387,7 @@ function prompt() {
 
         <template v-slot:body-cell-opciones="props">
           <q-td :props="props" class="botones">
-            <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
+            <q-btn color="warning" icon="zoom_in" class="botonv1" @click="opciones.editar(props.row)" />
           </q-td>
         </template>
       </q-table>
