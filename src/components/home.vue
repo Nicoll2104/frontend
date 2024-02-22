@@ -34,7 +34,7 @@ let content = ref([
   { ruta: "/Areas", titulo: "Areas", img: areas },
   { ruta: "/Pedidos", titulo: "Pedido", img: pedido },
   { ruta: "/Productos", titulo: "Producto", img: producto },
-  { ruta: "/Usuarios", titulo: "Usuarios", img: usuario }
+  { ruta: "/Usuario", titulo: "Usuarios", img: usuario }
 ]);
 </script>
 
