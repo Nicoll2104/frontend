@@ -25,6 +25,7 @@ import lotes from "../assets/lotes.png";
 import areas from "../assets/areas.png";
 import pedido from "../assets/pedido.png"; 
 import producto from "../assets/producto.png"; 
+import usuario from "../assets/usuario.png";
 
 let content = ref([
   { ruta: "/Presupuesto", titulo: "Presupuesto", img: presupuesto },
@@ -33,6 +34,7 @@ let content = ref([
   { ruta: "/Areas", titulo: "Areas", img: areas },
   { ruta: "/Pedidos", titulo: "Pedido", img: pedido },
   { ruta: "/Productos", titulo: "Producto", img: producto },
+  { ruta: "/Usuario", titulo: "Usuarios", img: usuario }
 ]);
 </script>
 

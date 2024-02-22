@@ -1,29 +1,6 @@
 <template>
   <div class="q-pa-xl row items-start q-gutter-md justify-center ">
-    <q-card class="my-card">
-      <h5>Crear Pedido</h5>
-      <div class="q-gutter-md">
-        <q-card-section class="q-gutter-md row items-star justify-center continputs1">
-          <q-input v-model="data.fecha_pedido" filled type="date" hint="Fecha de pedido" class="q-mx-auto"
-            style="width: 200px" lazy-rules :rules="[validateDate]" @update:model-value="validateDates" />
-          <q-input v-model="data.fecha_entrega" filled type="date" hint="Fecha de entrega" class="q-mx-auto"
-            style="width: 200px" lazy-rules :rules="[validateDate]" @update:model-value="validateDates" />
-        </q-card-section>
-        <q-card-section class="q-gutter-md row items-star justify-center continputs1" style="margin-top: 0px;">
-          <q-select filled v-model="data.usuario" :options="seletusuario" label="Seleccione el usuario" class="q-mx-auto"
-            style="width: 350px" />
-          <q-select filled v-model="data.ficha" :options="seletFicha" label="Seleccione la ficha" class="q-mx-auto"
-            style="width: 350px" />
-        </q-card-section>
-        <q-card-section class="q-gutter-md row items-end justify-center continputs1" style="margin-top: 0px;">
-          <q-btn @click="validarCamposPedidos" :loading="loadingmodal" padding="10px" color="secondary" label="guardar">
-            <q-icon name="style" color="white" right />
-          </q-btn>
-        </q-card-section>
-      </div>
-    </q-card>
-    <div v-if="showDetalleDiv" class="my-card">
-      <q-card>
+      <q-card class="my-card">
         <h5>Detalle Pedido</h5>
         <q-dialog v-model="showAgregar">
           <q-card class="modal">
@@ -37,10 +14,9 @@
                 label="Producto" lazy-rules :rules="[val => val != '' || 'Seleccione el producto']" />
               <q-input class="input1" outlined v-model="data.cantidad" label="Cantidad" type="number" maxlength="15"
                 lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
-              <q-btn @click="agregarProducto" :loading="loadingmodal" padding="10px"
-                :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
-                <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
-              </q-btn>
+                <q-btn @click="agregarDetallePedido(data.producto_id, data.cantidad)" :loading="loadingmodal" padding="10px" label="GUARDAR" :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
+                  <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
+                </q-btn>
             </q-card-section>
           </q-card>
         </q-dialog>
@@ -86,6 +62,31 @@
             </template>
           </q-table>
         </div>
+        <q-card-section class="q-gutter-md row items-end justify-center continputs1" style="margin-top: 0px;">
+          <q-btn @click="validarCamposPedidos" :loading="loadingmodal" padding="10px" color="secondary" label="guardar">
+            <q-icon name="style" color="white" right />
+          </q-btn>
+        </q-card-section>
+      </q-card>
+    </div>
+<!--     <div v-if="showDetalleDiv" class="my-card"> -->
+  <div class="q-pa-xl row items-start q-gutter-md justify-center ">
+    <q-card class="my-card">
+      <h5>Crear Pedido</h5>
+      <div class="q-gutter-md">
+        <q-card-section class="q-gutter-md row items-star justify-center continputs1">
+          <q-input v-model="data.fecha_pedido" filled type="date" hint="Fecha de pedido" class="q-mx-auto"
+            style="width: 200px" lazy-rules :rules="[validateDate]" @update:model-value="validateDates" />
+          <q-input v-model="data.fecha_entrega" filled type="date" hint="Fecha de entrega" class="q-mx-auto"
+            style="width: 200px" lazy-rules :rules="[validateDate]" @update:model-value="validateDates" />
+        </q-card-section>
+        <q-card-section class="q-gutter-md row items-star justify-center continputs1" style="margin-top: 0px;">
+          <q-select filled v-model="data.usuario" :options="seletusuario" label="Seleccione el usuario" class="q-mx-auto"
+            style="width: 300px" />
+          <q-select filled v-model="data.ficha" :options="seletFicha" label="Seleccione la ficha" class="q-mx-auto"
+            style="width: 300px" />
+        </q-card-section>
+
         <!-- btns 🛑👇 -->
         <q-card-section class="q-gutter-md row items-end justify-end continputs1">
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px" color="secondary" label="guardar">
@@ -102,9 +103,11 @@
 
         </q-card-section>
         <!-- btns 🛑☝ -->
-      </q-card>
-    </div>
+        
+      </div>
+    </q-card>
   </div>
+<!--   </div> -->
 </template>
 
 <script setup>
@@ -137,18 +140,10 @@ const columns = ref([
     field: (row) => row.cantidad,
   },
   {
-    name: "pedido_id",
-    label: "Pedido",
-    align: "left",
-    field: (row) => row.pedido_id,
-  },
-  {
     name: "producto_id",
     label: "Producto",
     align: "left",
     field: (row) => row.producto_id,
-
-
   },
 
 ]);
@@ -259,6 +254,56 @@ const obtenerProducto = async () => {
   }
 }
 obtenerProducto();
+
+async function agregarDetallePedido() {
+  if (validacionDetallePedido.value == true) {
+    try {
+      showDefault();
+      await ticketStore.postDetPedido({
+        cantidad: Number,
+        pedido_id: pedido._rawValue.value,
+        producto_id: producto._rawValue.value,
+
+      });
+      cancelShow();
+      greatMessage.value = "Ticket Agregado";
+      generarTicket();
+      showGreat();
+      generarListaAsientos()
+    } catch (error) {
+      console.log(error);
+      cancelShow();
+      badMessage.value = error.response.data.error.errors[0].msg;
+      showBad();
+    };
+  } else {
+    cancelShow();
+    badMessage.value = "Agrega un Cliente"
+    showBad();
+  };
+};
+
+/* const agregarDetallePedido = (producto, cantidad) => {
+  if (!producto || !cantidad) {
+    notificar('negative', 'Por favor seleccione un producto y una cantidad.');
+    return;
+  }
+
+  const newRow = {
+    cantidad,
+    pedido_id: dataPedido.value._id,
+    producto_id: producto._id,
+    producto_nombre: producto.nombre,
+  };
+
+  rows.value.push(newRow);
+
+  // Limpiar los campos del modal después de agregar una nueva fila
+  data.value.cantidad = '';
+  data.value.producto_id = '';
+
+  notificar('positive', 'Detalle de pedido agregado exitosamente.');
+}; */
 
 const obtenerFicha = async () => {
   try {
@@ -379,6 +424,9 @@ const enviarInfoPedido = {
     }
   },
 };
+
+
+
 const obtenerInfo = async () => {
   try {
     // Esperar a que se completen todas las promesas
@@ -460,24 +508,16 @@ const in_activar = {
 .tabla {
   padding: 0 20px;
   margin: 10px auto;
-  max-width: 1200px;
+  max-width: 900px;
   /* min-height: 710px; */
   border: 0px solid black;
 }
 
 .my-card {
   width: 100%;
-  max-width: 1500px;
+  max-width: 1200px;
   align-items: center;
-}
-
-.buscar {
-  display: inline-block;
-  margin: auto;
-  margin-top: 8px;
-  padding: 0px 15px;
-  border: 1px solid rgb(212, 212, 212);
-  border-radius: 5px;
+  margin-top: 0px;
 }
 
 .encabezado {
