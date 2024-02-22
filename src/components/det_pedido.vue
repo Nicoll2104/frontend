@@ -25,7 +25,7 @@
     <div v-if="showDetalleDiv" class="my-card">
       <q-card>
         <h5>Detalle Pedido</h5>
-        <q-dialog v-model="modal">
+        <q-dialog v-model="showAgregar">
           <q-card class="modal">
             <q-toolbar>
               <q-toolbar-title>Agregar producto</q-toolbar-title>
@@ -49,7 +49,7 @@
             rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
             no-results-label="No hay resultados para la busqueda" wrap-cells="false">
             <template v-slot:top>
-              <q-btn @click="" label="Agregar Producto" color="secondary">
+              <q-btn @click="opciones.agregar" label="Agregar Producto" color="secondary">
                 <q-icon name="shopping_cart" color="white" right />
               </q-btn>
             </template>
@@ -159,7 +159,11 @@ let itemsPre = ref([]);
 let selectProdut = ref([]);
 let seletFicha = ref([]);
 let seletusuario = ref([]);
+
+
 let showDetalleDiv = ref(false);
+let showAgregar = ref(false);
+
 
 const dataPedido = ref({
   fecha_pedido: "",
@@ -174,6 +178,23 @@ const data = ref({
   pedido_id: "",
   producto_id: "",
 });
+
+const opciones = {
+  agregar: () => {
+    data.value = {
+      cantidad: "",
+      pedido_id: "",
+      producto_id: "",
+    };
+    showAgregar.value = true;
+    estado.value = "guardar";
+  },
+  editar: (info) => {
+    data.value = { ...info }
+    modal.value = true;
+    estado.value = "editar";
+  },
+};
 
 const validateDate = (value) => {
   const today = new Date();
