@@ -49,7 +49,7 @@
             rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
             no-results-label="No hay resultados para la busqueda" wrap-cells="false">
             <template v-slot:top>
-              <q-btn @click="opciones.agregar" label="Agregar Producto" color="secondary">
+              <q-btn @click="" label="Agregar Producto" color="secondary">
                 <q-icon name="shopping_cart" color="white" right />
               </q-btn>
             </template>
@@ -276,7 +276,7 @@ const obtenerUsuarios = async () => {
 obtenerUsuarios();
 
 function validarCamposPedidos() {
-  console.log("----------------------------------------------------------------")
+/*   console.log("----------------------------------------------------------------")
 
   const arrData = Object.entries(dataPedido.value)
   console.log(arrData);
@@ -308,8 +308,9 @@ function validarCamposPedidos() {
       notificar('negative', "La ficha  obligatoria")
       return
     }
-  }
-  enviarInfo[estado.value]()
+  } */
+  showDetalleDiv.value = true
+  /* enviarInfo[estado.value]() */
 }
 
 
