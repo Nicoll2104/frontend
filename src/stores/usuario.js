@@ -4,85 +4,118 @@ import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import Cookies from "js-cookie";
 
-
 export const useUsuarioStore = defineStore("usuario", () => {
-    
   const obtenerInfoUsuarios = async () => {
     try {
-        let responseUsuarios = await axios.get('usuario/ver');
-        console.log (responseUsuarios);
-        return responseUsuarios.data
+      let responseUsuarios = await axios.get("usuario/ver");
+      console.log(responseUsuarios);
+      return responseUsuarios.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const postUsuarios = async (data) =>{
+    try {
+        let res = await axios.post("usuario/agregar", data);
+        return res.data
     } catch (error) {
         throw error
     }
+}
+
+const putUsuario = async (id, data) => {
+  try {
+      let res = await axios.put(`usuario/modificar/${id}`, data);
+      return res
+  } catch (error) {
+      throw error;
+  }
 };
 
-    const model = "usuario/";
-    const router = useRouter();
-    const $q = useQuasar();
-  
-    function solicitarToken() {
-      const token = Cookies.get("x-token");
-  
-      console.log(token);
-      if (token == "null") {
-        console.log("h");
-        notificar("Por favor inicie sesión");
-        router.push("/");
-        return false;
-      }
-  
-      return token;
-    }
-  
-    function notificar(msg) {
-      $q.notify({
-        type: "negative",
-        message: msg,
-        position: "top",
-      });
-    }
-  
-    function insertarToken() {
-      const token = solicitarToken();
-  
-      if (!token) return false;
-  
-      const axiosInstance = axios.create({
-        headers: {
-          "x-token": token,
-        },
-      });
-  
-      return axiosInstance;
-    }
-  
-    function salir() {
-      notificar("Por favor vuelva a iniciar sesión");
+const putInactivar = async (id)=>{
+  try {
+      let res = await axios.put(`usuario/inactivar/${id}`)
+      return res
+  } catch (error) {
+      console.log(error, "Error al cambiar el estado del usuario");
+  }
+}
+const  putActivar = async (id)=>{
+  try {
+      let res = await axios.put(`usuario/activar/${id}`)
+      return res
+  } catch (error) {
+      console.log(error, "Error al cambiar el estado del usuario");
+  }
+}
+
+  const model = "usuario/";
+  const router = useRouter();
+  const $q = useQuasar();
+
+  function solicitarToken() {
+    const token = Cookies.get("x-token");
+
+    console.log(token);
+    if (token == "null") {
+      console.log("h");
+      notificar("Por favor inicie sesión");
       router.push("/");
+      return false;
     }
-  
-    const obtener = async () => {
-      try {
-        const x = insertarToken();
-        if (!x) return null;
-        const response = await x.get(`${model}all`);
-        return response.data;
-      } catch (error) {
-        console.error(error);
-        if (error.message === "Network Error") {
-          notificar("Sin conexión, por favor intente recargar");
-          return null;
-        }
-  
-        if (error.response.data.error === "Token no valido") {
-          salir();
-        }
-        return error.response.data;
+
+    return token;
+  }
+
+  function notificar(msg) {
+    $q.notify({
+      type: "negative",
+      message: msg,
+      position: "top",
+    });
+  }
+
+  function insertarToken() {
+    const token = solicitarToken();
+
+    if (!token) return false;
+
+    const axiosInstance = axios.create({
+      headers: {
+        "x-token": token,
+      },
+    });
+
+    return axiosInstance;
+  }
+
+  function salir() {
+    notificar("Por favor vuelva a iniciar sesión");
+    router.push("/");
+  }
+
+  const obtener = async () => {
+    try {
+      const x = insertarToken();
+      if (!x) return null;
+      const response = await x.get(`${model}all`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      if (error.message === "Network Error") {
+        notificar("Sin conexión, por favor intente recargar");
+        return null;
       }
-    };
-  
-    const guardar = async (data) => {
+
+      if (error.response.data.error === "Token no valido") {
+        salir();
+      }
+      return error.response.data;
+    }
+  };
+
+  /*   const guardar = async (data) => {
       try {
         const x = insertarToken();
         if (!x) return null;
@@ -165,7 +198,7 @@ export const useUsuarioStore = defineStore("usuario", () => {
         }
         return error.response.data;
       }
-    };
+    }; */
   
     const login = async (data) => {
       try {
@@ -185,14 +218,14 @@ export const useUsuarioStore = defineStore("usuario", () => {
         return error.response.data;
       }
     };
-  
-    return {
-      obtenerInfoUsuarios,
-      obtener,
-      guardar,
-      editar,
-      activar,
-      inactivar,
-      login,
-    };
-  });
+
+  return {
+    obtenerInfoUsuarios,
+    obtener,
+    postUsuarios,
+    putUsuario,
+    putInactivar,
+    putActivar,
+    login,
+  };
+});
