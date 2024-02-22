@@ -74,10 +74,9 @@ export const useDisFichaStore = defineStore('disFicha', () => {
 
  const postDisFicha = async (data) =>{
         try {
-            console.log('a');
             let res = await axios.post("disFicha/agregar", data);
-            console.log('a', res);
-            return res.data.disFichas
+            console.log('respuesta del servidor:', res);
+            return res
         } catch (error) {
             return error
         }

@@ -288,20 +288,22 @@ const enviarInfo = {
     loadingmodal.value = true;
     try {
       const response = await useDisFicha.postDisFicha(data.value);
-      console.log(response);
       if (!response) return
-      if (response.response.data.error) {
-        notificar('negative', response.response.data.error)
+      if (response.error) {
+        notificar('negative', response.error)
         return
       }
+      const responseDatos = response.data.distribucion
+      responseDatos.distribucion_presupuesto = data.value.distribucion_presupuesto
+      responseDatos.ficha = data.value.ficha
 
-      rows.value.unshift(response);
-      notificar('positive', 'Guardado exitosamente')
-      modal.value = false;
+      rows.value.unshift(responseDatos);
+
+      loadingmodal.value = false;
+      modal.value = false
     } catch (error) {
       console.log(error);
     } finally {
-      loadingmodal.value = false;
     }
   },
   editar: async () => {
@@ -310,14 +312,15 @@ const enviarInfo = {
       const response = await useDisFicha.putDisFicha(data.value._id, data.value);
       console.log(response);
       if (!response) return
-      if (response.response.data.error) {
+      if (response.error) {
         notificar('negative', response.response.data.error)
         return
       }
       console.log(rows.value);
-      rows.value.splice(buscarIndexLocal(response.data.distribucion._id), 1, response.data.distribucion);
+      rows.value[buscarIndexLocal(response.data.distribucion._id)] = data.value;
       notificar('positive', 'Editado exitosamente')
-      modal.value = false;
+      loadingmodal.value = false;
+      modal.value = false
     } catch (error) {
       console.log(error);
     } finally {
@@ -374,7 +377,6 @@ const in_activar = {
 
 function validarCampos() {
   const arrData = Object.entries(data.value)
-  console.log(arrData);
   for (const d of arrData) {
     console.log(d);
     if (d[1] === null) {
