@@ -3,7 +3,7 @@
     <q-dialog v-model="modal" persistent>
       <q-card class="modal">
         <q-toolbar class=" q-pr-xl q-pl-xl">
-          <q-toolbar-title class="text-h5">Agregar {{ modelo }}</q-toolbar-title>
+          <q-toolbar-title class="text-h5">Agregar/Modificar {{ modelo }}</q-toolbar-title>
           <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
         </q-toolbar>
 
@@ -30,7 +30,6 @@
           <q-input class="modalinputs" outlined v-model="data.fecha_creacion" label="Fecha creacion" type="text"
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de creacion']">
           </q-input>
-
 
           <q-input class="modalinputs" outlined v-model="data.fecha_vencimiento" label="Fecha vencimiento" type="text"
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de vencimiento']"></q-input>
@@ -459,7 +458,7 @@ warning: Color para advertencias o mensajes importantes.
 }
 
 .descripcioninput{
-  width: 500px;
+  width: 480px;
   max-width: 80% ;
 }
 
