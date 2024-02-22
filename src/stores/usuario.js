@@ -203,8 +203,13 @@ const  putActivar = async (id)=>{
     const login = async (data) => {
       try {
         const response = await axios.post(`${model}login`, {
+          "id":data._id,
+          "nombre":data.nombre,
+          "cedula":data.cedula,
           "correo":data.correo,
-          "contrasena":data.contrasena
+          "telefono":data.telefono,
+          "contrasena":data.contrasena,
+          "rol":data.rol
         });
         console.log(response);
   
