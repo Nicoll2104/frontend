@@ -270,7 +270,7 @@ function notificar(tipo, msg) {
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
           <q-input class="input1" outlined v-model="data.año" label="Año" type="number" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
-          <q-card-section class="q-gutter-md row items-end justify-end continputs1">
+          <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
             <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />

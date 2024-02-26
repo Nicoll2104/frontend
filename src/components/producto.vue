@@ -34,12 +34,15 @@
           <q-input class="modalinputs" outlined v-model="data.fecha_vencimiento" label="Fecha vencimiento" type="text"
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de vencimiento']"></q-input>
         </q-card-section>
-        <q-card-section class="q-pr-xl row items-star justify-end continputs1">
-          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
-            :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
-            <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
-          </q-btn>
-        </q-card-section>
+        <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
+            <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
+              :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
+              <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
+            </q-btn>
+            <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white" v-close-popup>
+              <q-icon name="cancel" color="white" right />
+            </q-btn>
+          </q-card-section>
       </q-card>
     </q-dialog>
 
