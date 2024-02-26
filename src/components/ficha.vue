@@ -19,10 +19,15 @@
           <q-input class="input1" outlined v-model="data.fecha_fin" label="Fecha de cierre" type="date" 
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de cierre']"></q-input>
             <q-select class="input1" outlined v-model="data.area" label="Área" :options="opcionesArea"></q-select>
-          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
-            :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
-            <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
-          </q-btn>
+          <q-card-section class="q-gutter-md row items-end justify-end continputs1">
+            <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
+              :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
+              <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
+            </q-btn>
+            <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white" v-close-popup>
+              <q-icon name="cancel" color="white" right />
+            </q-btn>
+          </q-card-section>
         </q-card-section>
       </q-card>
     </q-dialog>
