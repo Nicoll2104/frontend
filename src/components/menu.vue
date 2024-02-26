@@ -11,7 +11,7 @@ function toggleLeftDrawer() {
 
 let menu1_content = ref([
     { ruta: "/", titulo: "Cerrar Sesión", desplegable: false },
-    { ruta: "/home", titulo: "Menu", desplegable: false },
+    { ruta: "/inicio", titulo: "Inicio", desplegable: false },
 ]);
 
 let menu2_content = ref([

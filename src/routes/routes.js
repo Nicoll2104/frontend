@@ -1,7 +1,7 @@
 import Login from "../components/login.vue" 
 import Menu from "../components/menu.vue"
 
-import home from "../components/home.vue"
+import inicio from "../components/inicio.vue"
 import presupuesto from '../components/presupuesto.vue'
 import Lotes from "../components/lotes.vue"
 import Fichas from '../components/ficha.vue'
@@ -22,8 +22,8 @@ const routes = [
     {path: "/Restableciemiento",component: contraseña,},
     {path: "/menu",component: Menu, 
       children: [
-        { path: "/", redirect: "/menu/home" },
-        { path: "/home", component: home },
+        { path: "/", redirect: "/menu/inicio" },
+        { path: "/inicio", component: inicio },
         {path: '/Presupuesto', component:presupuesto},
         {path: '/Fichas', component:Fichas},
         {path: '/Lotes', component:Lotes},
