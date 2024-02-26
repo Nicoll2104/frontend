@@ -32,15 +32,12 @@ const data = ref({
 
   function validarCampos() {
   const arrData = Object.entries(data.value)
-  console.log(arrData);
   for (const d of arrData) {
-    console.log(d);
     if (d[1] === null) {
       notificar('negative', 'Por favor complete todos los campos')
       return
     }
     if(typeof d[1] === 'string'){if (d[1].trim() === "") {
-      console.log("h");
       notificar('negative','Por favor complete todos los campos')
       return
     }}
@@ -63,7 +60,8 @@ async function validarIngreso() {
       return;
     }
     notificar('positive', 'Sección exitosa')
-    router.push("/home");
+    // Enviar la respuesta del servidor como parámetros de la URL al redirigir a la página de inicio
+    router.push({ path: '/inicio', query: { respuesta: JSON.stringify(response) } });
   } catch (error) {
     
   }finally{
