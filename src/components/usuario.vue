@@ -18,6 +18,8 @@
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el telefono']"></q-input>
           <q-input class="input1" outlined v-model="data.contrasena" label="Contraseña" type="text" maxlength="15"
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la contraseña']"></q-input>
+          <q-input class="input1" outlined v-model="data.rol" label="rol" type="text" maxlength="15"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la rol']"></q-input>
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
@@ -204,8 +206,8 @@ const enviarInfo = {
     try {
       const response = await useUsuario.postUsuarios(data.value);
       if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
+      if (response) {
+        notificar('negative',response.error)
         loadingmodal.value = false;
         return
       }
