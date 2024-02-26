@@ -119,6 +119,7 @@ import { usedetPedidoStore } from "../stores/det_pedido.js";
 import { useQuasar } from 'quasar';
 import { isAfter, isValid, parse } from 'date-fns';
 import { format } from "date-fns"
+import { Notify } from 'quasar';
 
 
 const modelo = "Crear Pedido";
@@ -130,6 +131,7 @@ const fichaStore = useFichaStore();
 const productoStore = useProductoStore();
 const usuarioStore = useUsuarioStore();
 const detPedidoStore = usedetPedidoStore();
+const enviarInfoestado = ref(false);
 
 
 const columns = ref([
@@ -341,43 +343,80 @@ const obtenerUsuarios = async () => {
 
 obtenerUsuarios();
 
-function validarCamposPedidos() {
-/*   console.log("----------------------------------------------------------------")
-
-  const arrData = Object.entries(dataPedido.value)
-  console.log(arrData);
-  for (const items of arrData) {
-    console.log(items);
-    if (items[1] === null) {
-      notificar('negative', "Por favor complete todos los campos")
-      return
-    }
-    if (typeof items[1] === 'string') {
-      if (items[1].trim() === "") {
-        notificar('negative', "Por favor complete todos los campos")
-        return
-      }
-    }
-    if (items[0] === "fecha_pedido" && items[1].toString().length < 1) {
-      notificar('negative', "La fecha de pedido es obligatoria")
-      return
-    }
-    if (items[0] === "fecha_entrega" && items[1].toString().length < 1) {
-      notificar('negative', "La fecha de entrega es obligatoria")
-      return
-    }
-    if (items[0] === "usuario" && items[1].toString().length < 1) {
-      notificar('negative', 'El usuario es obligatorio')
-      return
-    }
-    if (items[0] === "ficha" && items[1].toString().length < 1) {
-      notificar('negative', "La ficha  obligatoria")
-      return
-    }
-  } */
-  showDetalleDiv.value = true
-  /* enviarInfo[estado.value]() */
+function notificar(tipo, mensaje) {
+    console.log(`Tipo de notificación: ${tipo}, Mensaje: ${mensaje}`);
 }
+
+
+/* function validarCamposPedidos() {
+    const arrData = Object.entries(dataPedido.value);
+
+    for (const item of arrData) {
+        const key = item[0];
+        const value = item[1];
+
+        if (!value || value.trim() === "") {
+            notificar('negative', "Por favor complete todos los campos");
+            return;
+        }
+
+        if (key === "fecha_pedido" && value.toString().length < 1) {
+            notificar('negative', "La fecha de pedido es obligatoria");
+            return;
+        }
+
+        if (key === "fecha_entrega" && value.toString().length < 1) {
+            notificar('negative', "La fecha de entrega es obligatoria");
+            return;
+        }
+
+        if (key === "usuario" && value.toString().length < 1) {
+            notificar('negative', 'El usuario es obligatorio');
+            return;
+        }
+
+        if (key === "ficha" && value.toString().length < 1) {
+            notificar('negative', "La ficha es obligatoria");
+            return;
+        }
+    }
+
+    enviarInfoestado.value = true;
+} */
+function validarCampo(campo, valor, mensaje) {
+    if (!valor || valor.trim() === "") {
+        Notify.create({
+            type: 'negative',
+            message: mensaje,
+        });
+        return false; // Indica que el campo no es válido
+    }
+    return true; // Indica que el campo es válido
+}
+
+// Función para validar todos los campos
+function validarCamposPedidos() {
+    // Validar que ningún campo quede sin completar
+    if (!data.fecha_pedido || !data.fecha_entrega || !data.usuario || !data.ficha) {
+        notificar('negative', 'Por favor complete todos los campos.');
+        return;
+    }
+
+    if (data.usuario === 'Seleccionar') {
+        notificar('negative', 'Por favor seleccione un usuario válido.');
+        return;
+    }
+
+    // Ejemplo de validación de ficha
+    if (data.ficha === 'Seleccionar') {
+        notificar('negative', 'Por favor seleccione una ficha válida.');
+        return;
+    }
+
+    // Realizar la acción necesaria si todos los campos son válidos
+    enviarInfoestado.value = true;
+}
+
 
 
 const enviarInfoPedido = {

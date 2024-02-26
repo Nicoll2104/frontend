@@ -1,9 +1,21 @@
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter();
+const route = useRoute();
 const leftDrawerOpen = ref(false);
+
+console.log('menu cargado')
+
+/* if (route.query.respuesta) {
+    usuario = JSON.parse(route.query.respuesta);
+    console.log(usuario);
+  } else {
+    // Si no hay usuario en la URL, redirige al principio de la aplicación
+    router.push('/');
+  }
+ */
 
 function toggleLeftDrawer() {
     leftDrawerOpen.value = !leftDrawerOpen.value
