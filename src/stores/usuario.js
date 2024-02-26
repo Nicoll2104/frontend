@@ -20,7 +20,7 @@ export const useUsuarioStore = defineStore("usuario", () => {
         let res = await axios.post("usuario/agregar", data);
         return res.data
     } catch (error) {
-        throw error
+        return error.response.data
     }
 }
 
@@ -29,7 +29,7 @@ const putUsuario = async (id, data) => {
       let res = await axios.put(`usuario/modificar/${id}`, data);
       return res
   } catch (error) {
-      throw error;
+      return error.response.data;
   }
 };
 
