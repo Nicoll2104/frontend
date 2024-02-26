@@ -1,4 +1,29 @@
 <template>
+    <div class="q-pa-xl row items-start q-gutter-md justify-center ">
+    <q-card class="my-card">
+      <h5>Crear Pedido</h5>
+      <div class="q-gutter-md">
+        <q-card-section class="q-gutter-md row items-star justify-center continputs1">
+          <q-input v-model="data.fecha_pedido" filled type="date" hint="Fecha de pedido" class="q-mx-auto"
+            style="width: 200px" lazy-rules :rules="[validateDate]" @update:model-value="validateDates" />
+          <q-input v-model="data.fecha_entrega" filled type="date" hint="Fecha de entrega" class="q-mx-auto"
+            style="width: 200px" lazy-rules :rules="[validateDate]" @update:model-value="validateDates" />
+        </q-card-section>
+        <q-card-section class="q-gutter-md row items-star justify-center continputs1" style="margin-top: 0px;">
+          <q-select filled v-model="data.usuario" :options="seletusuario" label="Seleccione el usuario" class="q-mx-auto"
+            style="width: 300px" />
+          <q-select filled v-model="data.ficha" :options="seletFicha" label="Seleccione la ficha" class="q-mx-auto"
+            style="width: 300px" />
+        </q-card-section>
+        <q-card-section class="q-gutter-md row items-end justify-center continputs1" style="margin-top: 0px;">
+          <q-btn @click="validarCamposPedidos" :loading="loadingmodal" padding="10px" color="secondary" label="guardar">
+            <q-icon name="style" color="white" right />
+          </q-btn>
+        </q-card-section>
+      </div>
+    </q-card>
+  </div>
+  <div v-if="showDetalleDiv" class="my-card">
   <div class="q-pa-xl row items-start q-gutter-md justify-center ">
       <q-card class="my-card">
         <h5>Detalle Pedido</h5>
@@ -62,31 +87,6 @@
             </template>
           </q-table>
         </div>
-        <q-card-section class="q-gutter-md row items-end justify-center continputs1" style="margin-top: 0px;">
-          <q-btn @click="validarCamposPedidos" :loading="loadingmodal" padding="10px" color="secondary" label="guardar">
-            <q-icon name="style" color="white" right />
-          </q-btn>
-        </q-card-section>
-      </q-card>
-    </div>
-<!--     <div v-if="showDetalleDiv" class="my-card"> -->
-  <div class="q-pa-xl row items-start q-gutter-md justify-center ">
-    <q-card class="my-card">
-      <h5>Crear Pedido</h5>
-      <div class="q-gutter-md">
-        <q-card-section class="q-gutter-md row items-star justify-center continputs1">
-          <q-input v-model="data.fecha_pedido" filled type="date" hint="Fecha de pedido" class="q-mx-auto"
-            style="width: 200px" lazy-rules :rules="[validateDate]" @update:model-value="validateDates" />
-          <q-input v-model="data.fecha_entrega" filled type="date" hint="Fecha de entrega" class="q-mx-auto"
-            style="width: 200px" lazy-rules :rules="[validateDate]" @update:model-value="validateDates" />
-        </q-card-section>
-        <q-card-section class="q-gutter-md row items-star justify-center continputs1" style="margin-top: 0px;">
-          <q-select filled v-model="data.usuario" :options="seletusuario" label="Seleccione el usuario" class="q-mx-auto"
-            style="width: 300px" />
-          <q-select filled v-model="data.ficha" :options="seletFicha" label="Seleccione la ficha" class="q-mx-auto"
-            style="width: 300px" />
-        </q-card-section>
-
         <!-- btns 🛑👇 -->
         <q-card-section class="q-gutter-md row items-end justify-end continputs1">
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px" color="secondary" label="guardar">
@@ -103,10 +103,10 @@
 
         </q-card-section>
         <!-- btns 🛑☝ -->
-        
-      </div>
-    </q-card>
-  </div>
+      </q-card>
+    </div>
+    </div>
+<!--     <div v-if="showDetalleDiv" class="my-card"> -->
 <!--   </div> -->
 </template>
 
