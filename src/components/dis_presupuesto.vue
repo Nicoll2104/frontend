@@ -5,7 +5,7 @@ import { useQuasar } from 'quasar'
 import { useLoteStore } from "../stores/lotes.js";
 import { usePresupStore } from "../stores/presupuesto.js"
 
-const modelo = "Dis Presupuesto";
+const modelo = "Presupuesto por lotes";
 const useDisPresupuesto = usedisPresupuesStore();
 const useLote = useLoteStore();
 const usePresupes = usePresupStore();
@@ -17,7 +17,7 @@ const loadingmodal = ref(false);
 const columns = ref([
   {
     name: "codigo_presupuestal",
-    label: "Codigo presupuestal",
+    label: "Codigo Auxiliar",
     align: "left",
     field: (row) => row.codigo_presupuestal,
     sort: true,
@@ -32,7 +32,7 @@ const columns = ref([
   },
   {
     name: "presupuesto_inicial",
-    label: "Presupuesto inicial",
+    label: "Presupuesto",
     align: "left",
     field: (row) => row.presupuesto_inicial,
   },
@@ -50,7 +50,7 @@ const columns = ref([
   },
   {
     name: "items",
-    label: "items",
+    label: "Codigo presupuestal",
     align: "left",
     field: (row) => row.items.codigo_presupuesto,
   },
@@ -142,7 +142,7 @@ const obtenerInfo = async () => {
 };
 
 
-  obtenerInfo();
+obtenerInfo();
 
 
 const estado = ref("guardar");
@@ -166,11 +166,11 @@ const opciones = {
     obtenerPresupuestos()
     obtenerLotes();
     data.value = { ...info }
-    if(data.value.lote){
-      data.value.lote = { label: info.lote.nombre, value: info.lote._id}
+    if (data.value.lote) {
+      data.value.lote = { label: info.lote.nombre, value: info.lote._id }
     }
-    if(data.value.items){
-      data.value.items = { label: info.items.codigo_presupuesto, value: info.items._id}
+    if (data.value.items) {
+      data.value.items = { label: info.items.codigo_presupuesto, value: info.items._id }
     }
     modal.value = true;
     estado.value = "editar";
@@ -186,7 +186,7 @@ const enviarInfo = {
     console.log("data guardar", data);
     loadingmodal.value = true;
     try {
-      const info = {...data.value, lote:data.value.lote.value, items: data.value.items.value}
+      const info = { ...data.value, lote: data.value.lote.value, items: data.value.items.value }
       const response = await useDisPresupuesto.postDisPresupuesto(info);
       console.log(response);
       if (!response) return
@@ -208,7 +208,7 @@ const enviarInfo = {
   editar: async () => {
     loadingmodal.value = true;
     try {
-      const info = {...data.value, lote:data.value.lote.value, items: data.value.items.value}//esto
+      const info = { ...data.value, lote: data.value.lote.value, items: data.value.items.value }//esto
       console.log("info", data.items);
       const response = await useDisPresupuesto.putDisPresupuesto(data.value._id, info);
       console.log(response);
@@ -324,10 +324,10 @@ function validarCampos() {
 
   enviarInfo[estado.value]()
   data.value = {
-  ...data.value,
-  lote: data.value.lote.value._id,
-  items: data.value.items.value._id
-};
+    ...data.value,
+    lote: data.value.lote.value._id,
+    items: data.value.items.value._id
+  };
 }
 
 function notificar(tipo, msg) {
@@ -359,8 +359,8 @@ function notificar(tipo, msg) {
             :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
           <q-select class="input1" outlined v-model="data.lote" :options="options" label="Lotes" type="number"
             maxlength="30" lazy-rules :rules="[val => val != '' || 'Seleccione el lote']" />
-          <q-select class="input1" outlined v-model="data.items" :options="itemsPre" label="Items presupuesto" type="number"
-            maxlength="30" lazy-rules :rules="[val => val != '' || 'Seleccione el item de presupuesto']" />
+          <q-select class="input1" outlined v-model="data.items" :options="itemsPre" label="Items presupuesto"
+            type="number" maxlength="30" lazy-rules :rules="[val => val != '' || 'Seleccione el item de presupuesto']" />
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
             <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
@@ -415,14 +415,14 @@ function notificar(tipo, msg) {
         <template v-slot:body-cell-opciones="props">
           <q-td :props="props" class="botones">
             <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
+            
+            <router-link to="/Presupuesto_de_ficha" class="ingresarcont">
+              <q-btn color="secondary" icon="zoom_in" class="botonv1" />
+            </router-link>
           </q-td>
         </template>
       </q-table>
     </div>
-
-    <router-link to="/Dis_ficha" class="ingresarcont">
-      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Distribucion de ficha</q-btn>
-    </router-link>
   </div>
 </template>
 <style scoped>

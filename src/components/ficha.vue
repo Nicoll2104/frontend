@@ -12,17 +12,30 @@
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo de la ficha']"></q-input>
           <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text"  lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-          <q-input class="input1" outlined v-model="data.nivel_de_formacion" label="Nivel de formación" type="text"
-            maxlength="30" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el nivel de formacion']"></q-input>
+            <q-select class="input1" outlined v-model="data.nivel_de_formacion" label="Nivel de formación" :options="opcionesNivelFormacion" emit-value map-options :use-input="false">
+  <template v-slot:no-option>
+    <q-item>
+      <q-item-section class="text-grey">
+        No se encontraron opciones disponibles.
+      </q-item-section>
+    </q-item>
+  </template>
+</q-select>
+
           <q-input class="input1" outlined v-model="data.fecha_inicio" label="Fecha de inicio" type="date" 
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de inicio']"></q-input>
           <q-input class="input1" outlined v-model="data.fecha_fin" label="Fecha de cierre" type="date" 
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de cierre']"></q-input>
             <q-select class="input1" outlined v-model="data.area" label="Área" :options="opcionesArea"></q-select>
-          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
-            :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
-            <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
-          </q-btn>
+          <q-card-section class="q-gutter-md row items-end justify-end continputs1">
+            <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
+              :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
+              <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
+            </q-btn>
+            <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white" v-close-popup>
+              <q-icon name="cancel" color="white" right />
+            </q-btn>
+          </q-card-section>
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -153,6 +166,14 @@ const columns = ref([
 ]);
 const rows = ref([]);
 
+opcionesNivelFormacion: [
+      { label: 'Secundario', value: 'Secundario' },
+      { label: 'Técnico', value: 'Técnico' },
+      { label: 'Universitario', value: 'Universitario' },
+    ]
+
+opcionesNivelFormacion();
+
 function convertirFecha(cadenaFecha) {
   const fecha = new Date(cadenaFecha);
   const offset = 5 * 60;
@@ -191,8 +212,10 @@ const obtenerInfo = async () => {
     rows.value = Activa;
 
     const area = await useArea.obtenerInfoAreas();
+    console.log(area);
       if (area && Array.isArray(area.areas)) {
-      opcionesArea.value = area.areas.map(areas => ({ label: areas.nombre, value: areas._id, disable:areas.status==='0' }));
+        const filtro = area.areas.filter(areas => areas.status==1);
+      opcionesArea.value = filtro.map(area=>area.nombre)
     } else {
   console.error("El áreas es inválido:", area);
   }
@@ -260,7 +283,7 @@ const enviarInfo = {
     console.log(response);
     if (!response) return;
     if (response.error) {
-      notificar('negative', response.error.errors[0].msg);
+      notificar('negative', response.error);
       loadingmodal.value = false;
       return;
     }
@@ -291,7 +314,7 @@ editar: async () => {
     console.log(response);
     if (!response) return;
     if (response.error) {
-      notificar('negative', response.error.errors[0].msg);
+      notificar('negative', response.error);
       loadingmodal.value = false;
       return;
     }
