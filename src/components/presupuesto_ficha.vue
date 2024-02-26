@@ -512,10 +512,6 @@ function notificar(tipo, msg) {
         </template>
       </q-table>
     </div>
-
-    <router-link to="/Dis_presupuesto" class="ingresarcont">
-      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Distribucion de presupuesto</q-btn>
-    </router-link>
   </div>
 </template>
 

@@ -61,7 +61,7 @@ const data = ref({
 
 const obtenerInfo = async () => {
   try {
-    const presupuestos= await usePresup.obtenerInfoPresup();
+    const presupuestos = await usePresup.obtenerInfoPresup();
     console.log("usePresup")
     console.log(usePresup)
     console.log("dentro")
@@ -156,7 +156,7 @@ const enviarInfo = {
       loadingmodal.value = false;
     }
   },
-};                                          
+};
 
 const in_activar = {
   putActivar: async (id) => {
@@ -272,10 +272,11 @@ function notificar(tipo, msg) {
             :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
           <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
             <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
-            :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
-            <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
+              :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
+              <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
             </q-btn>
-            <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white" v-close-popup>
+            <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white"
+              v-close-popup>
               <q-icon name="cancel" color="white" right />
             </q-btn>
           </q-card-section>
@@ -329,14 +330,14 @@ function notificar(tipo, msg) {
         <template v-slot:body-cell-opciones="props">
           <q-td :props="props" class="botones">
             <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
+            <router-link to="/Dis_presupuesto" class="ingresarcont">
+              <q-btn color="secondary" icon="zoom_in" class="botonv1" />
+            </router-link>
           </q-td>
         </template>
       </q-table>
     </div>
 
-    <router-link to="/Dis_presupuesto" class="ingresarcont">
-      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Distribucion de presupuesto</q-btn>
-    </router-link>
   </div>
 </template>
 <style scoped>
