@@ -260,7 +260,7 @@ const enviarInfo = {
     console.log(response);
     if (!response) return;
     if (response.error) {
-      notificar('negative', response.error.errors[0].msg);
+      notificar('negative', response.error);
       loadingmodal.value = false;
       return;
     }
@@ -291,7 +291,7 @@ editar: async () => {
     console.log(response);
     if (!response) return;
     if (response.error) {
-      notificar('negative', response.error.errors[0].msg);
+      notificar('negative', response.error);
       loadingmodal.value = false;
       return;
     }
