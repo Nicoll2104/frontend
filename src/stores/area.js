@@ -19,7 +19,7 @@ export const useAreaStore = defineStore('area', () => {
             let res = await axios.post("area/agregar", data);
             return res.data
         } catch (error) {
-            throw error
+            return error.response.data;
         }
     }
 
@@ -28,7 +28,7 @@ export const useAreaStore = defineStore('area', () => {
             let res = await axios.put(`area/modificar/${id}`, data);
             return res
         } catch (error) {
-            throw error;
+            return error.response.data;
         }
     };
 
