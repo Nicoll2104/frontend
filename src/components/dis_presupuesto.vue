@@ -74,14 +74,13 @@
         <template v-slot:body-cell-opciones="props">
           <q-td :props="props" class="botones">
             <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
+            <router-link to="/Presupuesto_de_ficha" class="ingresarcont">
+              <q-btn color="secondary" icon="zoom_in" class="botonv1" />
+            </router-link>
           </q-td>
         </template>
       </q-table>
     </div>
-
-    <router-link to="/Dis_ficha" class="ingresarcont">
-      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Distribucion de ficha</q-btn>
-    </router-link>
   </div>
 </template>
 
@@ -92,7 +91,7 @@ import { useQuasar } from 'quasar'
 import { useLoteStore } from "../stores/lotes.js";
 import { usePresupStore } from "../stores/presupuesto.js"
 
-const modelo = "Dis Presupuesto";
+const modelo = "Presupuestos por lotes";
 const useDisPresupuesto = usedisPresupuesStore();
 const useLote = useLoteStore();
 const usePresupes = usePresupStore();

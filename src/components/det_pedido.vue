@@ -1,5 +1,5 @@
 <template>
-    <div class="q-pa-xl row items-start q-gutter-md justify-center ">
+  <div class="q-pa-xl row items-start q-gutter-md justify-center ">
     <q-card class="my-card">
       <h5>Crear Pedido</h5>
       <div class="q-gutter-md">
@@ -24,7 +24,7 @@
     </q-card>
   </div>
   <div v-if="showDetalleDiv" class="my-card">
-  <div class="q-pa-xl row items-start q-gutter-md justify-center ">
+    <div class="q-pa-xl row items-start q-gutter-md justify-center ">
       <q-card class="my-card">
         <h5>Detalle Pedido</h5>
         <q-dialog v-model="showAgregar">
@@ -39,9 +39,10 @@
                 label="Producto" lazy-rules :rules="[val => val != '' || 'Seleccione el producto']" />
               <q-input class="input1" outlined v-model="data.cantidad" label="Cantidad" type="number" maxlength="15"
                 lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
-                <q-btn @click="agregarDetallePedido(data.producto_id, data.cantidad)" :loading="loadingmodal" padding="10px" label="GUARDAR" :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
-                  <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
-                </q-btn>
+              <q-btn @click="agregarDetallePedido(data.producto_id, data.cantidad)" :loading="loadingmodal" padding="10px"
+                label="GUARDAR" :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
+                <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
+              </q-btn>
             </q-card-section>
           </q-card>
         </q-dialog>
@@ -105,9 +106,9 @@
         <!-- btns 🛑☝ -->
       </q-card>
     </div>
-    </div>
-<!--     <div v-if="showDetalleDiv" class="my-card"> -->
-<!--   </div> -->
+  </div>
+  <!--     <div v-if="showDetalleDiv" class="my-card"> -->
+  <!--   </div> -->
 </template>
 
 <script setup>
@@ -344,7 +345,7 @@ const obtenerUsuarios = async () => {
 obtenerUsuarios();
 
 function notificar(tipo, mensaje) {
-    console.log(`Tipo de notificación: ${tipo}, Mensaje: ${mensaje}`);
+  console.log(`Tipo de notificación: ${tipo}, Mensaje: ${mensaje}`);
 }
 
 
@@ -384,37 +385,37 @@ function notificar(tipo, mensaje) {
     enviarInfoestado.value = true;
 } */
 function validarCampo(campo, valor, mensaje) {
-    if (!valor || valor.trim() === "") {
-        Notify.create({
-            type: 'negative',
-            message: mensaje,
-        });
-        return false; // Indica que el campo no es válido
-    }
-    return true; // Indica que el campo es válido
+  if (!valor || valor.trim() === "") {
+    Notify.create({
+      type: 'negative',
+      message: mensaje,
+    });
+    return false; // Indica que el campo no es válido
+  }
+  return true; // Indica que el campo es válido
 }
 
 // Función para validar todos los campos
 function validarCamposPedidos() {
-    // Validar que ningún campo quede sin completar
-    if (!data.fecha_pedido || !data.fecha_entrega || !data.usuario || !data.ficha) {
-        notificar('negative', 'Por favor complete todos los campos.');
-        return;
-    }
+  // Validar que ningún campo quede sin completar
+  if (!data.fecha_pedido || !data.fecha_entrega || !data.usuario || !data.ficha) {
+    notificar('negative', 'Por favor complete todos los campos.');
+    return;
+  }
 
-    if (data.usuario === 'Seleccionar') {
-        notificar('negative', 'Por favor seleccione un usuario válido.');
-        return;
-    }
+  if (data.usuario === 'Seleccionar') {
+    notificar('negative', 'Por favor seleccione un usuario válido.');
+    return;
+  }
 
-    // Ejemplo de validación de ficha
-    if (data.ficha === 'Seleccionar') {
-        notificar('negative', 'Por favor seleccione una ficha válida.');
-        return;
-    }
+  // Ejemplo de validación de ficha
+  if (data.ficha === 'Seleccionar') {
+    notificar('negative', 'Por favor seleccione una ficha válida.');
+    return;
+  }
 
-    // Realizar la acción necesaria si todos los campos son válidos
-    enviarInfoestado.value = true;
+  // Realizar la acción necesaria si todos los campos son válidos
+  enviarInfoestado.value = true;
 }
 
 
