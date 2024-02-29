@@ -225,7 +225,7 @@ const validateFicha = (value) => {
   return true;
 };
 
-const validarCamposPedidos = () => {
+/* const validarCamposPedidos = () => {
   const fechaPedidoValidation = dataPedido.value.validateDate(dataPedido.value.fecha_pedido);
   const fechaEntregaValidation = dataPedido.value.validateDate(dataPedido.value.fecha_entrega);
   const usuarioValidation = validateUsuario(dataPedido.value.usuario);
@@ -249,7 +249,7 @@ const validarCamposPedidos = () => {
     return;
   }
 
-};
+}; */
 
 function convertirFecha(cadenaFecha) {
   const fecha = new Date(cadenaFecha);
