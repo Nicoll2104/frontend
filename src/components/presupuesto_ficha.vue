@@ -107,6 +107,7 @@
   </div>
 </template>
 
+ 
 <script setup>
 import { onMounted, ref } from "vue";
 import { useDisFichaStore } from "../stores/dis_ficha.js";
@@ -169,23 +170,25 @@ const columns = ref([
 const rows = ref([]);
 
 const data = ref({
-      presupuesto: "",
-      distribucion_presupuesto: {
-        nombre:"",
-        presupuesto_inicial:"",
-        lote:{nombre:""}},
-      ficha: {
-        nombre:"",
-        codigo_ficha:""}
-    });
+  presupuesto: "",
+  distribucion_presupuesto: {
+    nombre: "",
+    presupuesto_inicial: "",
+    lote: { nombre: "" }
+  },
+  ficha: {
+    nombre: "",
+    codigo_ficha: ""
+  }
+});
 
 onMounted(() => {
   obtenerInfo();
   console.log("inicio");
 });
 
-let disFichas 
-let disPresupuesto 
+let disFichas
+let disPresupuesto
 let fichas
 
 
@@ -196,15 +199,15 @@ const obtenerInfo = async () => {
     if (!disFichas) return
 
 
-    
+
     rowbuild()
   } catch (error) {
     console.error(error);
   }
 
 
-    getdisPresupuesto()
-    loadingTable.value = false
+  getdisPresupuesto()
+  loadingTable.value = false
 
 };
 console.log("Antes de la línea 101");
@@ -254,28 +257,30 @@ const getficha = async () => {
 };
 
 
-function rowbuild(){
+function rowbuild() {
   const distribucion_fichas = disFichas.distribucion
 
   if (disPresupuesto == undefined && fichas == undefined) {
     console.log('rows1:')
-    
-    
+
+
     const array = []
     for (let i = 0; i < distribucion_fichas.length; i++) {
       console.log(distribucion_fichas)
 
-        array.push({
-        _id:distribucion_fichas[i]._id,
-        presupuesto:distribucion_fichas[i].presupuesto,
+      array.push({
+        _id: distribucion_fichas[i]._id,
+        presupuesto: distribucion_fichas[i].presupuesto,
         distribucion_presupuesto: {
-          nombre:"",
-          presupuesto_inicial:"",
-          lote:{nombre:""}},
+          nombre: "",
+          presupuesto_inicial: "",
+          lote: { nombre: "" }
+        },
         ficha: {
-          nombre:"",
-          codigo_ficha:""},
-        status:distribucion_fichas[i].status,
+          nombre: "",
+          codigo_ficha: ""
+        },
+        status: distribucion_fichas[i].status,
       })
     }
     rows.value = array
@@ -284,30 +289,32 @@ function rowbuild(){
 
   const distribucion_presupuesto = disPresupuesto.distribucion || []
 
-  if (fichas == undefined){
+  if (fichas == undefined) {
     const array = []
     for (let i = 0; i < distribucion_fichas.length; i++) {
       console.log('segunda consulta')
       const indexdispresupuesto = distribucion_presupuesto.findIndex(objeto => objeto._id == distribucion_fichas[i].distribucion_presupuesto)
 
-    let campo_dispresupuesto = {
-          nombre:"",
-          presupuesto_inicial:"",
-          lote:{nombre:""}}
-    if (indexdispresupuesto !== -1){
-      campo_dispresupuesto = distribucion_presupuesto[indexdispresupuesto]
-    } else {
-      notificar('negative', 'Ficha inexistente' )
-    }
+      let campo_dispresupuesto = {
+        nombre: "",
+        presupuesto_inicial: "",
+        lote: { nombre: "" }
+      }
+      if (indexdispresupuesto !== -1) {
+        campo_dispresupuesto = distribucion_presupuesto[indexdispresupuesto]
+      } else {
+        notificar('negative', 'Ficha inexistente')
+      }
 
-        array.push({
-          _id:distribucion_fichas[i]._id,
-        presupuesto:distribucion_fichas[i].presupuesto,
-        distribucion_presupuesto:campo_dispresupuesto,
+      array.push({
+        _id: distribucion_fichas[i]._id,
+        presupuesto: distribucion_fichas[i].presupuesto,
+        distribucion_presupuesto: campo_dispresupuesto,
         ficha: {
-          nombre:"",
-          codigo_ficha:""},
-        status:distribucion_fichas[i].status,
+          nombre: "",
+          codigo_ficha: ""
+        },
+        status: distribucion_fichas[i].status,
       })
 
     }
@@ -320,42 +327,43 @@ function rowbuild(){
   const fichasdatos = fichas || []
 
 
-  if (true){
-  const array = []
-  for (let i = 0; i < distribucion_fichas.length; i++) {
-    console.log("tercera consulta")
+  if (true) {
+    const array = []
+    for (let i = 0; i < distribucion_fichas.length; i++) {
+      console.log("tercera consulta")
 
-    const indexdispresupuesto = distribucion_presupuesto.findIndex(objeto => objeto._id == distribucion_fichas[i].distribucion_presupuesto)
-    const indexficha = fichasdatos.findIndex(objeto => objeto._id == distribucion_fichas[i].ficha)
-    let campo_dispresupuesto = {
-          nombre:"",
-          presupuesto_inicial:"",
-          lote:{nombre:""}}
-    let campo_ficha = {
-          nombre:"",
-          codigo_ficha:""
-        }
+      const indexdispresupuesto = distribucion_presupuesto.findIndex(objeto => objeto._id == distribucion_fichas[i].distribucion_presupuesto)
+      const indexficha = fichasdatos.findIndex(objeto => objeto._id == distribucion_fichas[i].ficha)
+      let campo_dispresupuesto = {
+        nombre: "",
+        presupuesto_inicial: "",
+        lote: { nombre: "" }
+      }
+      let campo_ficha = {
+        nombre: "",
+        codigo_ficha: ""
+      }
 
-    if (indexdispresupuesto !== -1){
-      campo_dispresupuesto = distribucion_presupuesto[indexdispresupuesto]
-    } else {
-      notificar('negative', 'Distribucion de presupuesto inexistente' )
-    }
+      if (indexdispresupuesto !== -1) {
+        campo_dispresupuesto = distribucion_presupuesto[indexdispresupuesto]
+      } else {
+        notificar('negative', 'Distribucion de presupuesto inexistente')
+      }
 
 
-    if (indexficha !== -1){
-      campo_ficha = fichasdatos[indexficha]
-    } else {
-      notificar('negative', 'Distribucion de presupuesto inexistente' )
-    }
+      if (indexficha !== -1) {
+        campo_ficha = fichasdatos[indexficha]
+      } else {
+        notificar('negative', 'Distribucion de presupuesto inexistente')
+      }
 
-    array.push({
-      _id:distribucion_fichas[i]._id,
-      presupuesto:distribucion_fichas[i].presupuesto,
-      distribucion_presupuesto:campo_dispresupuesto,
-      ficha:campo_ficha,
-      status:distribucion_fichas[i].status,
-    })
+      array.push({
+        _id: distribucion_fichas[i]._id,
+        presupuesto: distribucion_fichas[i].presupuesto,
+        distribucion_presupuesto: campo_dispresupuesto,
+        ficha: campo_ficha,
+        status: distribucion_fichas[i].status,
+      })
 
     }
     rows.value = array
@@ -371,12 +379,14 @@ const opciones = {
     data.value = {
       presupuesto: "",
       distribucion_presupuesto: {
-        nombre:"",
-        presupuesto_inicial:"",
-        lote:{nombre:""}},
+        nombre: "",
+        presupuesto_inicial: "",
+        lote: { nombre: "" }
+      },
       ficha: {
-        nombre:"",
-        codigo_ficha:""}
+        nombre: "",
+        codigo_ficha: ""
+      }
     };
     modal.value = true;
     estado.value = "guardar";
@@ -521,113 +531,6 @@ function notificar(tipo, msg) {
   })
 }
 </script>
-
-
-
-<template>
-  <div>
-    <q-dialog v-model="modal">
-      <q-card class="modal">
-        <q-toolbar>
-          <q-toolbar-title>Agregar {{ modelo }}</q-toolbar-title>
-          <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
-        </q-toolbar>
-
-        <q-card-section class="q-gutter-md">
-
-          <q-input class="input1" outlined v-model="data.presupuesto" label="Presupuesto" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el nombre del presupuesto']"></q-input>
-
-          <q-select outlined options-dense label="Distribucion de presupuesto" lazy-rules
-          v-model="data.distribucion_presupuesto" :options="disPresupuesto.distribucion" 
-          :option-label="item => item.nombre ? 'Nombre: ' + item.nombre + ' Valor: ' + item.presupuesto_inicial : '' "
-          :rules="[val => val.nombre !== '' || 'Seleccione un presupuesto']"/>
-
-          <q-select outlined options-dense label="ficha" 
-          v-model="data.ficha" :options="fichas" 
-          :option-label="item => item.nombre ? item.nombre + ' #' + item.codigo_ficha : '' "
-          :rules="[val => val.nombre !== '' || 'Seleccione un presupuesto']"/>
-
-          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
-            :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
-            <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
-          </q-btn>
-          
-        </q-card-section>
-      </q-card>
-    </q-dialog>
-
-    <div class="q-pa-md">
-      <q-table :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
-        rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
-        no-results-label="No hay resultados para la busqueda" wrap-cells="false">
-        <template v-slot:top>
-          <h4 class="titulo-cont">
-            {{ modelo + ' ' }}
-            <q-btn @click="opciones.agregar" label="Añadir" color="secondary" :loading="loadingficha">
-              <q-icon name="style" color="white" right />
-            </q-btn>
-          </h4>
-          <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar">
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
-        </template>
-
-        <template v-slot:header="props">
-          <q-tr :props="props" class="text-center">
-            <q-th v-for="col in props.cols" :key="col.name" :props="props" class="encabezado">
-              {{ col.label }}
-            </q-th>
-          </q-tr>
-        </template>
-
-        <template v-slot:body-cell-distribucion_presupuesto="props">
-          <q-td :props="props" class="botones" >
-            <q-btn class="botonv1" size="12px" flat padding="10px"
-            :loading="loadingpresupuesto" :label="props.row.distribucion_presupuesto.nombre"/>
-          </q-td>
-        </template>
-
-        <template v-slot:body-cell-ficha="props">
-          <q-td :props="props" class="botones" >
-            <q-btn class="botonv1" size="12px" flat padding="10px"
-            :loading="loadingficha" :label="props.row.ficha.nombre"/>
-          </q-td>
-        </template>
-
-        <template v-slot:body-cell-status="props">
-          <q-td :props="props" class="botones">
-            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.status == 1
-              ? 'Activo'
-              : props.row.status == 0
-                ? 'Inactivo'
-                : '‎  ‎   ‎   ‎   ‎ '
-              " :color="props.row.status == 1 ? 'primary' : 'secondary'" :loading="props.row.status == 'load'"
-              loading-indicator-size="small" @click="
-                props.row.status == 1
-                  ? in_activar.putInactivar(props.row._id)
-                  : in_activar.putActivar(props.row._id);
-              props.row.status = 'load';
-              "/>
-          </q-td>
-        </template>
-
-        <template v-slot:body-cell-opciones="props">
-          <q-td :props="props" class="botones">
-            <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" :loading="loadingficha" />
-          </q-td>
-        </template>
-      </q-table>
-    </div>
-
-    <router-link to="/Dis_presupuesto" class="ingresarcont">
-      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Distribucion de presupuesto</q-btn>
-    </router-link>
-  </div>
-</template>
-
 
 
 <style scoped>
