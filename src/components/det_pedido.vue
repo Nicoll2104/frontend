@@ -4,15 +4,15 @@
       <h5>Crear Pedido</h5>
       <div class="q-gutter-md">
         <q-card-section class="q-gutter-md row items-star justify-center continputs1">
-          <q-input v-model="data.fecha_pedido" filled type="date" hint="Fecha de pedido" class="q-mx-auto"
-            style="width: 200px" lazy-rules :rules="[validateDate]" @update:model-value="validateDates" />
-          <q-input v-model="data.fecha_entrega" filled type="date" hint="Fecha de entrega" class="q-mx-auto"
-            style="width: 200px" lazy-rules :rules="[validateDate]" @update:model-value="validateDates" />
+          <q-input v-model="dataPedido.fecha_pedido" filled type="date" hint="Fecha de pedido" class="q-mx-auto"
+            style="width: 200px" lazy-rules :rules="[dataPedido.validateDate]" @update:model-value="validateDates" />
+          <q-input v-model="dataPedido.fecha_entrega" filled type="date" hint="Fecha de entrega" class="q-mx-auto"
+            style="width: 200px" lazy-rules :rules="[dataPedido.validateDate]" @update:model-value="validateDates" />
         </q-card-section>
         <q-card-section class="q-gutter-md row items-star justify-center continputs1" style="margin-top: 0px;">
-          <q-select filled v-model="data.usuario" :options="seletusuario" label="Seleccione el usuario" class="q-mx-auto"
+          <q-select filled v-model="dataPedido.usuario" :options="seletusuario" label="Seleccione el usuario" class="q-mx-auto"
             style="width: 300px" />
-          <q-select filled v-model="data.ficha" :options="seletFicha" label="Seleccione la ficha" class="q-mx-auto"
+          <q-select filled v-model="dataPedido.ficha" :options="seletFicha" label="Seleccione la ficha" class="q-mx-auto"
             style="width: 300px" />
         </q-card-section>
         <q-card-section class="q-gutter-md row items-end justify-center continputs1" style="margin-top: 0px;">
@@ -159,7 +159,7 @@ let seletFicha = ref([]);
 let seletusuario = ref([]);
 
 
-let showDetalleDiv = ref(false);
+let showDetalleDiv = ref(true);
 let showAgregar = ref(false);
 
 
@@ -168,8 +168,22 @@ const dataPedido = ref({
   fecha_entrega: "",
   usuario: "",
   ficha: "",
-});
+  validateDate: (value) => {
+    const today = new Date();
+    const selectedDate = parse(value, 'yyyy-MM-dd', new Date());
+    const isValidDate = isValid(selectedDate);
 
+    if (!isValidDate) {
+      return 'Ingrese una fecha válida.';
+    }
+
+    if (!isAfter(selectedDate, today)) {
+      return 'La fecha no puede ser anterior a la actual.';
+    }
+
+    return true;
+  },
+});
 
 const data = ref({
   cantidad: "",
@@ -194,30 +208,47 @@ const opciones = {
   },
 };
 
-const validateDate = (value) => {
-  const today = new Date();
-  const selectedDate = parse(value, 'yyyy-MM-dd', new Date());
-  const isValidDate = isValid(selectedDate);
 
-  if (!isValidDate) {
-    return 'Ingrese una fecha válida.';
+
+const validateUsuario = (value) => {
+  if (!value) {
+    return 'Seleccione un usuario.';
   }
+  return true;
+};
 
-  if (!isAfter(selectedDate, today)) {
-    return 'La fecha no puede ser anterior a la actual.';
+const validateFicha = (value) => {
+  if (!value) {
+    return 'Seleccione una ficha.';
   }
 
   return true;
 };
 
-const validateDates = () => {
-  if (data.fecha_pedido && data.fecha_entrega) {
-    if (parse(data.fecha_pedido, 'yyyy-MM-dd', new Date()) > parse(data.fecha_entrega, 'yyyy-MM-dd', new Date())) {
-      notificar('negative', 'La fecha de pedido no puede ser posterior a la fecha de entrega.');
-      data.fecha_pedido = '';
-      data.fecha_entrega = '';
-    }
+const validarCamposPedidos = () => {
+  const fechaPedidoValidation = dataPedido.value.validateDate(dataPedido.value.fecha_pedido);
+  const fechaEntregaValidation = dataPedido.value.validateDate(dataPedido.value.fecha_entrega);
+  const usuarioValidation = validateUsuario(dataPedido.value.usuario);
+  const fichaValidation = validateFicha(dataPedido.value.ficha);
+
+
+  if (fechaPedidoValidation !== true) {
+    $q.notify({ type: 'negative', message: fechaPedidoValidation });
+    return;
   }
+  if (fechaEntregaValidation !== true) {
+    $q.notify({ type: 'negative', message: fechaEntregaValidation });
+    return;
+  }
+  if (usuarioValidation !== true) {
+    $q.notify({ type: 'negative', message: usuarioValidation });
+    return;
+  }
+  if (fichaValidation !== true) {
+    $q.notify({ type: 'negative', message: fichaValidation });
+    return;
+  }
+
 };
 
 function convertirFecha(cadenaFecha) {
@@ -385,37 +416,37 @@ function notificar(tipo, mensaje) {
     enviarInfoestado.value = true;
 } */
 function validarCampo(campo, valor, mensaje) {
-  if (!valor || valor.trim() === "") {
-    Notify.create({
-      type: 'negative',
-      message: mensaje,
-    });
-    return false; // Indica que el campo no es válido
-  }
-  return true; // Indica que el campo es válido
+    if (!valor || valor.trim() === "") {
+        Notify.create({
+            type: 'negative',
+            message: mensaje,
+        });
+        return false; // Indica que el campo no es válido
+    }
+    return true; // Indica que el campo es válido
 }
 
 // Función para validar todos los campos
 function validarCamposPedidos() {
-  // Validar que ningún campo quede sin completar
-  if (!data.fecha_pedido || !data.fecha_entrega || !data.usuario || !data.ficha) {
-    notificar('negative', 'Por favor complete todos los campos.');
-    return;
-  }
+    // Validar que ningún campo quede sin completar
+    if (!data.fecha_pedido || !data.fecha_entrega || !data.usuario || !data.ficha) {
+        notificar('negative', 'Por favor complete todos los campos.');
+        return;
+    }
 
-  if (data.usuario === 'Seleccionar') {
-    notificar('negative', 'Por favor seleccione un usuario válido.');
-    return;
-  }
+    if (data.usuario === 'Seleccionar') {
+        notificar('negative', 'Por favor seleccione un usuario válido.');
+        return;
+    }
 
-  // Ejemplo de validación de ficha
-  if (data.ficha === 'Seleccionar') {
-    notificar('negative', 'Por favor seleccione una ficha válida.');
-    return;
-  }
+    // Ejemplo de validación de ficha
+    if (data.ficha === 'Seleccionar') {
+        notificar('negative', 'Por favor seleccione una ficha válida.');
+        return;
+    }
 
-  // Realizar la acción necesaria si todos los campos son válidos
-  enviarInfoestado.value = true;
+    // Realizar la acción necesaria si todos los campos son válidos
+    enviarInfoestado.value = true;
 }
 
 
