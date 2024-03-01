@@ -12,7 +12,17 @@
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo de la ficha']"></q-input>
           <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text"  lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-            <q-select class="input1" outlined v-model="data.nivel_de_formacion" label="Nivel de formación" :options="opcionesNivelFormacion" emit-value map-options :use-input="false">
+            <q-select
+  class="input1"
+  outlined
+  v-model="data.nivel_de_formacion"
+  label="Nivel de formación"
+  :options="opcionesNivelFormacion"
+  emit-value
+  map-options
+  :use-input="false"
+>
+  <!-- Manejo de caso en el que no hay opciones disponibles -->
   <template v-slot:no-option>
     <q-item>
       <q-item-section class="text-grey">
@@ -166,13 +176,12 @@ const columns = ref([
 ]);
 const rows = ref([]);
 
-opcionesNivelFormacion: [
-      { label: 'Secundario', value: 'Secundario' },
-      { label: 'Técnico', value: 'Técnico' },
-      { label: 'Universitario', value: 'Universitario' },
-    ]
+const opcionesNivelFormacion = [
+  { label: 'Curso', value: 'Curso' },
+  { label: 'Técnico', value: 'Técnico' },
+  { label: 'Tecnólogo', value: 'Tecnólogo' },
+];
 
-opcionesNivelFormacion();
 
 function convertirFecha(cadenaFecha) {
   const fecha = new Date(cadenaFecha);
