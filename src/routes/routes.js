@@ -13,9 +13,35 @@ import Dis_presupuesto from '../components/dis_presupuesto.vue'
 import Det_pedido from '../components/det_pedido.vue'
 import presupuesto_ficha from '../components/presupuesto_ficha.vue'
 import Usuario from '../components/usuario.vue'
-
-
 import {createRouter, createWebHashHistory} from 'vue-router'
+import { useUsuarioStore } from "../stores/usuario.js"
+
+
+const auth = (to, from, next) => {
+  if (checkAuth()) {
+      const userUsuario = useUsuarioStore()
+      const rol = userUsuario.rol
+      if (!to.meta.rol.includes(rol)) {
+          return next({ name: 'login' })
+      }
+      next()
+  } else {
+      return next({ name: 'login' })
+  }
+}
+
+const checkAuth = () => {
+  const useUsuario = useUsuarioStore()
+
+  const token = useUsuario.token
+
+  if (useUsuario.login == "" || useUsuario.login === undefined) {
+      return false;
+  }
+  if (!token) return false
+  return true
+};
+
 
 const routes = [
     {path: "/",component: Login,},

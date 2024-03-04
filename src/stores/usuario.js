@@ -213,6 +213,7 @@ const  putActivar = async (id)=>{
         });
         console.log(response);
   
+        Cookies.set('rol', response.data.usuarios.rol, {expires:1})
         return response;
       } catch (error) {
         console.log(error);
