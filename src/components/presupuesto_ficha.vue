@@ -8,18 +8,20 @@
         </q-toolbar>
 
         <q-card-section class="q-gutter-md">
+          <q-input class="input1" outlined v-model="data.codigo_auxiliar" label="Codigo auxiliar ficha" type="number" maxlength="20"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo auxiliar']"></q-input>
 
-          <q-input class="input1" outlined v-model="data.presupuesto" label="Presupuesto" type="number" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el nombre del presupuesto']"></q-input>
+          <q-input class="input1" outlined v-model="data.presupuesto" label="Valor" type="number" maxlength="15"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el valor del presupuesto']"></q-input>
 
           <q-select outlined options-dense label="Distribucion de presupuesto" lazy-rules
             v-model="data.distribucion_presupuesto" :options="disPresupuesto.distribucion"
             :option-label="item => item.nombre ? 'Nombre: ' + item.nombre + ' Valor: ' + item.presupuesto_inicial : ''"
-            :rules="[val => val.nombre !== '' || 'Seleccione un presupuesto']" />
+            :rules="[val => val.nombre !== '' || 'Seleccione el codigo auxiliar del lote']" />
 
           <q-select outlined options-dense label="ficha" v-model="data.ficha" :options="fichas"
             :option-label="item => item.nombre ? item.nombre + ' #' + item.codigo_ficha : ''"
-            :rules="[val => val.nombre !== '' || 'Seleccione un presupuesto']" />
+            :rules="[val => val.nombre !== '' || 'Seleccione la ficha']" />
 
           <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
             <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
@@ -119,7 +121,7 @@ const useDisPresupuesto = usedisPresupuesStore();
 const useFicha = useFichaStore();
 
 
-const modelo = "Presupuesto de las fichas";
+const modelo = "Presupuesto por fichas";
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
@@ -137,7 +139,7 @@ const columns = ref([
   },
   {
     name: "presupuesto",
-    label: "Valor ingreso",
+    label: "Valor",
     align: "left",
     field: (row) => row.presupuesto,
     sort: true,
@@ -175,7 +177,6 @@ const rows = ref([]);
 const data = ref({
   presupuesto: "",
   distribucion_presupuesto: {
-    nombre: "",
     presupuesto_inicial: "",
     lote: { nombre: "" }
   },
@@ -273,6 +274,7 @@ function rowbuild() {
 
       array.push({
         _id: distribucion_fichas[i]._id,
+        codigo_auxiliar: distribucion_fichas[i].codigo_auxiliar,
         presupuesto: distribucion_fichas[i].presupuesto,
         distribucion_presupuesto: {
           nombre: "",
@@ -299,7 +301,6 @@ function rowbuild() {
       const indexdispresupuesto = distribucion_presupuesto.findIndex(objeto => objeto._id == distribucion_fichas[i].distribucion_presupuesto)
 
       let campo_dispresupuesto = {
-        nombre: "",
         presupuesto_inicial: "",
         lote: { nombre: "" }
       }
@@ -311,6 +312,7 @@ function rowbuild() {
 
       array.push({
         _id: distribucion_fichas[i]._id,
+        codigo_auxiliar: distribucion_fichas[i].codigo_auxiliar,
         presupuesto: distribucion_fichas[i].presupuesto,
         distribucion_presupuesto: campo_dispresupuesto,
         ficha: {
@@ -338,7 +340,6 @@ function rowbuild() {
       const indexdispresupuesto = distribucion_presupuesto.findIndex(objeto => objeto._id == distribucion_fichas[i].distribucion_presupuesto)
       const indexficha = fichasdatos.findIndex(objeto => objeto._id == distribucion_fichas[i].ficha)
       let campo_dispresupuesto = {
-        nombre: "",
         presupuesto_inicial: "",
         lote: { nombre: "" }
       }
@@ -362,6 +363,7 @@ function rowbuild() {
 
       array.push({
         _id: distribucion_fichas[i]._id,
+        codigo_auxiliar: distribucion_fichas[i].codigo_auxiliar,
         presupuesto: distribucion_fichas[i].presupuesto,
         distribucion_presupuesto: campo_dispresupuesto,
         ficha: campo_ficha,
@@ -380,6 +382,7 @@ const modal = ref(false);
 const opciones = {
   agregar: () => {
     data.value = {
+      codigo_auxiliar: "",
       presupuesto: "",
       distribucion_presupuesto: {
         nombre: "",

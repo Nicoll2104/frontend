@@ -29,7 +29,7 @@ const columns = ref([
   {
 
   name: "presupuesto_inicial",
-  label: "Valor ingreso",
+  label: "Valor",
   align: "left",
   field: (row) => row.presupuesto_inicial.toLocaleString(),
 },
