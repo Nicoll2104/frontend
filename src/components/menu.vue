@@ -1,12 +1,14 @@
 <script setup>
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useUsuarioStore } from "../stores/usuario.js"
 
-const router = useRouter();
+const UsuarioStore = useUsuarioStore()
 const route = useRoute();
 const leftDrawerOpen = ref(false);
 
 console.log('menu cargado')
+console.log(UsuarioStore.sesion)
 
 /* if (route.query.respuesta) {
     usuario = JSON.parse(route.query.respuesta);
@@ -75,7 +77,7 @@ let menu2_content = ref([
 
 
                     <!--🧩🧩🧩🧩-->
-                    <q-linear-progress :value="progress" class="q-mt-md" />
+                    <q-linear-progress class="q-mt-md" />
                     <!--🧩🧩🧩🧩-->
 
 
@@ -105,7 +107,7 @@ let menu2_content = ref([
                     </div>
 
                     <!--🧩🧩🧩🧩-->
-                    <q-linear-progress :value="progress" class="q-mt-md" />
+                    <q-linear-progress class="q-mt-md" />
                     <!--🧩🧩🧩🧩-->
                 </div>
             </q-drawer>
