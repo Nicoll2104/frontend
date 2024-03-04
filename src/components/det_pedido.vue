@@ -10,10 +10,10 @@
             style="width: 200px" lazy-rules :rules="[dataPedido.validateDate]" @update:model-value="validateDates" />
         </q-card-section>
         <q-card-section class="q-gutter-md row items-star justify-center continputs1" style="margin-top: 0px;">
-          <q-select filled v-model="dataPedido.usuario" :options="seletusuario" label="Seleccione el usuario" class="q-mx-auto"
-            style="width: 300px" />
-          <q-select filled v-model="dataPedido.ficha" :options="seletFicha" label="Seleccione la ficha" class="q-mx-auto"
-            style="width: 300px" />
+          <q-select filled v-model="dataPedido.usuario" :options="seletusuario" label="Seleccione el usuario"
+            class="q-mx-auto" style="width: 300px" />
+          <q-select filled v-model="dataPedido.ficha" :options="seletFicha" label="Seleccione la ficha"
+            class="q-mx-auto" style="width: 300px" />
         </q-card-section>
         <q-card-section class="q-gutter-md row items-end justify-center continputs1" style="margin-top: 0px;">
           <q-btn @click="validarCamposPedidos" :loading="loadingmodal" padding="10px" color="secondary" label="guardar">
@@ -39,8 +39,9 @@
                 label="Producto" lazy-rules :rules="[val => val != '' || 'Seleccione el producto']" />
               <q-input class="input1" outlined v-model="data.cantidad" label="Cantidad" type="number" maxlength="15"
                 lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
-              <q-btn @click="agregarDetallePedido(data.producto_id, data.cantidad)" :loading="loadingmodal" padding="10px"
-                label="GUARDAR" :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
+              <q-btn @click="agregarDetallePedido(data.producto_id, data.cantidad)" :loading="loadingmodal"
+                padding="10px" :label="estado == 'editar' ? 'Editar' : 'Guardar'"
+                :color="estado == 'editar' ? 'warning' : 'secondary'">
                 <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
               </q-btn>
             </q-card-section>
@@ -67,17 +68,17 @@
             <template v-slot:body-cell-Estado="props">
               <q-td :props="props" class="botones">
                 <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.estado === 1
-                  ? 'Activo'
-                  : props.row.estado === 0
-                    ? 'Inactivo'
-                    : '‎  ‎   ‎   ‎   ‎ '
-                  " :color="props.row.estado === 1 ? 'positive' : 'accent'" :loading="props.row.estado === 'load'"
+            ? 'Activo'
+            : props.row.estado === 0
+              ? 'Inactivo'
+              : '‎  ‎   ‎   ‎   ‎ '
+            " :color="props.row.estado === 1 ? 'positive' : 'accent'" :loading="props.row.estado === 'load'"
                   loading-indicator-size="small" @click="
-                    props.row.estado === 1
-                      ? in_activar.inactivar(props.row._id)
-                      : in_activar.activar(props.row._id);
-                  props.row.estado = 'load';
-                  " />
+            props.row.estado === 1
+              ? in_activar.inactivar(props.row._id)
+              : in_activar.activar(props.row._id);
+          props.row.estado = 'load';
+          " />
               </q-td>
             </template>
 
@@ -98,7 +99,8 @@
             <q-icon name="print" color="white" right />
           </q-btn>
 
-          <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white" v-close-popup>
+          <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white"
+            v-close-popup>
             <q-icon name="cancel" color="white" right />
           </q-btn>
 
@@ -225,12 +227,11 @@ const validateFicha = (value) => {
   return true;
 };
 
-/* const validarCamposPedidos = () => {
+const validarCamposPedidos = () => {
   const fechaPedidoValidation = dataPedido.value.validateDate(dataPedido.value.fecha_pedido);
   const fechaEntregaValidation = dataPedido.value.validateDate(dataPedido.value.fecha_entrega);
   const usuarioValidation = validateUsuario(dataPedido.value.usuario);
   const fichaValidation = validateFicha(dataPedido.value.ficha);
-
 
   if (fechaPedidoValidation !== true) {
     $q.notify({ type: 'negative', message: fechaPedidoValidation });
@@ -248,8 +249,7 @@ const validateFicha = (value) => {
     $q.notify({ type: 'negative', message: fichaValidation });
     return;
   }
-
-}; */
+};
 
 function convertirFecha(cadenaFecha) {
   const fecha = new Date(cadenaFecha);
@@ -379,78 +379,6 @@ function notificar(tipo, mensaje) {
   console.log(`Tipo de notificación: ${tipo}, Mensaje: ${mensaje}`);
 }
 
-
-/* function validarCamposPedidos() {
-    const arrData = Object.entries(dataPedido.value);
-
-    for (const item of arrData) {
-        const key = item[0];
-        const value = item[1];
-
-        if (!value || value.trim() === "") {
-            notificar('negative', "Por favor complete todos los campos");
-            return;
-        }
-
-        if (key === "fecha_pedido" && value.toString().length < 1) {
-            notificar('negative', "La fecha de pedido es obligatoria");
-            return;
-        }
-
-        if (key === "fecha_entrega" && value.toString().length < 1) {
-            notificar('negative', "La fecha de entrega es obligatoria");
-            return;
-        }
-
-        if (key === "usuario" && value.toString().length < 1) {
-            notificar('negative', 'El usuario es obligatorio');
-            return;
-        }
-
-        if (key === "ficha" && value.toString().length < 1) {
-            notificar('negative', "La ficha es obligatoria");
-            return;
-        }
-    }
-
-    enviarInfoestado.value = true;
-} */
-function validarCampo(campo, valor, mensaje) {
-    if (!valor || valor.trim() === "") {
-        Notify.create({
-            type: 'negative',
-            message: mensaje,
-        });
-        return false; // Indica que el campo no es válido
-    }
-    return true; // Indica que el campo es válido
-}
-
-// Función para validar todos los campos
-function validarCamposPedidos() {
-    // Validar que ningún campo quede sin completar
-    if (!data.fecha_pedido || !data.fecha_entrega || !data.usuario || !data.ficha) {
-        notificar('negative', 'Por favor complete todos los campos.');
-        return;
-    }
-
-    if (data.usuario === 'Seleccionar') {
-        notificar('negative', 'Por favor seleccione un usuario válido.');
-        return;
-    }
-
-    // Ejemplo de validación de ficha
-    if (data.ficha === 'Seleccionar') {
-        notificar('negative', 'Por favor seleccione una ficha válida.');
-        return;
-    }
-
-    // Realizar la acción necesaria si todos los campos son válidos
-    enviarInfoestado.value = true;
-}
-
-
-
 const enviarInfoPedido = {
   guardar: async () => {
     loadingmodal.value = true;
@@ -565,6 +493,7 @@ const in_activar = {
   },
 };
 </script>
+
 <style scoped>
 * {
   margin: 0px;
