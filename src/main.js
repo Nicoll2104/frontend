@@ -2,6 +2,7 @@ import App from './App.vue'
 import { createApp } from 'vue'
 import "./style.css";
 import { createPinia } from 'pinia';
+import { createPersistedState } from 'pinia-plugin-persistedstate'
 import { router } from "./routes/routes.js";
 import { Quasar, Dialog, Notify  } from 'quasar';
 import '@quasar/extras/material-icons/material-icons.css'
@@ -21,6 +22,10 @@ app.use(Quasar, {
       notify: {}/* look at QuasarConfOptions from the API card */
     }
   });
+
+pinia.use(createPersistedState({
+  storage: sessionStorage,
+}))
 
 
 app.mount('#app')
