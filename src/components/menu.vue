@@ -7,9 +7,10 @@ import { useUsuarioStore } from "../stores/usuario.js"
 const UsuarioStore = useUsuarioStore()
 const route = useRoute();
 const leftDrawerOpen = ref(false);
+const usuario = ref(UsuarioStore.sesion.usuarios)
 
 console.log('menu cargado')
-console.log(UsuarioStore.sesion)
+console.log(usuario)
 
 /* if (route.query.respuesta) {
     usuario = JSON.parse(route.query.respuesta);
@@ -73,9 +74,7 @@ let menu2_content = ref({
                 <q-toolbar>
                     <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
                     <q-toolbar-title>
-                        <q-avatar icon="page_info">
-
-                        </q-avatar>
+                        <q-avatar icon="page_info"/>
                         Distribucion De Presupuesto SENA
                     </q-toolbar-title>
                     <router-link to="/">
@@ -85,10 +84,14 @@ let menu2_content = ref({
             </q-header>
 
             <q-drawer class="bg-secondary" v-model="leftDrawerOpen" side="left" behavior="mobile" elevated style="scrollbar-width: none;">
-                <div class="q-pa-md q-gutter menucont">
-                    <div class="q-pa-md q-gutter-sm" style="margin-top: 1em">
-                        <q-avatar color="white" text-color="primary" padding="none" icon="face" style="font-size: 7em" />
-                    </div>
+                <div class="q-pa-md menucont">
+                    <q-div class="q-pa-md q-gutter-sm column ">
+                        <q-avatar class="q-mx-auto shadow-4" color="white" text-color="primary" size="150px" icon="face" />
+                        <q-div class="q-mx-auto text-h3 text-weight-bold column">
+                            {{ usuario.nombre }}
+                        </q-div>
+                        <q-card class="q-ma-lg q-mx-xl absolute-top " color="primary">{{ usuario.rol }}</q-card>
+                    </q-div>
 
 
                     <router-link
