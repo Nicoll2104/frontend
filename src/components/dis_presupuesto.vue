@@ -10,8 +10,6 @@
         <q-card-section class="q-gutter-md">
           <q-input class="input1" outlined v-model="data.codigo_presupuestal" label="Codigo presupuestal" type="number"
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo presupuestal']"></q-input>
-          <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
           <q-input class="input1" outlined v-model="data.presupuesto_inicial" label="Presupuesto inicial" type="number"
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
           <q-input class="input1" outlined v-model="data.ano" label="Año" type="number" maxlength="15" lazy-rules
@@ -108,15 +106,8 @@ const columns = ref([
     field: (row) => row.codigo_presupuestal,
   },
   {
-    name: "nombre",
-    label: "Nombre",
-    align: "left",
-    field: (row) => row.nombre,
-
-  },
-  {
     name: "presupuesto_inicial",
-    label: "Valor ingreso",
+    label: "Valor",
     align: "left",
     field: (row) => row.presupuesto_inicial,
   },
@@ -156,7 +147,6 @@ let itemsPre = ref([]);
 
 const data = ref({
   codigo_presupuestal: "",
-  nombre: "",
   presupuesto_inicial: "",
   ano: "",
   lote: "",
@@ -237,7 +227,6 @@ const opciones = {
     obtenerLotes();
     data.value = {
       codigo_presupuestal: "",
-      nombre: "",
       presupuesto_inicial: "",
       ano: "",
       lote: "",
@@ -375,11 +364,6 @@ function validarCampos() {
 
     if (d[0] === "codigo_presupuestal" && d[1].toString().length < 6) {
       notificar('negative', "El codigo debe tener más de 6 digitos")
-      return
-    }
-
-    if (d[0] === "nombre" && d[1].length > 15) {
-      notificar('negative', 'El nombre no puede tener más de 15 caracteres')
       return
     }
 
