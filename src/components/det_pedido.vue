@@ -16,9 +16,9 @@
             class="q-mx-auto" style="width: 300px" />
         </q-card-section>
         <q-card-section class="q-gutter-md row items-end justify-center continputs1" style="margin-top: 0px;">
-          <q-btn @click="validarCamposPedidos" :loading="loadingmodal" padding="10px" color="secondary" label="guardar">
-            <q-icon name="style" color="white" right />
-          </q-btn>
+  <q-btn @click="crearPedido" :loading="loadingmodal" padding="10px" color="secondary" label="Guardar">
+    <q-icon name="style" color="white" right />
+  </q-btn>
         </q-card-section>
       </div>
     </q-card>
@@ -119,6 +119,7 @@ import { useFichaStore } from "../stores/ficha.js";
 import { useProductoStore } from "../stores/producto.js";
 import { useUsuarioStore } from "../stores/usuario.js";
 import { usedetPedidoStore } from "../stores/det_pedido.js";
+import { usePedidoStore } from "../stores/pedido.js";
 import { useQuasar } from 'quasar';
 import { isAfter, isValid, parse } from 'date-fns';
 import { format } from "date-fns"
@@ -135,7 +136,7 @@ const productoStore = useProductoStore();
 const usuarioStore = useUsuarioStore();
 const detPedidoStore = usedetPedidoStore();
 const enviarInfoestado = ref(false);
-
+const PedidoStore = usePedidoStore()
 
 const columns = ref([
   {
@@ -170,21 +171,22 @@ const dataPedido = ref({
   fecha_entrega: "",
   usuario: "",
   ficha: "",
-  validateDate: (value) => {
-    const today = new Date();
-    const selectedDate = parse(value, 'yyyy-MM-dd', new Date());
-    const isValidDate = isValid(selectedDate);
+  validateDate: (value, type) => {
+  const today = new Date();
+  const selectedDate = parse(value, 'yyyy-MM-dd', new Date());
+  const isValidDate = isValid(selectedDate);
 
-    if (!isValidDate) {
-      return 'Ingrese una fecha válida.';
-    }
+  if (!isValidDate) {
+    return `Por favor ingrese una fecha válida para ${type === 'pedido' ? 'fecha de pedido' : 'fecha de entrega'}.`;
+  }
 
-    if (!isAfter(selectedDate, today)) {
-      return 'La fecha no puede ser anterior a la actual.';
-    }
+  if (!isAfter(selectedDate, today)) {
+    return `La ${type === 'pedido' ? 'fecha de pedido' : 'fecha de entrega'} no puede ser anterior a la actual.`;
+  }
 
-    return true;
-  },
+  return true;
+},
+
 });
 
 const data = ref({
@@ -228,8 +230,8 @@ const validateFicha = (value) => {
 };
 
 const validarCamposPedidos = () => {
-  const fechaPedidoValidation = dataPedido.value.validateDate(dataPedido.value.fecha_pedido);
-  const fechaEntregaValidation = dataPedido.value.validateDate(dataPedido.value.fecha_entrega);
+  const fechaPedidoValidation = dataPedido.value.validateDate(dataPedido.value.fecha_pedido, 'pedido');
+const fechaEntregaValidation = dataPedido.value.validateDate(dataPedido.value.fecha_entrega, 'entrega');
   const usuarioValidation = validateUsuario(dataPedido.value.usuario);
   const fichaValidation = validateFicha(dataPedido.value.ficha);
 
@@ -250,6 +252,54 @@ const validarCamposPedidos = () => {
     return;
   }
 };
+
+async function crearPedido() {
+
+  validarCamposPedidos();
+
+  if (enviarInfoestado.value) {
+    try {
+      const response = await enviarPedidoAlServidor(dataPedido.value);
+
+      if (response.status === 'success') {
+        dataPedido.value = {
+          fecha_pedido: "",
+          fecha_entrega: "",
+          usuario: "",
+          ficha: ""
+        };
+
+        $q.notify({
+          type: 'positive',
+          message: 'Pedido creado exitosamente.'
+        });
+      } else {
+        $q.notify({
+          type: 'negative',
+          message: 'Error al crear el pedido. Por favor, inténtelo de nuevo más tarde.'
+        });
+      }
+    } catch (error) {
+      console.error('Error al crear el pedido:', error);
+      $q.notify({
+        type: 'negative',
+        message: 'Error al crear el pedido. Por favor, inténtelo de nuevo más tarde.'
+      });
+    }
+  }
+}
+
+async function enviarPedidoAlServidor(pedido) {
+  try {
+    const response = await PedidoStore.postPedido(pedido);
+    console.log(response)
+    return response.data;
+  } catch (error) {
+    console.error('Error al enviar el pedido al servidor:', error);
+    throw new Error('Error al enviar el pedido al servidor.');
+  }
+}
+
 
 function convertirFecha(cadenaFecha) {
   const fecha = new Date(cadenaFecha);
