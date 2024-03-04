@@ -3,10 +3,11 @@ import axios from "axios";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import Cookies from "js-cookie";
+import { ref } from "vue";
 
 export const useUsuarioStore = defineStore("usuario", () => {
 
-  let sesion = {error:'no hay usuario'}
+  const sesion = ref({})
 
 
   const obtenerInfoUsuarios = async () => {
@@ -216,7 +217,9 @@ const  putActivar = async (id)=>{
           "contrasena":data.contrasena,
           "rol":data.rol
         });
-        console.log(response);
+        sesion.value = response.data
+
+        console.log('sesion:',response)
   
         Cookies.set('rol', response.data.usuarios.rol, {expires:1})
         return response;
@@ -240,7 +243,7 @@ const  putActivar = async (id)=>{
     putInactivar,
     putActivar,
     login,
-  };
+  }
 },{
   persist: true
 });
