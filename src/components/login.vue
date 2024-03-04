@@ -61,7 +61,7 @@ async function validarIngreso() {
     }
     notificar('positive', 'Sección exitosa')
     // Enviar la respuesta del servidor como parámetros de la URL al redirigir a la página de inicio
-    router.push({ path: '/inicio', query: { respuesta: JSON.stringify(response) } });
+    router.push({ path: '/inicio'});
   } catch (error) {
     
   }finally{
