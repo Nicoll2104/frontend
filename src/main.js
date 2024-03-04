@@ -24,7 +24,7 @@ app.use(Quasar, {
   });
 
 pinia.use(createPersistedState({
-  storage: sessionStorage,
+  storage: sessionStorage, // sessionStorage o tambien localStorage si prefieres
 }))
 
 

@@ -17,6 +17,32 @@ import Entradas from '../components/entradas.vue'
 
 
 import {createRouter, createWebHashHistory} from 'vue-router'
+import { useUsuarioStore } from "../stores/usuario.js"
+import { Cookies } from "quasar"
+
+
+const auth = (to, from, next) => {
+  if (checkAuth()) {
+      // const userUsuario = useUsuarioStore()
+      const rol = Cookies.get('rol')
+      if (!to.meta.rol.includes(rol)) {
+          return next({ path: '/' })
+      }
+      next()
+  } else {
+      return next({ path: '/' })
+  }
+}
+
+const checkAuth = () => {
+  // const useUsuario = useUsuarioStore()
+
+  const token = Cookies.get('rol')
+
+  if (!token) return false
+  return true
+};
+
 
 const routes = [
     {path: "/",component: Login,},
@@ -34,7 +60,7 @@ const routes = [
         {path: '/Dis_presupuesto', component:Dis_presupuesto},
         {path: '/Det_pedido', component:Det_pedido},
         {path: '/Presupuesto_de_ficha', component:presupuesto_ficha},
-        {path: '/Usuario', component:Usuario},
+        {path: '/Usuario', component:Usuario, name: "usuario", beforeEnter: auth, meta: { rol: ['Administrador', ]}},
         {path: '/entradas', component:Entradas},
       ],
     }

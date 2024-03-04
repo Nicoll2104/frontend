@@ -5,6 +5,10 @@ import { useQuasar } from "quasar";
 import Cookies from "js-cookie";
 
 export const useUsuarioStore = defineStore("usuario", () => {
+
+  let sesion = {error:'no hay usuario'}
+
+
   const obtenerInfoUsuarios = async () => {
     try {
       let responseUsuarios = await axios.get("usuario/ver");
@@ -202,6 +206,7 @@ const  putActivar = async (id)=>{
   
     const login = async (data) => {
       try {
+        console.log('prosesando solicitud en js..')
         const response = await axios.post(`${model}login`, {
           "id":data._id,
           "nombre":data.nombre,
@@ -213,7 +218,9 @@ const  putActivar = async (id)=>{
         });
         console.log(response);
   
+        Cookies.set('rol', response.data.usuarios.rol, {expires:1})
         return response;
+
       } catch (error) {
         console.log(error);
         if (error.message === "Network Error") {
@@ -225,6 +232,7 @@ const  putActivar = async (id)=>{
     };
 
   return {
+    sesion,
     obtenerInfoUsuarios,
     obtener,
     postUsuarios,
@@ -233,4 +241,6 @@ const  putActivar = async (id)=>{
     putActivar,
     login,
   };
+},{
+  persist: true
 });
