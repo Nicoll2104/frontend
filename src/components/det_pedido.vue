@@ -159,7 +159,7 @@ let seletFicha = ref([]);
 let seletusuario = ref([]);
 
 
-let showDetalleDiv = ref(true);
+let showDetalleDiv = ref(false);
 let showAgregar = ref(false);
 
 

@@ -27,11 +27,13 @@ const columns = ref([
 
   },
   {
-    name: "presupuesto_inicial",
-    label: "Valor ingreso",
-    align: "left",
-    field: (row) => row.presupuesto_inicial,
-  },
+
+  name: "presupuesto_inicial",
+  label: "Presupuesto inicial",
+  align: "left",
+  field: (row) => row.presupuesto_inicial.toLocaleString(),
+},
+
   {
     name: "año",
     label: "Año",
