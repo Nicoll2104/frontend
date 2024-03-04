@@ -15,29 +15,27 @@ import presupuesto_ficha from '../components/presupuesto_ficha.vue'
 import Usuario from '../components/usuario.vue'
 import {createRouter, createWebHashHistory} from 'vue-router'
 import { useUsuarioStore } from "../stores/usuario.js"
+import { Cookies } from "quasar"
 
 
 const auth = (to, from, next) => {
   if (checkAuth()) {
-      const userUsuario = useUsuarioStore()
-      const rol = userUsuario.rol
+      // const userUsuario = useUsuarioStore()
+      const rol = Cookies.get('rol')
       if (!to.meta.rol.includes(rol)) {
-          return next({ name: 'login' })
+          return next({ path: '/' })
       }
       next()
   } else {
-      return next({ name: 'login' })
+      return next({ path: '/' })
   }
 }
 
 const checkAuth = () => {
-  const useUsuario = useUsuarioStore()
+  // const useUsuario = useUsuarioStore()
 
-  const token = useUsuario.token
+  const token = Cookies.get('rol')
 
-  if (useUsuario.login == "" || useUsuario.login === undefined) {
-      return false;
-  }
   if (!token) return false
   return true
 };
@@ -59,7 +57,7 @@ const routes = [
         {path: '/Dis_presupuesto', component:Dis_presupuesto},
         {path: '/Det_pedido', component:Det_pedido},
         {path: '/Presupuesto_de_ficha', component:presupuesto_ficha},
-        {path: '/Usuario', component:Usuario},
+        {path: '/Usuario', component:Usuario, name: "usuario", beforeEnter: auth, meta: { rol: ['Administrador', ]}},
       ],
     }
 ]
