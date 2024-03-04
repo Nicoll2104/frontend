@@ -91,7 +91,7 @@ import { useQuasar } from 'quasar'
 import { useLoteStore } from "../stores/lotes.js";
 import { usePresupStore } from "../stores/presupuesto.js"
 
-const modelo = "Presupuestos por lotes";
+const modelo = "Presupuesto por lotes";
 const useDisPresupuesto = usedisPresupuesStore();
 const useLote = useLoteStore();
 const usePresupes = usePresupStore();
@@ -103,11 +103,9 @@ const loadingmodal = ref(false);
 const columns = ref([
   {
     name: "codigo_presupuestal",
-    label: "Codigo presupuestal",
+    label: "Codigo Auxiliar Lote",
     align: "left",
     field: (row) => row.codigo_presupuestal,
-    sort: true,
-    sortOrder: "da",
   },
   {
     name: "nombre",
@@ -118,7 +116,7 @@ const columns = ref([
   },
   {
     name: "presupuesto_inicial",
-    label: "Presupuesto inicial",
+    label: "Valor ingreso",
     align: "left",
     field: (row) => row.presupuesto_inicial,
   },
@@ -136,7 +134,7 @@ const columns = ref([
   },
   {
     name: "items",
-    label: "items",
+    label: "Codigo presupuestal",
     align: "left",
     field: (row) => row.items.codigo_presupuesto,
   },

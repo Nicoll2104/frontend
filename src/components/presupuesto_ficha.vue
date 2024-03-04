@@ -9,29 +9,29 @@
 
         <q-card-section class="q-gutter-md">
 
-          <q-input class="input1" outlined v-model="data.presupuesto" label="Presupuesto" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el nombre del presupuesto']"></q-input>
+          <q-input class="input1" outlined v-model="data.presupuesto" label="Presupuesto" type="number" maxlength="15"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el nombre del presupuesto']"></q-input>
 
           <q-select outlined options-dense label="Distribucion de presupuesto" lazy-rules
-          v-model="data.distribucion_presupuesto" :options="disPresupuesto.distribucion" 
-          :option-label="item => item.nombre ? 'Nombre: ' + item.nombre + ' Valor: ' + item.presupuesto_inicial : '' "
-          :rules="[val => val.nombre !== '' || 'Seleccione un presupuesto']"/>
+            v-model="data.distribucion_presupuesto" :options="disPresupuesto.distribucion"
+            :option-label="item => item.nombre ? 'Nombre: ' + item.nombre + ' Valor: ' + item.presupuesto_inicial : ''"
+            :rules="[val => val.nombre !== '' || 'Seleccione un presupuesto']" />
 
-          <q-select outlined options-dense label="ficha" 
-          v-model="data.ficha" :options="fichas" 
-          :option-label="item => item.nombre ? item.nombre + ' #' + item.codigo_ficha : '' "
-          :rules="[val => val.nombre !== '' || 'Seleccione un presupuesto']"/>
+          <q-select outlined options-dense label="ficha" v-model="data.ficha" :options="fichas"
+            :option-label="item => item.nombre ? item.nombre + ' #' + item.codigo_ficha : ''"
+            :rules="[val => val.nombre !== '' || 'Seleccione un presupuesto']" />
 
           <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
             <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
               :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
               <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
             </q-btn>
-            <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white" v-close-popup>
-                <q-icon name="cancel" color="white" right />
-              </q-btn>
-            </q-card-section>
-          
+            <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white"
+              v-close-popup>
+              <q-icon name="cancel" color="white" right />
+            </q-btn>
+          </q-card-section>
+
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -63,16 +63,16 @@
         </template>
 
         <template v-slot:body-cell-distribucion_presupuesto="props">
-          <q-td :props="props" class="botones" >
-            <q-btn class="botonv1" size="12px" flat padding="10px"
-            :loading="loadingpresupuesto" :label="props.row.distribucion_presupuesto.nombre"/>
+          <q-td :props="props" class="botones">
+            <q-btn class="botonv1" size="12px" flat padding="10px" :loading="loadingpresupuesto"
+              :label="props.row.distribucion_presupuesto.nombre" />
           </q-td>
         </template>
 
         <template v-slot:body-cell-ficha="props">
-          <q-td :props="props" class="botones" >
-            <q-btn class="botonv1" size="12px" flat padding="10px"
-            :loading="loadingficha" :label="props.row.ficha.nombre"/>
+          <q-td :props="props" class="botones">
+            <q-btn class="botonv1" size="12px" flat padding="10px" :loading="loadingficha"
+              :label="props.row.ficha.nombre" />
           </q-td>
         </template>
 
@@ -89,13 +89,14 @@
                   ? in_activar.putInactivar(props.row._id)
                   : in_activar.putActivar(props.row._id);
               props.row.status = 'load';
-              "/>
+              " />
           </q-td>
         </template>
 
         <template v-slot:body-cell-opciones="props">
           <q-td :props="props" class="botones">
-            <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" :loading="loadingficha" />
+            <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)"
+              :loading="loadingficha" />
           </q-td>
         </template>
       </q-table>
@@ -129,8 +130,14 @@ const loadingficha = ref(true);
 
 const columns = ref([
   {
+    name: "codigo_auxiliar",
+    label: "Codigo Auxiliar Ficha",
+    align: "left",
+    field: (row) => row.codigo_auxiliar,
+  },
+  {
     name: "presupuesto",
-    label: "Presupuesto",
+    label: "Valor ingreso",
     align: "left",
     field: (row) => row.presupuesto,
     sort: true,
@@ -138,7 +145,7 @@ const columns = ref([
   },
   {
     name: "distribucion_presupuesto",
-    label: "Distribucion presupuesto",
+    label: "Codigo auxiliar lote",
     align: "center",
     field: (row) => row.distribucion_presupuesto,
     loading: false

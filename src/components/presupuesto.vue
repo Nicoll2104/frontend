@@ -13,7 +13,7 @@ const loadingmodal = ref(false);
 const columns = ref([
   {
     name: "codigo_presupuesto",
-    label: "Codigo Presupuesto",
+    label: "Codigo Presupuestal",
     align: "left",
     field: (row) => row.codigo_presupuesto,
     sort: true,
@@ -28,7 +28,7 @@ const columns = ref([
   },
   {
     name: "presupuesto_inicial",
-    label: "Presupuesto inicial",
+    label: "Valor ingreso",
     align: "left",
     field: (row) => row.presupuesto_inicial,
   },
