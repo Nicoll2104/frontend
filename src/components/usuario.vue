@@ -206,11 +206,6 @@ const enviarInfo = {
     try {
       const response = await useUsuario.postUsuarios(data.value);
       if (!response) return
-      if (response) {
-        notificar('negative',response.error)
-        loadingmodal.value = false;
-        return
-      }
       rows.value.unshift(response.areas);
       notificar('positive', 'Guardado exitosamente')
       modal.value = false;

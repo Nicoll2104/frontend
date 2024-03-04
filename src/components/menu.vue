@@ -1,12 +1,15 @@
 <script setup>
+import { Cookies } from 'quasar';
 import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useUsuarioStore } from "../stores/usuario.js"
 
-const router = useRouter();
+const UsuarioStore = useUsuarioStore()
 const route = useRoute();
 const leftDrawerOpen = ref(false);
 
 console.log('menu cargado')
+console.log(UsuarioStore.sesion)
 
 /* if (route.query.respuesta) {
     usuario = JSON.parse(route.query.respuesta);
@@ -26,7 +29,10 @@ let menu1_content = ref([
     { ruta: "/inicio", titulo: "Inicio", desplegable: false },
 ]);
 
-let menu2_content = ref([
+const rol = Cookies.get('rol')
+
+let menu2_content = ref({
+    Administrador: [
     { ruta: "/Presupuesto", titulo: "Presupuesto", desplegable: false},
     { ruta: "/Fichas", titulo: "Fichas", desplegable: false},
     { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
@@ -34,7 +40,24 @@ let menu2_content = ref([
     { ruta: "/Pedidos", titulo: "Pedido", desplegable: false },
     { ruta: "/Productos", titulo: "Producto", desplegable: false },
     { ruta: "/Usuario", titulo: "Usuario", desplegable: false },
-]);
+    ],
+    Instructor:[
+    { ruta: "/Presupuesto", titulo: "Presupuesto", desplegable: false},
+    { ruta: "/Fichas", titulo: "Fichas", desplegable: false},
+    { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
+    { ruta: "/Areas", titulo: "Areas", desplegable: false },
+    { ruta: "/Pedidos", titulo: "Pedido", desplegable: false },
+    { ruta: "/Productos", titulo: "Producto", desplegable: false },
+    ],
+    Bodega:[
+    { ruta: "/Presupuesto", titulo: "Presupuesto", desplegable: false},
+    { ruta: "/Fichas", titulo: "Fichas", desplegable: false},
+    { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
+    { ruta: "/Areas", titulo: "Areas", desplegable: false },
+    { ruta: "/Pedidos", titulo: "Pedido", desplegable: false },
+    { ruta: "/Productos", titulo: "Producto", desplegable: false },
+    ],
+});
 
 
 
@@ -75,7 +98,7 @@ let menu2_content = ref([
 
 
                     <!--🧩🧩🧩🧩-->
-                    <q-linear-progress :value="progress" class="q-mt-md" />
+                    <q-linear-progress class="q-mt-md" />
                     <!--🧩🧩🧩🧩-->
 
 
@@ -83,7 +106,7 @@ let menu2_content = ref([
                     <div class="opcionescont">
 
                         <router-link 
-                        v-for="(item, index) in menu2_content" :key="index" :to="item.ruta">
+                        v-for="(item, index) in menu2_content[rol]" :key="index" :to="item.ruta">
                     <!-- ❄️❄️Expandibles❄️❄️ -->
                         <q-expansion-item v-if="item.desplegable !== false" :label=item.titulo class="botones_principales"
                         header-class="bg-accent text-primary" expand-icon-class="text-primary">
@@ -105,7 +128,7 @@ let menu2_content = ref([
                     </div>
 
                     <!--🧩🧩🧩🧩-->
-                    <q-linear-progress :value="progress" class="q-mt-md" />
+                    <q-linear-progress class="q-mt-md" />
                     <!--🧩🧩🧩🧩-->
                 </div>
             </q-drawer>
