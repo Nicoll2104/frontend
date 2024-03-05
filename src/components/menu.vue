@@ -84,12 +84,15 @@ let menu2_content = ref({
 
             <q-drawer class="bg-secondary" v-model="leftDrawerOpen" side="left" behavior="mobile" elevated style="scrollbar-width: none;">
                 <div class="q-pa-md menucont">
-                    <q-div class="q-pa-md q-gutter-sm column ">
-                        <q-avatar class="q-mx-auto shadow-4" color="white" text-color="primary" size="150px" icon="face" />
-                        <q-div class="q-mx-auto text-h3 text-weight-bold column">
+                    <q-div class="q-pa-md q-gutter-sm column bg-secondary">
+                        <q-avatar class="q-mx-auto shadow-4 border-radius"   color="white" text-color="primary" size="150px"  rounded>
+                            <q-badge floating class="text-subtitle2 text-weight-bold text-black " color="white">{{ usuario.rol }}</q-badge>
+                            <img src="https://cdn.quasar.dev/img/avatar3.jpg">
+                        </q-avatar>
+                        <q-div class="q-mx-auto text-h3 text-weight-bold text-white  column">
                             {{ usuario.nombre }}
                         </q-div>
-                        <q-card class="q-ma-lg q-mx-xl absolute-top " color="primary">{{ usuario.rol }}</q-card>
+                        
                     </q-div>
 
 
