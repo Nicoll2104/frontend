@@ -18,13 +18,16 @@ import Entradas from '../components/entradas.vue'
 
 import {createRouter, createWebHashHistory} from 'vue-router'
 import { useUsuarioStore } from "../stores/usuario.js"
+/* const UsuarioStore = useUsuarioStore() */
 import { Cookies } from "quasar"
 
 
 const auth = (to, from, next) => {
+  console.log('verificar ruta')
   if (checkAuth()) {
-      // const userUsuario = useUsuarioStore()
-      const rol = Cookies.get('rol')
+    const UsuarioStore = useUsuarioStore()
+      const rol = UsuarioStore.sesion.usuarios.rol
+      console.log('rol:',rol)
       if (!to.meta.rol.includes(rol)) {
           return next({ path: '/' })
       }
@@ -35,11 +38,13 @@ const auth = (to, from, next) => {
 }
 
 const checkAuth = () => {
-  // const useUsuario = useUsuarioStore()
+  const UsuarioStore = useUsuarioStore()
 
-  const token = Cookies.get('rol')
+  const token = UsuarioStore.sesion.token
+  console.log(token)
 
   if (!token) return false
+  console.log(token)
   return true
 };
 
@@ -50,18 +55,18 @@ const routes = [
     {path: "/menu",component: Menu, 
       children: [
         { path: "/", redirect: "/menu/inicio" },
-        { path: "/inicio", component: inicio },
-        {path: '/Presupuesto', component:presupuesto},
-        {path: '/Fichas', component:Fichas},
-        {path: '/Lotes', component:Lotes},
-        {path: '/Areas', component:Areas},
-        {path: '/Pedidos', component:Pedidos},
-        {path: '/Productos', component:Productos},
-        {path: '/Dis_presupuesto', component:Dis_presupuesto},
-        {path: '/Det_pedido', component:Det_pedido},
-        {path: '/Presupuesto_de_ficha', component:presupuesto_ficha},
-        {path: '/Usuario', component:Usuario, name: "usuario", beforeEnter: auth, meta: { rol: ['Administrador', ]}},
-        {path: '/entradas', component:Entradas},
+        { path: "/inicio", component: inicio, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/Presupuesto', component:presupuesto, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/Fichas', component:Fichas, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/Lotes', component:Lotes, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/Areas', component:Areas, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/Pedidos', component:Pedidos, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/Productos', component:Productos, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/Dis_presupuesto', component:Dis_presupuesto, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/Det_pedido', component:Det_pedido, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/Presupuesto_de_ficha', component:presupuesto_ficha, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/Usuario', component:Usuario, beforeEnter: auth , meta: { rol: ['Administrador', ]}},
+        {path: '/entradas', component:Entradas, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
       ],
     }
 ]

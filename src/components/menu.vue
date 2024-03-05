@@ -1,13 +1,21 @@
 <script setup>
 import { Cookies } from 'quasar';
 import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useUsuarioStore } from "../stores/usuario.js"
 
 const UsuarioStore = useUsuarioStore()
 const route = useRoute();
 const leftDrawerOpen = ref(false);
-const usuario = ref(UsuarioStore.sesion.usuarios)
+const usuario = ref(UsuarioStore.sesion.usuarios || {usuarios:{
+    "id":'',
+    "nombre":'',
+    "cedula":'',
+    "correo":'',
+    "telefono":'',
+    "contrasena":'',
+    "rol":''
+  }})
 
 console.log('menu cargado')
 console.log(usuario)
@@ -87,8 +95,9 @@ let menu2_content = ref({
                 <div class="q-pa-md menucont">
                     <q-div class="q-pa-md q-gutter-sm column bg-secondary">
                         <q-avatar class="q-mx-auto shadow-4 border-radius"   color="white" text-color="primary" size="150px"  rounded>
-                            <q-badge floating class="text-subtitle2 text-weight-bold text-black " color="white">{{ usuario.rol }}</q-badge>
                             <img src="https://cdn.quasar.dev/img/avatar3.jpg">
+                            <q-div floating class="text-subtitle2 text-weight-bold text-white fixed-top q-ma-sm " color="white">{{ usuario.rol }}</q-div>
+
                         </q-avatar>
                         <q-div class="q-mx-auto text-h3 text-weight-bold text-white  column">
                             {{ usuario.nombre }}
