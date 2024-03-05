@@ -13,6 +13,9 @@ import Dis_presupuesto from '../components/dis_presupuesto.vue'
 import Det_pedido from '../components/det_pedido.vue'
 import presupuesto_ficha from '../components/presupuesto_ficha.vue'
 import Usuario from '../components/usuario.vue'
+import Entradas from '../components/entradas.vue'
+
+
 import {createRouter, createWebHashHistory} from 'vue-router'
 import { useUsuarioStore } from "../stores/usuario.js"
 import { Cookies } from "quasar"
@@ -58,6 +61,7 @@ const routes = [
         {path: '/Det_pedido', component:Det_pedido},
         {path: '/Presupuesto_de_ficha', component:presupuesto_ficha},
         {path: '/Usuario', component:Usuario, name: "usuario", beforeEnter: auth, meta: { rol: ['Administrador', ]}},
+        {path: '/entradas', component:Entradas},
       ],
     }
 ]

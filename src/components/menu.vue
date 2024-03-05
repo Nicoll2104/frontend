@@ -39,6 +39,7 @@ let menu2_content = ref({
     { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
     { ruta: "/Areas", titulo: "Areas", desplegable: false },
     { ruta: "/Pedidos", titulo: "Pedido", desplegable: false },
+    { ruta: "/Entradas", titulo: "Entradas", desplegable: false },
     { ruta: "/Productos", titulo: "Producto", desplegable: false },
     { ruta: "/Usuario", titulo: "Usuario", desplegable: false },
     ],
