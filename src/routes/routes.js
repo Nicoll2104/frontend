@@ -14,6 +14,8 @@ import Det_pedido from '../components/det_pedido.vue'
 import presupuesto_ficha from '../components/presupuesto_ficha.vue'
 import Usuario from '../components/usuario.vue'
 import Entradas from '../components/entradas.vue'
+import Requerimiento from '../components/Requerimiento.vue'
+
 
 
 import {createRouter, createWebHashHistory} from 'vue-router'
@@ -67,6 +69,7 @@ const routes = [
         {path: '/Presupuesto_de_ficha', component:presupuesto_ficha, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Usuario', component:Usuario, beforeEnter: auth , meta: { rol: ['Administrador', ]}},
         {path: '/entradas', component:Entradas, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/Requerimiento', component:Requerimiento, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
       ],
     }
 ]

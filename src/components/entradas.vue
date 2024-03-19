@@ -91,7 +91,7 @@ import { onMounted, ref } from "vue";
 import { usePresupStore } from "../stores/presupuesto.js";
 import { useQuasar } from 'quasar'
 
-const modelo = "Entradas";
+const modelo = "Entradas - Inventarios";
 const usePresup = usePresupStore();
 const loadingTable = ref(true)
 const $q = useQuasar()

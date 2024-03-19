@@ -47,9 +47,10 @@ let menu2_content = ref({
     { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
     { ruta: "/Areas", titulo: "Areas", desplegable: false },
     { ruta: "/Pedidos", titulo: "Pedido", desplegable: false },
-    { ruta: "/Entradas", titulo: "Entradas", desplegable: false },
+    { ruta: "/Entradas", titulo: "Entradas - Inventarios", desplegable: false },
     { ruta: "/Productos", titulo: "Producto", desplegable: false },
     { ruta: "/Usuario", titulo: "Usuario", desplegable: false },
+    { ruta: "/Requerimiento", titulo: "Requerimiento", desplegable: false },
     ],
     Instructor:[
     { ruta: "/Presupuesto", titulo: "Presupuesto", desplegable: false},
@@ -57,7 +58,10 @@ let menu2_content = ref({
     { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
     { ruta: "/Areas", titulo: "Areas", desplegable: false },
     { ruta: "/Pedidos", titulo: "Pedido", desplegable: false },
+    { ruta: "/Entradas", titulo: "Entradas - Inventarios", desplegable: false },
     { ruta: "/Productos", titulo: "Producto", desplegable: false },
+    { ruta: "/Usuario", titulo: "Usuario", desplegable: false },
+    { ruta: "/Requerimiento", titulo: "Requerimiento", desplegable: false },
     ],
     Bodega:[
     { ruta: "/Presupuesto", titulo: "Presupuesto", desplegable: false},
@@ -65,7 +69,10 @@ let menu2_content = ref({
     { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
     { ruta: "/Areas", titulo: "Areas", desplegable: false },
     { ruta: "/Pedidos", titulo: "Pedido", desplegable: false },
+    { ruta: "/Entradas", titulo: "Entradas - Inventarios", desplegable: false },
     { ruta: "/Productos", titulo: "Producto", desplegable: false },
+    { ruta: "/Usuario", titulo: "Usuario", desplegable: false },
+    { ruta: "/Requerimiento", titulo: "Requerimiento", desplegable: false },
     ],
 });
 
