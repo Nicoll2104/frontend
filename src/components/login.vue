@@ -129,8 +129,8 @@ async function validarIngreso() {
         <div class="q-pa-md row items-start q-gutter-md">
             <q-card class="my-card" >
                 <q-card-section>
-                    <q-div class="text-h3">Bienvenido</q-div>
-                    <p class="subtittle">Por favor ingrese sus datos de usuario para continuar:</p>
+                    <q-div class="text-h3 text-bold">Bienvenido</q-div>
+                    <p class="subtittle text-primary" >Por favor ingrese sus datos de usuario para continuar:</p>
                 </q-card-section>
                 <q-card-section style="max-width: 500px">
                     <q-input standout="bg-secondary text-white" v-model="data.correo" label="Correo electronico" />
@@ -138,11 +138,11 @@ async function validarIngreso() {
                 <q-card-section style="max-width: 500px">
                     <q-input standout="bg-secondary text-white" v-model="data.contrasena" label="Contraseña" type="password"/>
                     <router-link to="/Restableciemiento" class="ingresarcont">
-                        <button class="contrasenaayuda">¿Olvidaste tu contraseña?</button>
+                        <button class="contrasenaayuda text-secondary">¿Olvidaste tu contraseña?</button>
                     </router-link>
                 </q-card-section>
                     <q-card-section style="max-width: 500px">
-                        <q-btn push color="primary" label="Ingresar" @click="validarCampos" :loading="loading"/>
+                        <q-btn push color="secondary" label="Ingresar" @click="validarCampos" :loading="loading"/>
                     </q-card-section>
             </q-card>
         </div>
@@ -178,7 +178,7 @@ async function validarIngreso() {
 .subtittle {
     font-size: 20px;
     font-weight: bold;
-    color: #3F497F;
+
     margin-bottom: 10px;
 }
 
@@ -190,7 +190,6 @@ input::placeholder {
 
 .contrasenaayuda {
     text-align: right;
-    color: #29A19C;
     font-weight: 700;
     text-decoration-line: underline;
     margin: 10px 0px;
@@ -228,13 +227,16 @@ input::placeholder {
 .contrasenaayuda {
     background-color: transparent;
     border: none;
-    color: #29A19C;
+    color:#29A19C /* !important */;
     text-decoration: underline;
     cursor: pointer;
     font-size: 14px;
 }
 
 .contrasenaayuda:hover {
-    color: #3F497F;
+  color: var(--q-color-accent);
 }
+/* .contrasenaayuda:hover {
+    color: #29A19C;
+} */
 </style>
