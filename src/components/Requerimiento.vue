@@ -116,7 +116,7 @@
         </q-table>
   
         <router-link to="/Det_pedido" class="ingresarcont">
-          <q-btn class="ingresar opcion" color="primary">Crear Pedido
+          <q-btn class="ingresar opcion" color="primary">Crear Requerimiento
             <q-icon name="style" color="white" right />
           </q-btn>
         </router-link>
@@ -129,7 +129,7 @@
   import { useFichaStore } from "../stores/ficha.js";
   import { useQuasar } from 'quasar'
   
-  const modelo = "Pedidos";
+  const modelo = "Requerimiento";
   const usePedido = usePedidoStore();
   const useFicha = useFichaStore();
   const loadingTable = ref(true)
@@ -158,13 +158,6 @@
       sortOrder: "da",
     },
     {
-      name: "fecha_entrega",
-      label: "Fecha entrega",
-      align: "left",
-      field: (row) => row.fecha_entrega,
-  
-    },
-    {
       name: "ficha",
       label: "Ficha",
       align: "left",
@@ -187,7 +180,6 @@
   
   const data = ref({
     fecha_creacion: "",
-    fecha_entrega: "",
     ficha: "",
     instructor_encargado: "",
   });
@@ -223,7 +215,6 @@
     agregar: () => {
       data.value = {
         fecha_creacion: "",
-        fecha_entrega: "",
         ficha: "",
         subtotal: "",
         total: "",

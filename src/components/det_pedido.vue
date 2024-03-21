@@ -1,24 +1,18 @@
 <template>
   <div class="q-pa-xl row items-start q-gutter-md justify-center ">
     <q-card class="my-card">
-      <h5>Crear Pedido</h5>
+      <h5>Crear Requerimiento</h5>
       <div class="q-gutter-md">
-        <q-card-section class="q-gutter-md row items-star justify-center continputs1">
+        <q-card-section class="q-gutter-md row items-star justify-center continputs1" style="margin-bottom: 0px;">
           <q-input v-model="dataPedido.fecha_pedido" filled type="date" hint="Fecha de pedido" class="q-mx-auto"
             style="width: 200px" lazy-rules :rules="[dataPedido.validateDate]" @update:model-value="validateDates" />
-          <q-input v-model="dataPedido.fecha_entrega" filled type="date" hint="Fecha de entrega" class="q-mx-auto"
-            style="width: 200px" lazy-rules :rules="[dataPedido.validateDate]" @update:model-value="validateDates" />
-        </q-card-section>
-        <q-card-section class="q-gutter-md row items-star justify-center continputs1" style="margin-top: 0px;">
-          <q-select filled v-model="dataPedido.usuario" :options="seletusuario" label="Seleccione el usuario"
-            class="q-mx-auto" style="width: 300px" />
           <q-select filled v-model="dataPedido.ficha" :options="seletFicha" label="Seleccione la ficha"
             class="q-mx-auto" style="width: 300px" />
         </q-card-section>
         <q-card-section class="q-gutter-md row items-end justify-center continputs1" style="margin-top: 0px;">
-  <q-btn @click="crearPedido" :loading="loadingmodal" padding="10px" color="secondary" label="Guardar">
-    <q-icon name="style" color="white" right />
-  </q-btn>
+          <q-btn @click="crearPedido" :loading="loadingmodal" padding="10px" color="secondary" label="Guardar">
+            <q-icon name="style" color="white" right />
+          </q-btn>
         </q-card-section>
       </div>
     </q-card>
@@ -159,34 +153,28 @@ let itemsPre = ref([]);
 
 let selectProdut = ref([]);
 let seletFicha = ref([]);
-let seletusuario = ref([]);
 
-
-let showDetalleDiv = ref(false);
+/* let showDetalleDiv = ref(false); */
 let showAgregar = ref(false);
-
 
 const dataPedido = ref({
   fecha_pedido: "",
-  fecha_entrega: "",
-  usuario: "",
   ficha: "",
-  validateDate: (value, type) => {
-  const today = new Date();
-  const selectedDate = parse(value, 'yyyy-MM-dd', new Date());
-  const isValidDate = isValid(selectedDate);
+  validateDate: (value) => {
+    const today = new Date();
+    const selectedDate = parse(value, 'yyyy-MM-dd', new Date());
+    const isValidDate = isValid(selectedDate);
 
-  if (!isValidDate) {
-    return `Por favor ingrese una fecha válida para ${type === 'pedido' ? 'fecha de pedido' : 'fecha de entrega'}.`;
-  }
+    if (!isValidDate) {
+      return `Por favor ingrese una fecha válida para fecha de pedido.`;
+    }
 
-  if (!isAfter(selectedDate, today)) {
-    return `La ${type === 'pedido' ? 'fecha de pedido' : 'fecha de entrega'} no puede ser anterior a la actual.`;
-  }
+    if (!isAfter(selectedDate, today)) {
+      return `La fecha de pedido no puede ser anterior a la actual.`;
+    }
 
-  return true;
-},
-
+    return true;
+  },
 });
 
 const data = ref({
@@ -213,14 +201,6 @@ const opciones = {
 };
 
 
-
-const validateUsuario = (value) => {
-  if (!value) {
-    return 'Seleccione un usuario.';
-  }
-  return true;
-};
-
 const validateFicha = (value) => {
   if (!value) {
     return 'Seleccione una ficha.';
@@ -230,21 +210,11 @@ const validateFicha = (value) => {
 };
 
 const validarCamposPedidos = () => {
-  const fechaPedidoValidation = dataPedido.value.validateDate(dataPedido.value.fecha_pedido, 'pedido');
-const fechaEntregaValidation = dataPedido.value.validateDate(dataPedido.value.fecha_entrega, 'entrega');
-  const usuarioValidation = validateUsuario(dataPedido.value.usuario);
+  const fechaPedidoValidation = dataPedido.value.validateDate(dataPedido.value.fecha_pedido);
   const fichaValidation = validateFicha(dataPedido.value.ficha);
 
   if (fechaPedidoValidation !== true) {
     $q.notify({ type: 'negative', message: fechaPedidoValidation });
-    return;
-  }
-  if (fechaEntregaValidation !== true) {
-    $q.notify({ type: 'negative', message: fechaEntregaValidation });
-    return;
-  }
-  if (usuarioValidation !== true) {
-    $q.notify({ type: 'negative', message: usuarioValidation });
     return;
   }
   if (fichaValidation !== true) {
@@ -252,20 +222,16 @@ const fechaEntregaValidation = dataPedido.value.validateDate(dataPedido.value.fe
     return;
   }
 };
-
 async function crearPedido() {
-
   validarCamposPedidos();
 
   if (enviarInfoestado.value) {
     try {
-      const response = await enviarPedidoAlServidor(dataPedido.value);
+      const response = await crearPedidoAlServidor(dataPedido.value);
 
       if (response.status === 'success') {
         dataPedido.value = {
           fecha_pedido: "",
-          fecha_entrega: "",
-          usuario: "",
           ficha: ""
         };
 
@@ -273,6 +239,9 @@ async function crearPedido() {
           type: 'positive',
           message: 'Pedido creado exitosamente.'
         });
+
+        // Set showDetalleDiv to true
+        showDetalleDiv.value = true;
       } else {
         $q.notify({
           type: 'negative',
