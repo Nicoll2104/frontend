@@ -1,24 +1,18 @@
 <template>
   <div class="q-pa-xl row items-start q-gutter-md justify-center ">
     <q-card class="my-card">
-      <h5>Crear Pedido</h5>
+      <h5>Crear Requerimiento</h5>
       <div class="q-gutter-md">
-        <q-card-section class="q-gutter-md row items-star justify-center continputs1">
+        <q-card-section class="q-gutter-md row items-star justify-center continputs1" style="margin-bottom: 0px;">
           <q-input v-model="dataPedido.fecha_pedido" filled type="date" hint="Fecha de pedido" class="q-mx-auto"
             style="width: 200px" lazy-rules :rules="[dataPedido.validateDate]" @update:model-value="validateDates" />
-          <q-input v-model="dataPedido.fecha_entrega" filled type="date" hint="Fecha de entrega" class="q-mx-auto"
-            style="width: 200px" lazy-rules :rules="[dataPedido.validateDate]" @update:model-value="validateDates" />
-        </q-card-section>
-        <q-card-section class="q-gutter-md row items-star justify-center continputs1" style="margin-top: 0px;">
-          <q-select filled v-model="dataPedido.usuario" :options="seletusuario" label="Seleccione el usuario"
-            class="q-mx-auto" style="width: 300px" />
           <q-select filled v-model="dataPedido.ficha" :options="seletFicha" label="Seleccione la ficha"
             class="q-mx-auto" style="width: 300px" />
         </q-card-section>
         <q-card-section class="q-gutter-md row items-end justify-center continputs1" style="margin-top: 0px;">
-  <q-btn @click="crearPedido" :loading="loadingmodal" padding="10px" color="secondary" label="Guardar">
-    <q-icon name="style" color="white" right />
-  </q-btn>
+          <q-btn @click="crearPedido" :loading="loadingmodal" padding="10px" color="secondary" label="Guardar">
+            <q-icon name="style" color="white" right />
+          </q-btn>
         </q-card-section>
       </div>
     </q-card>
@@ -159,17 +153,13 @@ let itemsPre = ref([]);
 
 let selectProdut = ref([]);
 let seletFicha = ref([]);
-let seletusuario = ref([]);
 
-
-let showDetalleDiv = ref(false);
+let showDetalleDiv = ref(true);
 let showAgregar = ref(false);
 
 
 const dataPedido = ref({
   fecha_pedido: "",
-  fecha_entrega: "",
-  usuario: "",
   ficha: "",
   validateDate: (value, type) => {
   const today = new Date();
@@ -213,14 +203,6 @@ const opciones = {
 };
 
 
-
-const validateUsuario = (value) => {
-  if (!value) {
-    return 'Seleccione un usuario.';
-  }
-  return true;
-};
-
 const validateFicha = (value) => {
   if (!value) {
     return 'Seleccione una ficha.';
@@ -231,20 +213,10 @@ const validateFicha = (value) => {
 
 const validarCamposPedidos = () => {
   const fechaPedidoValidation = dataPedido.value.validateDate(dataPedido.value.fecha_pedido, 'pedido');
-const fechaEntregaValidation = dataPedido.value.validateDate(dataPedido.value.fecha_entrega, 'entrega');
-  const usuarioValidation = validateUsuario(dataPedido.value.usuario);
   const fichaValidation = validateFicha(dataPedido.value.ficha);
 
   if (fechaPedidoValidation !== true) {
     $q.notify({ type: 'negative', message: fechaPedidoValidation });
-    return;
-  }
-  if (fechaEntregaValidation !== true) {
-    $q.notify({ type: 'negative', message: fechaEntregaValidation });
-    return;
-  }
-  if (usuarioValidation !== true) {
-    $q.notify({ type: 'negative', message: usuarioValidation });
     return;
   }
   if (fichaValidation !== true) {
@@ -264,8 +236,6 @@ async function crearPedido() {
       if (response.status === 'success') {
         dataPedido.value = {
           fecha_pedido: "",
-          fecha_entrega: "",
-          usuario: "",
           ficha: ""
         };
 
