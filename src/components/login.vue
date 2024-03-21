@@ -126,27 +126,29 @@ async function validarIngreso() {
             <img class="olaazul" src="../assets/olaazul.svg">
             <img class="olaverde" src="../assets/olaverde.svg">
         </div>
-        <div class="q-pa-md row items-start q-gutter-md">
-            <q-card class="my-card" >
+            <q-card class="my-card q-ma-lg q-pa-md" >
                 <q-card-section>
-                    <q-div class="text-h3 text-bold">Bienvenido</q-div>
-                    <p class="subtittle text-primary" >Por favor ingrese sus datos de usuario para continuar:</p>
+                    <q-div class="text-h3 text-primary text-bold">Bienvenido</q-div>
+                    <p class="subtittle text-primary" >Por favor ingrese sus datos de usuario para continuar</p>
                 </q-card-section>
-                <q-card-section style="max-width: 500px">
-                    <q-input standout="bg-secondary text-white" v-model="data.correo" label="Correo electronico" />
+                <q-card-section>
+                    <q-input standout="bg-accent " v-model="data.correo" label="Correo electronico" />
                 </q-card-section>
-                <q-card-section style="max-width: 500px">
-                    <q-input standout="bg-secondary text-white" v-model="data.contrasena" label="Contraseña" type="password"/>
+                <q-card-section>
+                    <q-input standout="bg-accent" v-model="data.contrasena" label="Contraseña" type="password"/>
                     <router-link to="/Restableciemiento" class="ingresarcont">
-                        <button class="contrasenaayuda text-secondary">¿Olvidaste tu contraseña?</button>
+                        <p class="text-secondary text-weight-bold q-mt-md">¿Olvidaste tu contraseña?</p>
                     </router-link>
-                </q-card-section>
-                    <q-card-section style="max-width: 500px">
-                        <q-btn push color="secondary" label="Ingresar" @click="validarCampos" :loading="loading"/>
+
+                    <q-card-section>
                     </q-card-section>
+                    <q-btn push color="secondary" label="Ingresar" class="q-mt-lg" @click="validarCampos" :loading="loading"/>
+                </q-card-section>
+
+                        
+
             </q-card>
         </div>
-    </div>
 </template>
     
     <!-- scoped sirve para evitar que los estilos afecte a los
@@ -227,10 +229,8 @@ input::placeholder {
 .contrasenaayuda {
     background-color: transparent;
     border: none;
-    color:#29A19C /* !important */;
     text-decoration: underline;
     cursor: pointer;
-    font-size: 14px;
 }
 
 .contrasenaayuda:hover {

@@ -85,7 +85,7 @@ let menu2_content = ref({
 <template>
     <div>
         <q-layout view="hHh lpR fFf">
-            <q-header elevated class="bg-secondary text-white">
+            <q-header elevated class="bg-primary text-white">
                 <q-toolbar>
                     <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
                     <q-toolbar-title>
@@ -98,12 +98,12 @@ let menu2_content = ref({
                 </q-toolbar>
             </q-header>
 
-            <q-drawer class="bg-secondary" v-model="leftDrawerOpen" side="left" behavior="mobile" elevated style="scrollbar-width: none;">
+            <q-drawer class="bg-primary" v-model="leftDrawerOpen" side="left" behavior="mobile" elevated style="scrollbar-width: none;">
                 <div class="q-pa-md menucont">
-                    <q-div class="q-pa-md q-gutter-sm column bg-secondary">
-                        <q-avatar class="q-mx-auto shadow-4 border-radius"   color="white" text-color="primary" size="150px"  rounded>
+                    <q-div class="q-pa-md q-gutter-sm column">
+                        <q-div floating class="text-subtitle2 text-weight-bold text-white q-mt-none " color="white">{{ usuario.rol }}</q-div>
+                        <q-avatar class="q-mx-auto shadow-4 border-radius"   color="white" text-color="accent" size="150px"  rounded>
                             <img src="https://cdn.quasar.dev/img/avatar3.jpg">
-                            <q-div floating class="text-subtitle2 text-weight-bold text-white fixed-top q-ma-sm " color="white">{{ usuario.rol }}</q-div>
 
                         </q-avatar>
                         <q-div class="q-mx-auto text-h3 text-weight-bold text-white  column">
@@ -115,7 +115,7 @@ let menu2_content = ref({
 
                     <router-link
                     v-for="(item, index) in menu1_content" :key="index" :to="item.ruta">
-                        <q-btn no-caps align="between" color="accent" text-color="primary" icon-right="chevron_right"
+                        <q-btn no-caps align="between" color="accent" text-color="black" icon-right="chevron_right"
                             class="botones_secundarios">{{ item.titulo }}</q-btn>
                     </router-link>
 
@@ -132,17 +132,17 @@ let menu2_content = ref({
                         v-for="(item, index) in menu2_content[rol]" :key="index" :to="item.ruta">
                     <!-- ❄️❄️Expandibles❄️❄️ -->
                         <q-expansion-item v-if="item.desplegable !== false" :label=item.titulo class="botones_principales"
-                        header-class="bg-accent text-primary" expand-icon-class="text-primary">
+                        header-class="bg-accent text-black" expand-icon-class="text-black">
                                     <router-link
                                     v-for="(item2, index2) in item.desplegable" :key="index2" :to="item2.ruta">
-                                        <q-btn no-caps align="between" color="accent" text-color="primary"
+                                        <q-btn no-caps align="between" color="accent" text-color="black"
                                         icon-right="chevron_right" :label="item2.titulo" class="botones_secundarios" />
                                     </router-link>
                         </q-expansion-item>
 
                     <!-- ❄️❄️No expandibles❄️❄️ -->
                         <q-expansion-item  v-if="item.desplegable == false" :label=item.titulo class="botones_principales"
-                        header-class="bg-accent text-primary" expand-icon-class="text-primary" 
+                        header-class="bg-accent text-black" expand-icon-class="text-black" 
                         expand-icon="chevron_right" expanded-icon="chevron_right">
                         </q-expansion-item>
 

@@ -9,10 +9,10 @@
       class="link-card"
     >
       <q-btn
-        color="secondary"
+        color="accent"
         class="tarjetasbtn text-weight-bold text-h6 justify-center"
       >
-        <span class="tarjetastxt">{{ item.titulo }}</span>
+        <span class="tarjetastxt text-black">{{ item.titulo }}</span>
 
         <div class="card__content" :class="item.titulo + 'btn'">
           <img
@@ -92,16 +92,4 @@ let content = ref({
   width: 50%;
 }
 
-.tools {
-  display: flex;
-  align-items: center;
-  padding: 5px;
-}
-
-.line {
-  width: 30px;
-  height: 3px;
-  background-color: #29a19c;
-  margin: 5px;
-}
 </style>
