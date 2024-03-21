@@ -161,22 +161,21 @@ let showAgregar = ref(false);
 const dataPedido = ref({
   fecha_pedido: "",
   ficha: "",
-  validateDate: (value, type) => {
-  const today = new Date();
-  const selectedDate = parse(value, 'yyyy-MM-dd', new Date());
-  const isValidDate = isValid(selectedDate);
+  validateDate: (value) => {
+    const today = new Date();
+    const selectedDate = parse(value, 'yyyy-MM-dd', new Date());
+    const isValidDate = isValid(selectedDate);
 
-  if (!isValidDate) {
-    return `Por favor ingrese una fecha válida para ${type === 'pedido' ? 'fecha de pedido' : 'fecha de entrega'}.`;
-  }
+    if (!isValidDate) {
+      return `Por favor ingrese una fecha válida para fecha de pedido.`;
+    }
 
-  if (!isAfter(selectedDate, today)) {
-    return `La ${type === 'pedido' ? 'fecha de pedido' : 'fecha de entrega'} no puede ser anterior a la actual.`;
-  }
+    if (!isAfter(selectedDate, today)) {
+      return `La fecha de pedido no puede ser anterior a la actual.`;
+    }
 
-  return true;
-},
-
+    return true;
+  },
 });
 
 const data = ref({
@@ -212,7 +211,7 @@ const validateFicha = (value) => {
 };
 
 const validarCamposPedidos = () => {
-  const fechaPedidoValidation = dataPedido.value.validateDate(dataPedido.value.fecha_pedido, 'pedido');
+  const fechaPedidoValidation = dataPedido.value.validateDate(dataPedido.value.fecha_pedido);
   const fichaValidation = validateFicha(dataPedido.value.ficha);
 
   if (fechaPedidoValidation !== true) {
@@ -224,7 +223,6 @@ const validarCamposPedidos = () => {
     return;
   }
 };
-
 async function crearPedido() {
 
   validarCamposPedidos();
