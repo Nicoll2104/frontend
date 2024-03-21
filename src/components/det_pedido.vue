@@ -154,9 +154,8 @@ let itemsPre = ref([]);
 let selectProdut = ref([]);
 let seletFicha = ref([]);
 
-let showDetalleDiv = ref(true);
+/* let showDetalleDiv = ref(false); */
 let showAgregar = ref(false);
-
 
 const dataPedido = ref({
   fecha_pedido: "",
@@ -224,12 +223,11 @@ const validarCamposPedidos = () => {
   }
 };
 async function crearPedido() {
-
   validarCamposPedidos();
 
   if (enviarInfoestado.value) {
     try {
-      const response = await enviarPedidoAlServidor(dataPedido.value);
+      const response = await crearPedidoAlServidor(dataPedido.value);
 
       if (response.status === 'success') {
         dataPedido.value = {
@@ -241,6 +239,9 @@ async function crearPedido() {
           type: 'positive',
           message: 'Pedido creado exitosamente.'
         });
+
+        // Set showDetalleDiv to true
+        showDetalleDiv.value = true;
       } else {
         $q.notify({
           type: 'negative',
