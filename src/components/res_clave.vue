@@ -1,29 +1,28 @@
 <template>
-  <div class="cont">
+    <div class="cont bg-dark flex flex-center fullscreen">
     <div class="olascont">
       <img class="olaazul" src="../assets/olaazul.svg">
       <img class="olaverde" src="../assets/olaverde.svg">
     </div>
-    <div class="q-pa-md row items-start q-gutter-md">
-      <q-card class="my-card">
+      <q-card class="my-card q-ma-lg q-px-md q-py-lg" >
+        <q-card-section class="q-py-none">
+          <p class="text-h3 text-primary text-bold">Restablecer Contraseña</p>
+          <q-div class="subtittle text-primary"> Por favor digite su correo y asigne una nueva contraseña</q-div>
+        </q-card-section>
         <q-card-section>
-          <q-div class="text-h3">Restablecer Contraseña</q-div>
-          <p class="subtittle">Por favor digite su correo y asigne una nueva contraseña</p>
+          <q-input inputstandout="bg-accent " v-model="data.correo" label="Correo electronico"
+          class="q-mb-lg input"/>
+          <q-input inputstandout="bg-accent" v-model="data.contrasena" label="nueva contraseña" type="password" 
+          class="q-mb-lg input"/>
+          <q-input inputstandout="bg-accent" v-model="data.contrasena2" label="confirmar contraseña" type="password" 
+          class=" input"/>
         </q-card-section>
-        <q-card-section style="max-width: 500px">
-          <q-input standout="bg-secondary text-white" v-model="data.correo" label="Correo electronico" />
-        </q-card-section>
-        <q-card-section style="max-width: 500px">
-          <q-input standout="bg-secondary text-white" v-model="data.contrasena" label="Nueva Contraseña" type="password"/>
-        </q-card-section>
-        <q-card-section style="max-width: 500px">
-          <q-input standout="bg-secondary text-white" v-model="data.contrasena2" label="Confirmar Contraseña" type="password"/>
-        </q-card-section>
-        <q-card-section style="max-width: 500px">
-          <q-btn push color="primary" label="RESTABLECER" @click="cambiar" :loading="loading"/>
+
+
+        <q-card-section>
+          <q-btn push color="secondary" label="guardar" class="float-right" @click="validarCampos" :loading="loading"/>
         </q-card-section>
       </q-card>
-    </div>
   </div>
 </template>
 <script setup>
@@ -37,6 +36,7 @@
   const router = useRouter()
 
   const data = ref({
+    correo: "",
     contrasena: "",
     contrasena2: "",
   });
@@ -108,52 +108,21 @@ function notificar(tipo, msg) {
 }
     </script>
 
-  <style scoped>
-  .paleta {
-    background-color:
-      #3F497F #29A19C #A3F7BF;
-  }
+<style lang="scss" scoped>
+@use '../quasar-variables.scss' as *;
   
   * {
     margin: 0;
     padding: 0;
   }
-  .my-card{
-    background-color: accent;
-    transform: translate(0px, -50px);
-}
 
-.cont {
-    display: flex;
-    justify-content: center;
-    height: 100vh;
-    align-items: center;
+  .my-card{
+    transform: translate(0px, -50px);
 }
 
 .olascont {
     flex: 1;
 }
-.subtittle {
-    font-size: 20px;
-    font-weight: bold;
-    color: #3F497F;
-    margin-bottom: 10px;
-}
-
-
-input::placeholder {
-    color: rgb(255, 255, 255);
-}
-
-
-.contrasenaayuda {
-    text-align: right;
-    color: #29A19C;
-    font-weight: 700;
-    text-decoration-line: underline;
-    margin: 10px 0px;
-}
-
 .olascont {
     user-select: none;
     z-index: -1;
@@ -180,19 +149,5 @@ input::placeholder {
     bottom: 0;
     right: 50%;
     transform: translate(50%, 0);
-}
-
-
-.contrasenaayuda {
-    background-color: transparent;
-    border: none;
-    color: #29A19C;
-    text-decoration: underline;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.contrasenaayuda:hover {
-    color: #3F497F;
 }
   </style>

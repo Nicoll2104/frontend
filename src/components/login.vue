@@ -121,28 +121,31 @@ async function validarIngreso() {
 
 
 <template>
-    <div class="cont">
+    <div class="cont bg-dark flex flex-center fullscreen">
         <div class="olascont">
             <img class="olaazul" src="../assets/olaazul.svg">
             <img class="olaverde" src="../assets/olaverde.svg">
         </div>
-            <q-card class="my-card q-ma-lg q-pa-md" >
-                <q-card-section>
-                    <q-div class="text-h3 text-primary text-bold">Bienvenido</q-div>
-                    <p class="subtittle text-primary" >Por favor ingrese sus datos de usuario para continuar</p>
+            <q-card class="my-card q-ma-lg q-px-md q-py-lg" >
+                <q-card-section class="q-py-none">
+                    <p class="text-h3 text-primary text-bold">Bienvenido</p>
+                    <q-div class="subtittle text-primary"> Por favor ingrese sus datos de usuario para continuar</q-div>
                 </q-card-section>
                 <q-card-section>
-                    <q-input standout="bg-accent " v-model="data.correo" label="Correo electronico" />
+                    <q-input inputstandout="bg-accent " v-model="data.correo" label="Correo electronico"
+                    class="q-mb-lg input"/>
+                    <q-input inputstandout="bg-accent" v-model="data.contrasena" label="Contraseña" type="password" 
+                    class=" input"/>
                 </q-card-section>
+
                 <q-card-section>
-                    <q-input standout="bg-accent" v-model="data.contrasena" label="Contraseña" type="password"/>
-                    <router-link to="/Restableciemiento" class="ingresarcont">
-                        <p class="text-secondary text-weight-bold q-mt-md">¿Olvidaste tu contraseña?</p>
+                    <router-link to="/Restableciemiento">
+                        <span class="text-secondary text-weight-bold contrasenaayuda">¿Olvidaste tu contraseña?</span>
                     </router-link>
 
                     <q-card-section>
                     </q-card-section>
-                    <q-btn push color="secondary" label="Ingresar" class="q-mt-lg" @click="validarCampos" :loading="loading"/>
+                    <q-btn push color="secondary" label="Ingresar" class="float-right" @click="validarCampos" :loading="loading"/>
                 </q-card-section>
 
                         
@@ -153,11 +156,12 @@ async function validarIngreso() {
     
     <!-- scoped sirve para evitar que los estilos afecte a los
     demas componentes  -->
-<style scoped>
-.paleta {
-    background-color:
-        #3F497F #29A19C #A3F7BF;
-}
+
+    <!-- lang="scss" es para poder utilizar variables sass-->
+
+<style lang="scss" scoped>
+@use '../quasar-variables.scss' as *;
+
 
 * {
     margin: 0;
@@ -167,36 +171,11 @@ async function validarIngreso() {
     transform: translate(0px, -50px);
 }
 
-.cont {
-    display: flex;
-    justify-content: center;
-    height: 100vh;
-    align-items: center;
-}
+
 
 .olascont {
     flex: 1;
 }
-.subtittle {
-    font-size: 20px;
-    font-weight: bold;
-
-    margin-bottom: 10px;
-}
-
-
-input::placeholder {
-    color: rgb(255, 255, 255);
-}
-
-
-.contrasenaayuda {
-    text-align: right;
-    font-weight: 700;
-    text-decoration-line: underline;
-    margin: 10px 0px;
-}
-
 .olascont {
     user-select: none;
     z-index: -1;
@@ -225,18 +204,8 @@ input::placeholder {
     transform: translate(50%, 0);
 }
 
-
-.contrasenaayuda {
-    background-color: transparent;
-    border: none;
-    text-decoration: underline;
-    cursor: pointer;
+.contrasenaayuda:hover{
+    color: $primary !important;
 }
 
-.contrasenaayuda:hover {
-  color: var(--q-color-accent);
-}
-/* .contrasenaayuda:hover {
-    color: #29A19C;
-} */
 </style>

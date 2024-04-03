@@ -101,12 +101,14 @@ let menu2_content = ref({
             <q-drawer class="bg-primary" v-model="leftDrawerOpen" side="left" behavior="mobile" elevated style="scrollbar-width: none;">
                 <div class="q-pa-md menucont">
                     <q-div class="q-pa-md q-gutter-sm column">
-                        <q-div floating class="text-subtitle2 text-weight-bold text-white q-mt-none " color="white">{{ usuario.rol }}</q-div>
                         <q-avatar class="q-mx-auto shadow-4 border-radius"   color="white" text-color="accent" size="150px"  rounded>
+                        <q-card floating class="absolute-top text-subtitle2 text-weight-bold text-black text-white q-px-sm q-mx-auto rollname">
+                            {{ usuario.rol }}
+                        </q-card>
                             <img src="https://cdn.quasar.dev/img/avatar3.jpg">
 
                         </q-avatar>
-                        <q-div class="q-mx-auto text-h3 text-weight-bold text-white  column">
+                        <q-div class="q-mx-auto text-h3 text-weight-bold text-white column">
                             {{ usuario.nombre }}
                         </q-div>
                         
@@ -143,7 +145,7 @@ let menu2_content = ref({
                     <!-- ❄️❄️No expandibles❄️❄️ -->
                         <q-expansion-item  v-if="item.desplegable == false" :label=item.titulo class="botones_principales"
                         header-class="bg-accent text-black" expand-icon-class="text-black" 
-                        expand-icon="chevron_right" expanded-icon="chevron_right">
+                        expand-icon="chevron_right" expanded-icon="chevron_right"  >
                         </q-expansion-item>
 
                     </router-link>
@@ -185,5 +187,10 @@ let menu2_content = ref({
 .botones_secundarios {
     width: 90%;
     margin: 9px 0px;
+}
+
+.rollname{
+    width: min-content;
+    transform: translate(0 , -50%);
 }
 </style>

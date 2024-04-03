@@ -364,7 +364,7 @@ function prompt() {
       
       </q-table>
 
-      <q-card-section class="q-gutter-md row items-end justify-end continputs1">
+      <q-card-section class="q-gutter-md row items-end justify-center continputs1">
           <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px" color="secondary" label="guardar">
             <q-icon name="style" color="white" right />
           </q-btn>
@@ -408,10 +408,7 @@ warning: Color para advertencias o mensajes importantes.
   max-width: 600px;
 }
 
-.continputs1 {
-  border-top: solid 1px rgba(0, 0, 0, 0.212);
-  margin-top: 2px;
-}
+
 
 .modalinputs {
   width: 400px;
