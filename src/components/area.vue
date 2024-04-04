@@ -87,7 +87,7 @@ import { ref } from "vue";
 import { useAreaStore } from "../stores/area.js";
 import { useQuasar } from 'quasar'
 
-const modelo = "Areas";
+const modelo = "Area Temática";
 const useArea = useAreaStore();
 const loadingTable = ref(true)
 const $q = useQuasar()
@@ -104,7 +104,7 @@ const columns = ref([
   },
   {
     name: "presupuesto",
-    label: "Presupuesto",
+    label: "Dependencia",
     align: "left",
     field: (row) => row.presupuesto,
   },

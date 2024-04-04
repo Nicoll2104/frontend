@@ -43,9 +43,9 @@ const rol = Cookies.get('rol')
 let menu2_content = ref({
     Administrador: [
     { ruta: "/Presupuesto", titulo: "Dependencias", desplegable: false},
-    { ruta: "/Fichas", titulo: "Fichas", desplegable: false},
+    { ruta: "/Fichas", titulo: "Destino", desplegable: false},
     { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
-    { ruta: "/Areas", titulo: "Areas", desplegable: false },
+    { ruta: "/Areas", titulo: "Area Temática", desplegable: false },
     { ruta: "/Pedidos", titulo: "Pedido", desplegable: false },
     { ruta: "/Entradas", titulo: "Entradas - Inventarios", desplegable: false },
     { ruta: "/Productos", titulo: "Producto", desplegable: false },
