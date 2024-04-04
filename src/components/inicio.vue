@@ -41,7 +41,7 @@ import { Cookies } from "quasar";
 const rol = Cookies.get('rol')
 let content = ref({
   Administrador: [
-    { ruta: "/Presupuesto", titulo: "Presupuesto", img: presupuesto },
+    { ruta: "/Presupuesto", titulo: "Dependencias", img: presupuesto },
     { ruta: "/Fichas", titulo: "Fichas", img: fichas2 },
     { ruta: "/Lotes", titulo: "Lotes", img: lotes },
     { ruta: "/Areas", titulo: "Areas", img: areas },
