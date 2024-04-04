@@ -7,26 +7,26 @@ export const useAreaStore = defineStore('area', () => {
 
     const obtenerInfoAreas = async () => {
         try {
-            let responseAreas = await axios.get('area/ver');
-            return responseAreas.data
+            let responseAreas = await axios.get('area_tematica/ver');
+            return responseAreas.data;
         } catch (error) {
-            throw error
+            throw error;
         }
     };
 
     const postArea = async (data) =>{
         try {
-            let res = await axios.post("area/agregar", data);
-            return res.data
+            let res = await axios.post("area_tematica/agregar", data);
+            return res.data;
         } catch (error) {
             return error.response.data;
         }
-    }
+    };
 
     const putArea = async (id, data) => {
         try {
-            let res = await axios.put(`area/modificar/${id}`, data);
-            return res
+            let res = await axios.put(`area_tematica/modificar/${id}`, data);
+            return res;
         } catch (error) {
             return error.response.data;
         }
@@ -34,23 +34,28 @@ export const useAreaStore = defineStore('area', () => {
 
     const putInactivar = async (id)=>{
         try {
-            let res = await axios.put(`area/inactivar/${id}`)
-            return res
+            let res = await axios.put(`area_tematica/inactivar/${id}`);
+            return res;
         } catch (error) {
-            console.log(error, "Error al cambiar el estado de la area");
+            console.log(error, "Error al cambiar el estado de la área");
         }
-    }
-    const  putActivar = async (id)=>{
+    };
+
+    const putActivar = async (id)=>{
         try {
-            let res = await axios.put(`area/activar/${id}`)
-            return res
+            let res = await axios.put(`area_tematica/activar/${id}`);
+            return res;
         } catch (error) {
-            console.log(error, "Error al cambiar el estado de la area");
+            console.log(error, "Error al cambiar el estado de la área");
         }
-    }
+    };
 
     return {
         area,
-        obtenerInfoAreas, postArea, putArea, putInactivar, putActivar
+        obtenerInfoAreas,
+        postArea,
+        putArea,
+        putInactivar,
+        putActivar
     };
-}); 
+});

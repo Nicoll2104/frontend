@@ -45,7 +45,7 @@ let menu2_content = ref({
     { ruta: "/Presupuesto", titulo: "Presupuesto", desplegable: false},
     { ruta: "/Fichas", titulo: "Fichas", desplegable: false},
     { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
-    { ruta: "/Areas", titulo: "Areas", desplegable: false },
+    { ruta: "/Areas", titulo: "Area tematica", desplegable: false },
     { ruta: "/Pedidos", titulo: "Pedido", desplegable: false },
     { ruta: "/Entradas", titulo: "Entradas - Inventarios", desplegable: false },
     { ruta: "/Productos", titulo: "Producto", desplegable: false },

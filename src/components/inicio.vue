@@ -44,7 +44,7 @@ let content = ref({
     { ruta: "/Presupuesto", titulo: "Presupuesto", img: presupuesto },
     { ruta: "/Fichas", titulo: "Fichas", img: fichas2 },
     { ruta: "/Lotes", titulo: "Lotes", img: lotes },
-    { ruta: "/Areas", titulo: "Areas", img: areas },
+    { ruta: "/Areas", titulo: "Area tematica", img: areas },
     { ruta: "/Pedidos", titulo: "Pedido", img: pedido },
     { ruta: "/Productos", titulo: "Producto", img: producto },
     { ruta: "/Usuario", titulo: "Usuarios", img: usuario },
