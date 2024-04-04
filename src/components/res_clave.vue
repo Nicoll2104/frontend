@@ -1,30 +1,3 @@
-<template>
-    <div class="cont bg-dark flex flex-center fullscreen">
-    <div class="olascont">
-      <img class="olaazul" src="../assets/olaazul.svg">
-      <img class="olaverde" src="../assets/olaverde.svg">
-    </div>
-      <q-card class="my-card q-ma-lg q-px-md q-py-lg" >
-        <q-card-section class="q-py-none">
-          <p class="text-h3 text-primary text-bold">Restablecer Contraseña</p>
-          <q-div class="subtittle text-primary"> Por favor digite su correo y asigne una nueva contraseña</q-div>
-        </q-card-section>
-        <q-card-section>
-          <q-input inputstandout="bg-accent " v-model="data.correo" label="Correo electronico"
-          class="q-mb-lg input"/>
-          <q-input inputstandout="bg-accent" v-model="data.contrasena" label="nueva contraseña" type="password" 
-          class="q-mb-lg input"/>
-          <q-input inputstandout="bg-accent" v-model="data.contrasena2" label="confirmar contraseña" type="password" 
-          class=" input"/>
-        </q-card-section>
-
-
-        <q-card-section>
-          <q-btn push color="secondary" label="guardar" class="float-right" @click="validarCampos" :loading="loading"/>
-        </q-card-section>
-      </q-card>
-  </div>
-</template>
 <script setup>
   import { ref } from "vue";
   import { useQuasar } from 'quasar'
@@ -52,6 +25,29 @@
     });
   };
 
+  
+  function validarCampos() {
+  const arrData = Object.entries(data.value)
+  for (const d of arrData) {
+    if (d[1] === null) {
+      notificar('negative', 'Por favor complete todos los campos')
+      return
+    }
+    if(typeof d[1] === 'string'){
+      if (d[1].trim() === "") {
+        notificar('negative','Por favor complete todos los campos')
+        return
+      }
+    }
+  }
+  if( data.value.contrasena !== data.value.contrasena2){
+      notificar('negative', 'Las contraseñas no coinciden')
+      return
+    }
+
+  notificar('positive', 'bien')
+}
+
   let validacion = ref(false);
   let notification = ref(null);
   let loading = ref(false)
@@ -72,10 +68,7 @@
       }}
     }
 
-    if(data.value.contrasena !== data.value.contrasena2){
-      notificar('negative', 'Las contraseñas no coinciden')
-      return
-    }
+
 
     restablecerContrasena()
   }
@@ -99,6 +92,7 @@
       console.log(error);
   }
 }
+
 function notificar(tipo, msg) {
   $q.notify({
     type: tipo,
@@ -107,6 +101,35 @@ function notificar(tipo, msg) {
   })
 }
     </script>
+
+
+<template>
+    <div class="cont bg-dark flex flex-center fullscreen">
+    <div class="olascont">
+      <img class="olaazul" src="../assets/olaazul.svg">
+      <img class="olaverde" src="../assets/olaverde.svg">
+    </div>
+      <q-card class="my-card q-ma-lg q-px-md q-py-lg" >
+        <q-card-section class="q-py-none">
+          <p class="text-h3 text-primary text-bold">Restablecer Contraseña</p>
+          <q-div class="subtittle text-primary"> Por favor digite su correo y asigne una nueva contraseña</q-div>
+        </q-card-section>
+        <q-card-section>
+          <q-input inputstandout="bg-accent " v-model="data.correo" label="Correo electronico"
+          class="q-mb-lg input"/>
+          <q-input inputstandout="bg-accent" v-model="data.contrasena" label="nueva contraseña" type="password" 
+          class="q-mb-lg input"/>
+          <q-input inputstandout="bg-accent" v-model="data.contrasena2" label="confirmar contraseña" type="password" 
+          class=" input"/>
+        </q-card-section>
+
+
+        <q-card-section>
+          <q-btn push color="secondary" label="guardar" class="float-right" @click="validarCampos" :loading="loading"/>
+        </q-card-section>
+      </q-card>
+  </div>
+</template>
 
 <style lang="scss" scoped>
 @use '../quasar-variables.scss' as *;

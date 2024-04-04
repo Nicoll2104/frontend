@@ -132,9 +132,9 @@ async function validarIngreso() {
                     <q-div class="subtittle text-primary"> Por favor ingrese sus datos de usuario para continuar</q-div>
                 </q-card-section>
                 <q-card-section>
-                    <q-input inputstandout="bg-accent " v-model="data.correo" label="Correo electronico"
+                    <q-input v-model="data.correo" label="Correo electronico"
                     class="q-mb-lg input"/>
-                    <q-input inputstandout="bg-accent" v-model="data.contrasena" label="Contraseña" type="password" 
+                    <q-input  v-model="data.contrasena" label="Contraseña" type="password" 
                     class=" input"/>
                 </q-card-section>
 
@@ -167,6 +167,7 @@ async function validarIngreso() {
     margin: 0;
     padding: 0;
 }
+
 .my-card{
     transform: translate(0px, -50px);
 }
