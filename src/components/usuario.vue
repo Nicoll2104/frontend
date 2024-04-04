@@ -206,7 +206,9 @@ const enviarInfo = {
     try {
       const response = await useUsuario.postUsuarios(data.value);
       if (!response) return
-      rows.value.unshift(response.areas);
+
+      console.log(response);
+      rows.value.unshift(response.usuarios);
       notificar('positive', 'Guardado exitosamente')
       modal.value = false;
     } catch (error) {
