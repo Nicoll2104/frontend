@@ -2,11 +2,12 @@ import Login from "../components/login.vue"
 import Menu from "../components/menu.vue"
 
 import inicio from "../components/inicio.vue"
-import presupuesto from '../components/presupuesto.vue'
+import Dependencias from '../components/Dependencias.vue'
 import Lotes from "../components/lotes.vue"
-import Fichas from '../components/ficha.vue'
+import Destino from '../components/Destino.vue'
 import Areas from '../components/area.vue'
 import Pedidos from '../components/Pedidos.vue'
+import Contrato from '../components/Contrato.vue'
 import Productos from '../components/producto.vue'
 import contraseña from '../components/res_clave.vue'
 import Dis_presupuesto from '../components/dis_presupuesto.vue'
@@ -14,7 +15,7 @@ import Det_pedido from '../components/det_pedido.vue'
 import presupuesto_ficha from '../components/presupuesto_ficha.vue'
 import Usuario from '../components/usuario.vue'
 import Entradas from '../components/entradas.vue'
-import Requerimiento from '../components/Requerimiento.vue'
+import Salidas from '../components/salidas.vue'
 import Perfil from '../components/perfil.vue'
 
 
@@ -23,6 +24,7 @@ import {createRouter, createWebHashHistory} from 'vue-router'
 import { useUsuarioStore } from "../stores/usuario.js"
 /* const UsuarioStore = useUsuarioStore() */
 import { Cookies } from "quasar"
+
 
 
 const auth = (to, from, next) => {
@@ -59,18 +61,19 @@ const routes = [
       children: [
         { path: "/", redirect: "/menu/inicio" },
         { path: "/inicio", component: inicio, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
-        {path: '/Presupuesto', component:presupuesto, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
-        {path: '/Fichas', component:Fichas, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/Dependencias', component:Dependencias, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/Destino', component:Destino, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Lotes', component:Lotes, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Areas', component:Areas, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Pedidos', component:Pedidos, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/Contrato', component:Contrato, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Productos', component:Productos, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Dis_presupuesto', component:Dis_presupuesto, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Det_pedido', component:Det_pedido, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Presupuesto_de_ficha', component:presupuesto_ficha, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Usuario', component:Usuario, beforeEnter: auth , meta: { rol: ['Administrador', ]}},
         {path: '/entradas', component:Entradas, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
-        {path: '/Requerimiento', component:Requerimiento, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/salidas', component:Salidas, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/perfil', component:Perfil, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
       ],
     }
