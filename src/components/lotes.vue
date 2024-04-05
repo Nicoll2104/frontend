@@ -8,19 +8,12 @@
         </q-toolbar>
 
         <q-card-section class="q-gutter-md">
-          <q-input class="input1" outlined v-model="data.codigo_presupuestal" label="Codigo presupuestal" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo presupuestal']"></q-input>
+          <q-input class="input1" outlined v-model="data.codigo" label="Codigo" type="number"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo']"></q-input>
           <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-          <q-input class="input1" outlined v-model="data.presupuesto_inicial" label="Presupuesto inicial" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
           <q-input class="input1" outlined v-model="data.año" label="Año" type="number" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
-          <q-input class="input1" outlined v-model="data.modificaciones" label="Modificaciones" type="text" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese las modificaciones']"></q-input>
-          <q-input class="input1" outlined v-model="data.presupuesto_definitivo" label="Presupuesto definitivo"
-            type="number" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el presupuesto definitivo']"></q-input>
           <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
             <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
@@ -105,10 +98,10 @@ const loadingmodal = ref(false);
 
 const columns = ref([
   {
-    name: "codigo_presupuestal",
-    label: "Codigo presupuestal",
+    name: "codigo",
+    label: "Codigo",
     align: "left",
-    field: (row) => row.codigo_presupuestal,
+    field: (row) => row.codigo,
     sort: true,
     sortOrder: "da",
   },
@@ -120,30 +113,11 @@ const columns = ref([
 
   },
   {
-    name: "presupuesto_inicial",
-    label: "Presupuesto inicial",
-    align: "left",
-    field: (row) => row.presupuesto_inicial,
-  },
-  {
     name: "año",
     label: "Año",
     align: "left",
     field: (row) => row.año,
   },
-  {
-    name: "modificaciones",
-    label: "Modificaciones",
-    align: "left",
-    field: (row) => row.modificaciones,
-  },
-  {
-    name: "presupuesto_definitivo",
-    label: "Presupuesto definitivo",
-    align: "left",
-    field: (row) => row.presupuesto_definitivo,
-  },
-
   {
     name: "status",
     label: "Estado",
@@ -159,12 +133,9 @@ const columns = ref([
 const rows = ref([]);
 
 const data = ref({
-  codigo_presupuestal: "",
+  codigo: "",
   nombre: "",
-  presupuesto_inicial: "",
   año: "",
-  modificaciones: "",
-  presupuesto_definitivo: "",
 });
 
 const obtenerInfo = async () => {
@@ -202,12 +173,9 @@ const modal = ref(false);
 const opciones = {
   agregar: () => {
     data.value = {
-      codigo_presupuestal: "",
+      codigo: "",
       nombre: "",
-      presupuesto_inicial: "",
       año: "",
-      modificaciones: "",
-      presupuesto_definitivo: "",
     };
     modal.value = true;
     estado.value = "guardar";
@@ -328,7 +296,7 @@ function validarCampos() {
       }
     }
 
-    if (d[0] === "codigo_presupuestal" && d[1].toString().length < 6) {
+    if (d[0] === "codigo" && d[1].toString().length < 6) {
       notificar('negative', "El codigo debe tener más de 6 digitos")
       return
     }
@@ -338,25 +306,9 @@ function validarCampos() {
       return
     }
 
-    if (d[0] === "presupuesto_inicial") {
-      const presupuesto = parseFloat(d[1]);
-      if (isNaN(presupuesto) || presupuesto <= 0) {
-        notificar('negative', "El presupuesto inicial debe ser mayor que cero");
-        return;
-      }
-    }
-
     if (d[0] === "año" && d[1].length !== 4) {
       notificar('negative', 'El año tiene que tener 4 caracteres')
       return
-    }
-
-    if (d[0] === "presupuesto_definitivo") {
-      const presupuesto = parseFloat(d[1]);
-      if (isNaN(presupuesto) || presupuesto <= 0) {
-        notificar('negative', "El presupuesto inicial debe ser mayor que cero");
-        return;
-      }
     }
 
    /*  if (d[0] === "email" && !d[1].includes('@')) {

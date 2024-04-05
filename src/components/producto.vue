@@ -24,15 +24,14 @@
           <q-input class="modalinputs" outlined v-model="data.precio_unitario" label="Precio Unitario" type="text"
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el precio unitario']"></q-input>
 
-          <q-input class="modalinputs" outlined v-model="data.impestos" label="Impuestos" type="text" maxlength="15"
+          <q-input class="modalinputs" outlined v-model="data.iva" label="Impuestos" type="text" maxlength="15"
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese un impuesto']"></q-input>
-            
-          <q-input class="modalinputs" outlined v-model="data.fecha_creacion" label="Fecha creacion" type="text"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de creacion']">
-          </q-input>
+          
+          <q-input class="modalinputs" outlined v-model="data.cantidad" label="Cantidad" type="text" maxlength="15"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
 
-          <q-input class="modalinputs" outlined v-model="data.fecha_vencimiento" label="Fecha vencimiento" type="text"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de vencimiento']"></q-input>
+          <q-select filled v-model="data.lote" :options="seletLote" label="Seleccione el lote"
+            class="q-mx-auto" style="width: 300px" />
         </q-card-section>
         <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
             <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
@@ -102,14 +101,17 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useProductoStore } from "../stores/producto.js";
+import { useLoteStore } from "../stores/lotes.js";
 import { useQuasar } from 'quasar'
 
 const modelo = "Productos";
 const useProducto = useProductoStore();
+const loteStore = useLoteStore();
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
 const loadingmodal = ref(false);
+
 
 const columns = ref([
   {
@@ -146,26 +148,22 @@ const columns = ref([
     field: (row) => row.precio_unitario,
   },
   {
-    name: "impestos",
-    label: "impuestos",
+    name: "iva",
+    label: "IVA",
     align: "left",
-    field: (row) => row.impestos,
+    field: (row) => row.iva,
   },
   {
-    name: "fecha_creacion",
-    label: "Fecha creacion",
+    name: "cantidad",
+    label: "Cantidad",
     align: "left",
-    field: (row) => row.fecha_creacion,
-    format: (val) => formatDate(val),
-    sortable: true,
+    field: (row) => row.cantidad,
   },
   {
-    name: "fecha_vencimiento",
-    label: "Fecha vencimiento",
+    name: "lote_id",
+    label: "Lote",
     align: "left",
-    field: (row) => row.fecha_vencimiento,
-    format: (val) => formatDate(val),
-    sortable: true,
+    field: (row) => row.lote_id,
   },
   {
     name: "status",
@@ -187,25 +185,33 @@ const data = ref({
   descripcion: "",
   unidad_medida: "",
   precio_unitario: "",
-  impestos: "",
-  fecha_creacion: "",
-  fecha_vencimiento: "",
+  iva: "",
+  cantidad: "",
+  lote: "",
 });
 
-function formatDate(dateString) {
-  if (!dateString) return '';
+let seletLote = ref([]);
 
-  const date = new Date(dateString);
-
-  if (isNaN(date.getTime())) return dateString;
-
-  const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-  return date.toLocaleDateString('es-ES', options);
+const obtenerLote = async () => {
+  try {
+    const lote = await loteStore.obtenerInfoLotes();
+    const loteAct = lote.filter(lotes => lotes.status === "1")
+    console.log("Lotes activo", loteAct);
+    seletLote.value = loteAct.map((items) => ({
+      label: `${items.codigo_lote}`,
+      value: String(items._id)
+    }));
+    sortBy(seletLote.value, 'label');
+  } catch (error) {
+    console.error(error);
+  }
 }
 
+obtenerLote();
 
 const obtenerInfo = async () => {
   try {
+    await Promise.all([obtenerLote()]);
     const productos = await useProducto.obtenerInfoProducto();
     console.log("useProducto")
     console.log(useProducto)
@@ -244,9 +250,9 @@ const opciones = {
       descripcion: "",
       unidad_medida: "",
       precio_unitario: "",
-      impestos: "",
-      fecha_creacion: "",
-      fecha_vencimiento: "",
+      iva: "",
+      cantidad: "",
+      lote: "",
     };
     modal.value = true;
     estado.value = "guardar";
@@ -254,16 +260,19 @@ const opciones = {
   editar: (info) => {
     data.value = { ...info }
     console.log(data.value)
-    data.value.fecha_creacion = data.value.fecha_creacion.slice(0, 16);
-    data.value.fecha_vencimiento = data.value.fecha_vencimiento.slice(0, 10);
     modal.value = true;
     estado.value = "editar";
   },
 };
 
-function buscarIndexLocal(id) {
-  return rows.value.findIndex((r) => r._id === id);
-}
+const validatelote = (value) => {
+  if (!value) {
+    return 'Seleccione un lote';
+  }
+
+  return true;
+};
+
 
 const enviarInfo = {
   guardar: async () => {
@@ -351,6 +360,7 @@ const in_activar = {
 
 function validarCampos() {
 
+  const loteValidation = validatelote(data.value.lote);
   const arrData = Object.entries(data.value)
   console.log(arrData);
   for (const d of arrData) {
@@ -388,22 +398,22 @@ function validarCampos() {
       notificar('negative', "El precio unitario es obligatorio")
       return
     }
-    if (d[0] === "impestos" && d[1].toString().length < 1) {
+    if (d[0] === "iva" && d[1].toString().length < 1) {
       notificar('negative', "El valor del impuesto es obligatorio")
       return
     }
-    if (d[0] === "fecha_creacion" && d[1].toString().length < 1) {
-      notificar('negative', "La fecha de creacion es obligatoria")
+    if (d[0] === "cantidad" && d[1].toString().length < 1) {
+      notificar('negative', "La cantidad es obligatorio")
       return
     }
-    if (d[0] === "fecha_vencimiento" && d[1].toString().length < 1) {
-      notificar('negative', "La fecha de vencimiento es obligatoria")
+    if (d[0] === "lote" && d[1].toString().length < 1) {
+      notificar('negative', "El lote es obligatorio")
       return
     }
-    if (data.value.fecha_creacion === data.value.fecha_vencimiento) {
-      notificar('negative', 'La fecha de creacion no puede ser igual a la fecha de vencimiento');
-      return;
-    }
+    if (loteValidation!== true) {
+    $q.notify({ type: 'negative', message: loteValidation });
+    return;
+  }
   }
   enviarInfo[estado.value]()
 }
