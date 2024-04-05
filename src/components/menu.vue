@@ -101,16 +101,18 @@ let menu2_content = ref({
             <q-drawer class="bg-primary" v-model="leftDrawerOpen" side="left" behavior="mobile" elevated style="scrollbar-width: none;">
                 <div class="q-pa-md menucont">
                     <q-div class="q-pa-md q-gutter-sm column">
-                        <q-avatar class="q-mx-auto shadow-4 border-radius"   color="white" text-color="accent" size="150px"  rounded>
-                        <q-card floating class="absolute-top text-subtitle2 text-weight-bold text-black text-white q-px-sm q-mx-auto rollname">
-                            {{ usuario.rol }}
-                        </q-card>
-                            <img src="https://cdn.quasar.dev/img/avatar3.jpg">
+                        <router-link to="/perfil">
+                        <q-avatar class="cursor-pointer bg-accent q-mx-auto shadow-4 border-radius avatarcont"   color="white" text-color="accent" size="150px"  rounded>
+                            <q-card floating class="no-box-shadow bg-white text-black absolute-top text-subtitle2 text-weight-bold text-white q-px-sm q-pb-sm q-mx-auto rollname">
+                                {{ usuario.rol }}
+                            </q-card>
 
+                                <img src="https://cdn.quasar.dev/img/avatar3.jpg" class="z-top avatarimg">
                         </q-avatar>
-                        <q-div class="q-mx-auto text-h3 text-weight-bold text-white column">
+                    </router-link>
+                        <q-car class="q-mx-auto q-mt-md text-h3 text-weight-bold text-white column text-capitalize">
                             {{ usuario.nombre }}
-                        </q-div>
+                        </q-car>
                         
                     </q-div>
 
@@ -143,8 +145,9 @@ let menu2_content = ref({
                         </q-expansion-item>
 
                     <!-- ❄️❄️No expandibles❄️❄️ -->
-                        <q-expansion-item  v-if="item.desplegable == false" :label=item.titulo class="botones_principales"
-                        header-class="bg-accent text-black" expand-icon-class="text-black" 
+                        <q-expansion-item  v-if="item.desplegable == false" :label=item.titulo 
+                        class="botones_principales q-my-sm"
+                        header-class="bg-accent text-black rounded-borders" expand-icon-class="text-black" 
                         expand-icon="chevron_right" expanded-icon="chevron_right"  >
                         </q-expansion-item>
 
@@ -172,25 +175,30 @@ let menu2_content = ref({
     text-align: center;
 }
 
-.menucont{
-
-}
-.opcionescont {
-    margin: 10px 0px;
-
-}
-
-.botones_principales {
-    margin-top: 10px;
-}
-
 .botones_secundarios {
     width: 90%;
     margin: 9px 0px;
 }
 
+.avatarcont{
+    transition: padding ease 0.2s;
+}
+
 .rollname{
     width: min-content;
-    transform: translate(0 , -50%);
+    transition: transform ease 0.2s;
 }
+
+.avatarimg{
+}
+
+.avatarcont:hover{
+    padding: 10px;
+}
+
+.avatarcont:hover .rollname{
+    width: min-content;
+    transform: translate(0 , -60%);
+}
+
 </style>

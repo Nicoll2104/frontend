@@ -15,6 +15,7 @@ import presupuesto_ficha from '../components/presupuesto_ficha.vue'
 import Usuario from '../components/usuario.vue'
 import Entradas from '../components/entradas.vue'
 import Requerimiento from '../components/Requerimiento.vue'
+import Perfil from '../components/perfil.vue'
 
 
 
@@ -70,6 +71,7 @@ const routes = [
         {path: '/Usuario', component:Usuario, beforeEnter: auth , meta: { rol: ['Administrador', ]}},
         {path: '/entradas', component:Entradas, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Requerimiento', component:Requerimiento, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/perfil', component:Perfil, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
       ],
     }
 ]
