@@ -1,7 +1,7 @@
 <template>
   <div class="q-pa-xl row items-start q-gutter-md justify-center ">
     <q-card class="my-card">
-      <h5>Pedido</h5>
+      <h5>Crear Requerimiento</h5>
       <div class="q-gutter-md">
         <q-card-section class="q-gutter-md row items-star justify-center continputs1" style="margin-bottom: 0px;">
           <q-input v-model="dataPedido.fecha_pedido" filled type="date" hint="Fecha de pedido" class="q-mx-auto"
