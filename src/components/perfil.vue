@@ -5,28 +5,24 @@
   import { useUsuarioStore } from "../stores/usuario.js"
   import Cookies from 'js-cookie'
 
+const $q = useQuasar();
+const UsuarioStore = useUsuarioStore()
+const router = useRouter()
+const modal = ref(false);
+let loading = ref(false)  
 
-  const UsuarioStore = useUsuarioStore()
-  const router = useRouter()
-  
 const data = ref({
   correo: "",
   contrasena: "",
 });
-  const $q = useQuasar();
-  let errorMessage = ref("");
-    
-  const showDefault = () => {
-  notification = $q.notify({
-      spinner: true,
-      message: 'Please wait...',
-      timeout: 0 
-  });
-  };
+
+const usuario = UsuarioStore.sesion.usuarios
+console.log(usuario)
+
   
-  let validacion = ref(false);
-  let notification = ref(null);
-  let loading = ref(false)
+function editar() {
+    modal.value = true
+  }
 
 
 
@@ -70,44 +66,6 @@ async function validarIngreso() {
 }
 
 
-
-
-/*       if (validacion.value==true) {
-          try {
-            showDefault()
-            const res = await loginStore.Login({
-                cuenta: username.value,
-                clave: password.value
-            });
-            console.log(res);
-            localStorage.setItem('token', res.data.token)
-            if(notification) {
-                notification()
-            }
-            $q.notify({
-                spinner: false, 
-                message: "Ingresado al programa", 
-                timeout: 2000,
-                type: 'positive',
-            });
-        } catch (error) {
-            if(notification) {
-                notification()
-            };
-            $q.notify({
-                spinner: false, 
-                message: `${error.response.data.msg}`, 
-                timeout: 2000,
-                type: 'negative',
-            });
-        };
-        }
-        
-        validacion.value = false   */
-
-
-
-
     function notificar(tipo, msg) {
   $q.notify({
     type: tipo,
@@ -115,13 +73,48 @@ async function validarIngreso() {
     position: "top"
   })
 }
+
+
     </script>
 
 
-
-
 <template>
-    <div class="cont bg-dark flex flex-center fullscreen">
+    <div class="cont bg-dark flex flex-center ">
+
+        <q-dialog v-model="modal">
+      <q-card class="modal">
+        <q-toolbar>
+          <q-toolbar-title>Agregar {{ modelo }}</q-toolbar-title>
+          <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
+        </q-toolbar>
+
+        <q-card-section class="q-gutter-md">
+          <q-input class="input1" outlined v-model="data.codigo_presupuestal" label="Codigo presupuestal" type="number"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo presupuestal']"></q-input>
+          <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
+          <q-input class="input1" outlined v-model="data.presupuesto_inicial" label="Presupuesto inicial" type="number"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
+          <q-input class="input1" outlined v-model="data.año" label="Año" type="number" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
+          <q-input class="input1" outlined v-model="data.modificaciones" label="Modificaciones" type="text" maxlength="15"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese las modificaciones']"></q-input>
+          <q-input class="input1" outlined v-model="data.presupuesto_definitivo" label="Presupuesto definitivo"
+            type="number" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese el presupuesto definitivo']"></q-input>
+          <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
+            <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
+            :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
+              <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
+            </q-btn>
+            <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white" v-close-popup>
+              <q-icon name="cancel" color="white" right />
+            </q-btn>
+          </q-card-section>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+        
         <div class="olascont">
             <img class="olaazul" src="../assets/olaazul.svg">
             <img class="olaverde" src="../assets/olaverde.svg">
@@ -139,18 +132,19 @@ async function validarIngreso() {
                 </q-card-section>
 
                 <q-card-section>
-                    <router-link to="/Restableciemiento">
-                        <span class="text-secondary text-weight-bold contrasenaayuda">ohhh!!! mi base de datos🗣️🔥💯</span>
-                    </router-link>
 
                     <q-card-section>
                     </q-card-section>
-                    <q-btn push color="secondary" label="Ingresar" class="float-right" @click="validarCampos" :loading="loading"/>
+                    <q-btn push color="warning" label="editar el perfil" class="text-capitalize q-mx-md" @click="editar()" :loading="loading"
+                    icon="edit"/>
+                    <router-link to="/Restableciemiento">
+                    <q-btn push color="primary" label="volver al menú" class="text-capitalize q-mx-md" :loading="loading"
+                    icon="home"/>
+                    </router-link>
                 </q-card-section>
-
-                        
-
             </q-card>
+
+            
         </div>
 </template>
     

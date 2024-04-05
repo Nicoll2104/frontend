@@ -181,7 +181,7 @@ let menu2_content = ref({
 }
 
 .avatarcont{
-    transition: padding ease 0.2s;
+    transition: padding ease 0.2s, transform ease 0.2s;
 }
 
 .rollname{
@@ -194,6 +194,7 @@ let menu2_content = ref({
 
 .avatarcont:hover{
     padding: 10px;
+    transform: translate(0% , 0%);
 }
 
 .avatarcont:hover .rollname{
