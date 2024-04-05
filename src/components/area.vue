@@ -10,8 +10,6 @@
         <q-card-section class="q-gutter-md">
           <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-          <q-input class="input1" outlined v-model="data.presupuesto" label="Presupuesto" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto']"></q-input>
           <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
             <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
@@ -75,10 +73,6 @@
         </template>
       </q-table>
     </div>
-
-    <router-link to="/Dis_presupuesto" class="ingresarcont">
-      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Distribucion de presupuesto</q-btn>
-    </router-link>
   </div>
 </template>
 
@@ -87,7 +81,7 @@ import { ref } from "vue";
 import { useAreaStore } from "../stores/area.js";
 import { useQuasar } from 'quasar'
 
-const modelo = "Areas";
+const modelo = "Areas tematica";
 const useArea = useAreaStore();
 const loadingTable = ref(true)
 const $q = useQuasar()
@@ -101,12 +95,6 @@ const columns = ref([
     align: "left",
     field: (row) => row.nombre,
 
-  },
-  {
-    name: "presupuesto",
-    label: "Presupuesto",
-    align: "left",
-    field: (row) => row.presupuesto,
   },
 
   {
@@ -125,7 +113,6 @@ const rows = ref([]);
 
 const data = ref({
   nombre: "",
-  presupuesto: "",
 });
 
 const obtenerInfo = async () => {
@@ -140,7 +127,8 @@ const obtenerInfo = async () => {
       notificar('negative', area.error)
       return
     }
-    rows.value = area.areas
+    rows.value = area
+
 
   } catch (error) {
     console.error(error);
@@ -160,7 +148,6 @@ const opciones = {
   agregar: () => {
     data.value = {
       nombre: "",
-      presupuesto: "",
     };
     modal.value = true;
     estado.value = "guardar";
@@ -187,7 +174,8 @@ const enviarInfo = {
         loadingmodal.value = false;
         return
       }
-      rows.value.unshift(response.areas);
+      console.log(response);
+      rows.value.unshift(response.A_tematica);
       notificar('positive', 'Guardado exitosamente')
       modal.value = false;
     } catch (error) {
@@ -208,7 +196,7 @@ const enviarInfo = {
         return
       }
       console.log(rows.value);
-      rows.value.splice(buscarIndexLocal(response.data.areas._id), 1, response.data.areas);
+      rows.value.splice(buscarIndexLocal(response.data.A_tematica._id), 1, response.data.A_tematica);
       notificar('positive', 'Editado exitosamente')
       modal.value = false;
     } catch (error) {
@@ -231,7 +219,7 @@ const in_activar = {
         notificar('negative', response.error)
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.areas._id), 1, response.data.areas);
+      rows.value.splice(buscarIndexLocal(response.data.A_tematica._id), 1, response.data.A_tematica);
       notificar('positive', 'Activado, exitosamente')
     } catch (error) {
       console.log(error);
@@ -251,7 +239,7 @@ const in_activar = {
 
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.areas._id), 1, response.data.areas);
+      rows.value.splice(buscarIndexLocal(response.data.A_tematica._id), 1, response.data.A_tematica);
       notificar('negative', 'Inactivado exitosamente')
     } catch (error) {
       console.log(error);
@@ -284,13 +272,6 @@ for (const d of arrData) {
     return
   }
 
-  if (d[0] === "presupuesto") {
-      const presupuesto = parseFloat(d[1]);
-      if (isNaN(presupuesto) || presupuesto <= 0) {
-        notificar('negative', "El presupuesto inicial debe ser mayor que cero");
-        return;
-      }
-    }
 }
 enviarInfo[estado.value]()
 }

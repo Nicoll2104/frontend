@@ -113,7 +113,7 @@ import { useFichaStore } from "../stores/ficha.js";
 import { useAreaStore } from "../stores/area";
 import { useQuasar } from 'quasar'
 
-const modelo = "Fichas";
+const modelo = "Destino (Fichas/Proyectos)";
 const useFicha = useFichaStore();
 const useArea = useAreaStore();
 const loadingTable = ref(true)

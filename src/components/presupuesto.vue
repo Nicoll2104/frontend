@@ -3,7 +3,7 @@ import { onMounted, ref } from "vue";
 import { usePresupStore } from "../stores/presupuesto.js";
 import { useQuasar } from 'quasar'
 
-const modelo = "Presupuesto";
+const modelo = "Dependencias";
 const usePresup = usePresupStore();
 const loadingTable = ref(true)
 const $q = useQuasar()
@@ -13,7 +13,7 @@ const loadingmodal = ref(false);
 const columns = ref([
   {
     name: "codigo_presupuesto",
-    label: "Codigo Presupuestal",
+    label: "Codigo",
     align: "left",
     field: (row) => row.codigo_presupuesto,
     sort: true,
@@ -55,7 +55,7 @@ const columns = ref([
 const rows = ref([]);
 
 const data = ref({
-  codigo_presupuesto: "",
+  codigo: "",
   nombre: "",
   presupuesto_inicial: "",
   año: "",
