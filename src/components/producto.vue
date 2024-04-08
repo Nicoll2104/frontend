@@ -21,13 +21,13 @@
           <q-input class="modalinputs" outlined v-model="data.unidad_medida" label="Unidad Medida" type="text"
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una unidad de medida']"></q-input>
 
-          <q-input class="modalinputs" outlined v-model="data.precio_unitario" label="Precio Unitario" type="text"
+          <q-input class="modalinputs" outlined v-model="data.precio_unitario" label="Precio Unitario" type="number"
             maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el precio unitario']"></q-input>
 
-          <q-input class="modalinputs" outlined v-model="data.iva" label="Impuestos" type="text" maxlength="15"
+          <q-input class="modalinputs" outlined v-model="data.iva" label="Impuestos" type="number" maxlength="15"
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese un impuesto']"></q-input>
           
-          <q-input class="modalinputs" outlined v-model="data.cantidad" label="Cantidad" type="text" maxlength="15"
+          <q-input class="modalinputs" outlined v-model="data.cantidad" label="Cantidad" type="number" maxlength="15"
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
 
           <q-select filled v-model="data.lote" :options="seletLote" label="Seleccione el lote"
@@ -160,11 +160,12 @@ const columns = ref([
     field: (row) => row.cantidad,
   },
   {
-    name: "lote_id",
-    label: "Lote",
-    align: "left",
-    field: (row) => row.lote_id,
-  },
+  name: "lote",
+  label: "Lote",
+  align: "left",
+  field: (row) => row.lote,
+},
+
   {
     name: "status",
     label: "Estado",
@@ -194,18 +195,28 @@ let seletLote = ref([]);
 
 const obtenerLote = async () => {
   try {
-    const lote = await loteStore.obtenerInfoLotes();
-    const loteAct = lote.filter(lotes => lotes.status === "1")
-    console.log("Lotes activo", loteAct);
-    seletLote.value = loteAct.map((items) => ({
-      label: `${items.codigo_lote}`,
-      value: String(items._id)
+    const lotes = await loteStore.obtenerInfoLotes();
+    console.log("Todos los lotes:", lotes);
+    
+    seletLote.value = lotes.map((lote) => ({
+      label: `${lote.codigo}`,
+      value: String(lote._id)
     }));
-    sortBy(seletLote.value, 'label');
+
+    seletLote.value.sort((a, b) => {
+      if (a.label < b.label) {
+        return -1;
+      }
+      if (a.label > b.label) {
+        return 1;
+      }
+      return 0;
+    });
   } catch (error) {
     console.error(error);
   }
 }
+
 
 obtenerLote();
 
@@ -426,6 +437,7 @@ function notificar(tipo, msg) {
   })
 }
 </script>
+
 
 <style scoped>
 /* 
