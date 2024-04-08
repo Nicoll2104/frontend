@@ -12,12 +12,26 @@ const modal = ref(false);
 let loading = ref(false)  
 
 const data = ref({
+  nombre: "",
+  cedula: "",
   correo: "",
+  telefono: "",
   contrasena: "",
+  rol: "",
 });
 
-const usuario = UsuarioStore.sesion.usuarios
-console.log(usuario)
+
+const usuario = ref(UsuarioStore.sesion.usuarios || {usuarios:{
+    "id":'',
+    "nombre":'',
+    "cedula":'',
+    "correo":'',
+    "telefono":'',
+    "contrasena":'',
+    "rol":''
+  }})
+
+console.log(usuario.value)
 
   
 function editar() {
@@ -84,33 +98,27 @@ async function validarIngreso() {
         <q-dialog v-model="modal">
       <q-card class="modal">
         <q-toolbar>
-          <q-toolbar-title>Agregar {{ modelo }}</q-toolbar-title>
+          <q-toolbar-title> editar perfil</q-toolbar-title>
           <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
         </q-toolbar>
 
         <q-card-section class="q-gutter-md">
-          <q-input class="input1" outlined v-model="data.codigo_presupuestal" label="Codigo presupuestal" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo presupuestal']"></q-input>
           <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-          <q-input class="input1" outlined v-model="data.presupuesto_inicial" label="Presupuesto inicial" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
-          <q-input class="input1" outlined v-model="data.año" label="Año" type="number" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
-          <q-input class="input1" outlined v-model="data.modificaciones" label="Modificaciones" type="text" maxlength="15"
-            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese las modificaciones']"></q-input>
-          <q-input class="input1" outlined v-model="data.presupuesto_definitivo" label="Presupuesto definitivo"
-            type="number" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el presupuesto definitivo']"></q-input>
-          <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
-            <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
-            :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
-              <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
-            </q-btn>
-            <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white" v-close-popup>
-              <q-icon name="cancel" color="white" right />
-            </q-btn>
-          </q-card-section>
+          <q-input class="input1" outlined v-model="data.cedula" label="Cedula" type="number" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese la cedula']"></q-input>
+          <q-input class="input1" outlined v-model="data.correo" label="Correo" type="text" maxlength="30" lazy-rules
+            :rules="[val => val.trim() != '' || 'Ingrese el correo']"></q-input>
+          <q-input class="input1" outlined v-model="data.telefono" label="Telefono" type="number" maxlength="15"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el telefono']"></q-input>
+          <q-input class="input1" outlined v-model="data.contrasena" label="Contraseña" type="text" maxlength="15"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la contraseña']"></q-input>
+          <q-input class="input1" outlined v-model="data.rol" label="rol" type="text" maxlength="15"
+            lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la rol']"></q-input>
+          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
+            :color="estado == 'editar' ? 'warning' : 'secondary'" label="actualizar perfil">
+            <q-icon name="edit" color="white" right />
+          </q-btn>
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -122,19 +130,17 @@ async function validarIngreso() {
             <q-card class="my-card q-ma-lg q-px-md q-py-lg" >
                 <q-card-section class="q-py-none">
                     <p class="text-h3 text-primary text-bold">Perfil</p>
-                    <q-div class="subtittle text-primary"> when haces tus momazos mientras pregramas tu pajina wep</q-div>
+                    <q-div class="subtittle text-primary"></q-div>
                 </q-card-section>
                 <q-card-section>
-                    <q-input v-model="data.correo" label="but"
-                    class="q-mb-lg input"/>
-                    <q-input  v-model="data.contrasena" label="te terminan hakeando" type="" 
-                    class=" input"/>
+                  <p class="subtittle q-my-md text-primary text-left"> Nombre: {{ usuario.nombre }}</p>
+                  <p class="subtittle q-my-md text-primary text-left"> Correo: {{ usuario.correo }}</p>
+                  <p class="subtittle q-my-md text-primary text-left"> Rol: {{ usuario.rol }}</p>
+                  <p class="subtittle q-my-md text-primary text-left"> Telefono: {{ usuario.telefono }}</p>
+                  <p class="subtittle q-my-md text-primary text-left"> Estado: {{ usuario.status == 1 ? 'Activo' : 'Inactivo' }}</p>
                 </q-card-section>
 
                 <q-card-section>
-
-                    <q-card-section>
-                    </q-card-section>
                     <q-btn push color="warning" label="editar el perfil" class="text-capitalize q-mx-md" @click="editar()" :loading="loading"
                     icon="edit"/>
                     <router-link to="/Restableciemiento">
@@ -162,9 +168,7 @@ async function validarIngreso() {
     padding: 0;
 }
 
-.my-card{
-    transform: translate(0px, -50px);
-}
+
 
 
 
