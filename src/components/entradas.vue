@@ -88,11 +88,11 @@
   </template>
 <script setup>
 import { onMounted, ref } from "vue";
-import { usePresupStore } from "../stores/presupuesto.js";
+/* import { usePresupStore } from "../stores/presupuesto.js"; */
 import { useQuasar } from 'quasar'
 
 const modelo = "Entradas";
-const usePresup = usePresupStore();
+/* const usePresup = usePresupStore(); */
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");

@@ -87,12 +87,12 @@ import { onMounted, ref } from "vue";
 import { usedisPresupuesStore } from "../stores/dis_presupuesto.js";
 import { useQuasar } from 'quasar'
 import { useLoteStore } from "../stores/lotes.js";
-import { usePresupStore } from "../stores/presupuesto.js"
+import { useDependStore } from "../stores/dependencia.js"
 
 const modelo = "Presupuesto por lotes";
 const useDisPresupuesto = usedisPresupuesStore();
 const useLote = useLoteStore();
-const usePresupes = usePresupStore();
+const usePresupes = useDependStore();
 const loadingTable = ref(true);
 const $q = useQuasar();
 const filter = ref("");
