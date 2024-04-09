@@ -11,18 +11,11 @@ const router = useRouter()
 const modal = ref(false);
 let loading = ref(false)  
 
-const data = ref({
-  nombre: "",
-  cedula: "",
-  correo: "",
-  telefono: "",
-  contrasena: "",
-  rol: "",
-});
+
 
 
 const usuario = ref(UsuarioStore.sesion.usuarios || {usuarios:{
-    "id":'',
+    "_id":'',
     "nombre":'',
     "cedula":'',
     "correo":'',
@@ -30,6 +23,8 @@ const usuario = ref(UsuarioStore.sesion.usuarios || {usuarios:{
     "contrasena":'',
     "rol":''
   }})
+
+const data = ref(UsuarioStore.sesion.usuarios);
 
 console.log(usuario.value)
 
@@ -60,7 +55,7 @@ async function validarIngreso() {
   try {
     console.log("Esperando confirmación...");
     loading.value = true;
-    const response = await UsuarioStore.login(data.value);
+    const response = await useUsuario.putUsuario(usuario._id, data.value);
     console.log(response);
   
     if(!response) return
@@ -76,6 +71,7 @@ async function validarIngreso() {
     
   }finally{
     loading.value = false
+    UsuarioStore.sesion.usuarios = data
   }
 }
 
@@ -93,7 +89,7 @@ async function validarIngreso() {
 
 
 <template>
-    <div class="cont bg-dark flex flex-center ">
+    <div class="cont flex flex-center fullscreen">
 
         <q-dialog v-model="modal">
       <q-card class="modal">
@@ -115,7 +111,7 @@ async function validarIngreso() {
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la contraseña']"></q-input>
           <q-input class="input1" outlined v-model="data.rol" label="rol" type="text" maxlength="15"
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la rol']"></q-input>
-          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
+          <q-btn @click="validarCampos" :loading="loading" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" label="actualizar perfil">
             <q-icon name="edit" color="white" right />
           </q-btn>
@@ -127,7 +123,10 @@ async function validarIngreso() {
             <img class="olaazul" src="../assets/olaazul.svg">
             <img class="olaverde" src="../assets/olaverde.svg">
         </div>
-            <q-card class="my-card q-ma-lg q-px-md q-py-lg" >
+
+
+        
+            <q-card class="my-card q-ma-md q-px-md q-py-lg " >
                 <q-card-section class="q-py-none">
                     <p class="text-h3 text-primary text-bold">Perfil</p>
                     <q-div class="subtittle text-primary"></q-div>
@@ -143,7 +142,7 @@ async function validarIngreso() {
                 <q-card-section>
                     <q-btn push color="warning" label="editar el perfil" class="text-capitalize q-mx-md" @click="editar()" :loading="loading"
                     icon="edit"/>
-                    <router-link to="/Restableciemiento">
+                    <router-link to="/inicio">
                     <q-btn push color="primary" label="volver al menú" class="text-capitalize q-mx-md" :loading="loading"
                     icon="home"/>
                     </router-link>
@@ -162,22 +161,17 @@ async function validarIngreso() {
 <style lang="scss" scoped>
 @use '../quasar-variables.scss' as *;
 
-
-* {
-    margin: 0;
-    padding: 0;
+.cont {
+  z-index: 1;
 }
 
 
-
-
-
 .olascont {
+    display: hidden;
     flex: 1;
 }
 .olascont {
     user-select: none;
-    z-index: -1;
     Overflow: hidden;
     position: fixed;
     height: 100vh;
