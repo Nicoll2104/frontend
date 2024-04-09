@@ -88,11 +88,11 @@
   </template>
 <script setup>
 import { onMounted, ref } from "vue";
-/* import { useSalidaStore } from "../stores/salida.js"; */
+import { useSalidaStore } from "../stores/salidas.js";
 import { useQuasar } from 'quasar'
 
 const modelo = "Salidas";
-/* const useSalida = useSalidaStore(); */
+const useSalida = useSalidaStore(); 
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
@@ -100,32 +100,32 @@ const loadingmodal = ref(false);
 
 const columns = ref([
   {
-    name: "Item",
-    label: "Item",
+    name: "fecha_entrega",
+    label: "Fecha entrega",
     align: "left",
-    field: (row) => row.item,
+    field: (row) => row.fecha_entrega,
     sort: true,
     sortOrder: "da",
   },
   {
-    name: "producto",
-    label: "Producto",
+    name: "entregado",
+    label: "Entregado",
     align: "left",
     field: (row) => row.producto,
 
   },
   {
 
-  name: "cantidad",
-  label: "Cantidad",
+  name: "idUsuario",
+  label: "Usuario",
   align: "left",
-  field: (row) => row.cantidad.toLocaleString(),
+  field: (row) => row.idUsuario,
 },
 {
-    name: "Valor Unitario",
-    label: "Valor Unitario",
+    name: "idPedido",
+    label: "Pedido",
     align: "left",
-    field: (row) => row.vr_unitario.toLocaleString(),
+    field: (row) => row.idPedido,
 },
 {
     name: "Subtotal",
