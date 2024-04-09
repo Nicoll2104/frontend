@@ -87,7 +87,7 @@ let menu2_content = ref({
 
 <template>
     <div>
-        <q-layout view="hHh lpR fFf">
+        <q-layout view="hHh lpR fFf" >
             <q-header elevated class="bg-primary text-white">
                 <q-toolbar>
                     <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
@@ -164,7 +164,7 @@ let menu2_content = ref({
                 </div>
             </q-drawer>
 
-            <q-page-container>
+            <q-page-container class="bg-grey">
                 <router-view />
             </q-page-container>
 

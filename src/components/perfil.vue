@@ -11,14 +11,7 @@ const router = useRouter()
 const modal = ref(false);
 let loading = ref(false)  
 
-const data = ref({
-  nombre: "",
-  cedula: "",
-  correo: "",
-  telefono: "",
-  contrasena: "",
-  rol: "",
-});
+const data = ref(UsuarioStore.sesion.usuarios);
 
 
 const usuario = ref(UsuarioStore.sesion.usuarios || {usuarios:{
@@ -93,7 +86,7 @@ async function validarIngreso() {
 
 
 <template>
-    <div class="cont bg-dark flex flex-center ">
+    <div class="cont flex flex-center fullscreen">
 
         <q-dialog v-model="modal">
       <q-card class="modal">
@@ -127,7 +120,10 @@ async function validarIngreso() {
             <img class="olaazul" src="../assets/olaazul.svg">
             <img class="olaverde" src="../assets/olaverde.svg">
         </div>
-            <q-card class="my-card q-ma-lg q-px-md q-py-lg" >
+
+
+        
+            <q-card class="my-card q-ma-md q-px-md q-py-lg " >
                 <q-card-section class="q-py-none">
                     <p class="text-h3 text-primary text-bold">Perfil</p>
                     <q-div class="subtittle text-primary"></q-div>
@@ -163,21 +159,12 @@ async function validarIngreso() {
 @use '../quasar-variables.scss' as *;
 
 
-* {
-    margin: 0;
-    padding: 0;
-}
-
-
-
-
-
 .olascont {
     flex: 1;
 }
 .olascont {
     user-select: none;
-    z-index: -1;
+
     Overflow: hidden;
     position: fixed;
     height: 100vh;
