@@ -1,10 +1,10 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import { usePresupStore } from "../stores/presupuesto.js";
+import { useDependStore } from "../stores/dependencia.js";
 import { useQuasar } from 'quasar'
 
 const modelo = "Dependencias";
-const usePresup = usePresupStore();
+const usePresup = useDependStore();
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
@@ -12,10 +12,10 @@ const loadingmodal = ref(false);
 
 const columns = ref([
   {
-    name: "codigo_presupuesto",
+    name: "codigo",
     label: "Codigo",
     align: "left",
-    field: (row) => row.codigo_presupuesto,
+    field: (row) => row.codigo,
     sort: true,
     sortOrder: "da",
   },
@@ -25,20 +25,6 @@ const columns = ref([
     align: "left",
     field: (row) => row.nombre,
 
-  },
-  {
-
-  name: "presupuesto_inicial",
-  label: "Valor",
-  align: "left",
-  field: (row) => row.presupuesto_inicial.toLocaleString(),
-},
-
-  {
-    name: "año",
-    label: "Año",
-    align: "left",
-    field: (row) => row.año,
   },
   {
     name: "status",
@@ -57,25 +43,23 @@ const rows = ref([]);
 const data = ref({
   codigo: "",
   nombre: "",
-  presupuesto_inicial: "",
-  año: "",
 });
 
 const obtenerInfo = async () => {
   try {
-    const presupuestos = await usePresup.obtenerInfoPresup();
+    const dependencias = await usePresup.obtenerInfoDepend();
     console.log("usePresup")
     console.log(usePresup)
     console.log("dentro")
-    console.log(presupuestos);
+    console.log(dependencias);
 
-    if (!presupuestos) return
+    if (!dependencias) return
 
-    if (presupuestos.error) {
-      notificar('negative', presupuestos.error)
+    if (dependencias.error) {
+      notificar('negative', dependencias.error)
       return
     }
-    rows.value = presupuestos
+    rows.value = dependencias
 
   } catch (error) {
     console.error(error);
@@ -96,10 +80,8 @@ const modal = ref(false);
 const opciones = {
   agregar: () => {
     data.value = {
-      codigo_presupuesto: "",
+      codigo: "",
       nombre: "",
-      presupuesto_inicial: "",
-      año: "",
     };
     modal.value = true;
     estado.value = "guardar";
@@ -119,7 +101,7 @@ const enviarInfo = {
   guardar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await usePresup.postItem(data.value);
+      const response = await usePresup.postDepend(data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -219,7 +201,7 @@ function validarCampos() {
       }
     }
 
-    if (d[0] === "codigo_presupuesto" && d[1].toString().length < 6) {
+    if (d[0] === "codigo" && d[1].toString().length < 6) {
       notificar('negative', "El codigo debe tener más de 6 digitos")
       return
     }
@@ -229,18 +211,6 @@ function validarCampos() {
       return
     }
 
-    if (d[0] === "presupuesto_inicial") {
-      const presupuesto = parseFloat(d[1]);
-      if (isNaN(presupuesto) || presupuesto <= 0) {
-        notificar('negative', "El presupuesto inicial debe ser mayor que cero");
-        return;
-      }
-    }
-
-    if (d[0] === "año" && d[1].length !== 4) {
-      notificar('negative', 'El año tiene que tener 4 caracteres')
-      return
-    }
   }
   enviarInfo[estado.value]()
 }
@@ -264,14 +234,10 @@ function notificar(tipo, msg) {
         </q-toolbar>
 
         <q-card-section class="q-gutter-md">
-          <q-input class="input1" outlined v-model="data.codigo_presupuesto" label="Codigo presupuesto" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo de presupuesto']"></q-input>
+          <q-input class="input1" outlined v-model="data.codigo" label="Codigo" type="number"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese un codigo']"></q-input>
           <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-          <q-input class="input1" outlined v-model="data.presupuesto_inicial" label="Presupuesto inicial" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
-          <q-input class="input1" outlined v-model="data.año" label="Año" type="number" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
           <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
             <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
               :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
@@ -398,4 +364,4 @@ warning: Color para advertencias o mensajes importantes.
   font-size: 10px;
   font-weight: bold;
 }
-</style>
+</style>../stores/dependencia.js

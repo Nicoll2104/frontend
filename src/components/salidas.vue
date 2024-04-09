@@ -8,14 +8,14 @@
           </q-toolbar>
   
           <q-card-section class="q-gutter-md">
-            <q-input class="input1" outlined v-model="data.codigo_presupuesto" label="Codigo presupuesto" type="number"
-              maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo de presupuesto']"></q-input>
-            <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
-              :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-            <q-input class="input1" outlined v-model="data.presupuesto_inicial" label="Presupuesto inicial" type="number"
-              maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
-            <q-input class="input1" outlined v-model="data.año" label="Año" type="number" maxlength="15" lazy-rules
-              :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
+            <q-input class="input1" outlined v-model="data.fecha_entrega" label="Fecha entrega" type="date"
+              maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese la fecha de entrega']"></q-input>
+            <q-input class="input1" outlined v-model="data.entregado" label="Entregado" type="boolean" maxlength="15" lazy-rules
+              :rules="[val => val.trim() != '' || 'Ingrese un su estado']"></q-input>
+            <q-input class="input1" outlined v-model="data.idUsuario" label="Usuario" type="number"
+              maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el usuario']"></q-input>
+            <q-input class="input1" outlined v-model="data.idPedido" label="Pedido" type="number" maxlength="15" lazy-rules
+              :rules="[val => val.trim() != '' || 'Ingrese el pedido']"></q-input>
             <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
               <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
                 :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
@@ -88,11 +88,11 @@
   </template>
 <script setup>
 import { onMounted, ref } from "vue";
-import { usePresupStore } from "../stores/presupuesto.js";
+/* import { useSalidaStore } from "../stores/salida.js"; */
 import { useQuasar } from 'quasar'
 
-const modelo = "Entradas";
-const usePresup = usePresupStore();
+const modelo = "Salidas";
+/* const useSalida = useSalidaStore(); */
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
