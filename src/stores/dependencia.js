@@ -61,12 +61,12 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { ref } from 'vue';
 
-export const useDependStore = defineStore('items', () => {
+export const useDependStore = defineStore('dependencia', () => {
     const dependencias = ref([]);
 
     const obtenerInfoDepend = async () => {
         try {
-            let responseDepend = await axios.get('items/ver');
+            let responseDepend = await axios.get('dependencia/ver');
             console.log (responseDepend);
             // lotes.value = responseLotes.data; 
             return responseDepend.data
@@ -79,7 +79,7 @@ export const useDependStore = defineStore('items', () => {
     const postDepend = async (data) =>{
         try {
             console.log('a');
-            let res = await axios.post("Depend/agregar", data);
+            let res = await axios.post("dependencia/agregar", data);
             console.log('a', res);
             return res.data.items
         } catch (error) {
@@ -89,7 +89,7 @@ export const useDependStore = defineStore('items', () => {
 
     const putDepend = async (id, data) => {
         try {
-            let res = await axios.put(`Depend/modificar/${id}`, data);
+            let res = await axios.put(`dependencia/modificar/${id}`, data);
             return res
         } catch (error) {
             throw error;
@@ -98,7 +98,7 @@ export const useDependStore = defineStore('items', () => {
 
     const putInactivar = async (id)=>{
         try {
-            let r = await axios.put(`items/inactivar/${id}`)
+            let r = await axios.put(`dependencia/inactivar/${id}`)
             return r
         } catch (error) {
             console.log(error, "Error al cambiar el estado del presupuesto");
@@ -106,7 +106,7 @@ export const useDependStore = defineStore('items', () => {
     }
     const  putActivar = async (id)=>{
         try {
-            let r = await axios.put(`items/activar/${id}`)
+            let r = await axios.put(`dependencia/activar/${id}`)
             return r
         } catch (error) {
             console.log(error, "Error al cambiar el estado del presupuesto");

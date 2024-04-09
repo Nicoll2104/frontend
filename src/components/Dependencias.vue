@@ -122,7 +122,7 @@ const enviarInfo = {
   editar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await usePresup.putItem(data.value._id, data.value);
+      const response = await usePresup.putDepend(data.value._id, data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -131,7 +131,7 @@ const enviarInfo = {
         return
       }
       console.log(rows.value);
-      rows.value.splice(buscarIndexLocal(response.data.items._id), 1, response.data.items);
+      rows.value.splice(buscarIndexLocal(response.data.dependencia._id), 1, response.data.dependencia);
       notificar('positive', 'Editado exitosamente')
       modal.value = false;
     } catch (error) {
