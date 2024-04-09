@@ -164,7 +164,7 @@ let menu2_content = ref({
                 </div>
             </q-drawer>
 
-            <q-page-container class="bg-grey">
+            <q-page-container class="bg-grey-1 absolute-full ">
                 <router-view />
             </q-page-container>
 
