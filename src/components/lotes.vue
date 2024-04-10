@@ -306,10 +306,10 @@ function validarCampos() {
       return
     }
 
-    if (d[0] === "año" && d[1].length !== 4) {
-      notificar('negative', 'El año tiene que tener 4 caracteres')
-      return
-    }
+    //if (d[0] === "año" && d[1].length !== 4) {
+      //notificar('negative', 'El año tiene que tener 4 caracteres')
+      //return
+    //}
 
    /*  if (d[0] === "email" && !d[1].includes('@')) {
       notificar('negative', 'Email no válido')

@@ -22,7 +22,7 @@ export const useLoteStore = defineStore('lote', () => {
             console.log('a');
             let res = await axios.post("lote/agregar", data);
             console.log('a', res);
-            return res.data.lotes
+            return res.data.lote
         } catch (error) {
             throw error
         }
