@@ -164,6 +164,10 @@
               <q-icon name="search" />
             </template>
           </q-input>
+          <router-link to="/entradas" class="ingresarcont">
+            <q-btn color="warning" icon-right="add_circle_outline">Entradas</q-btn>
+          </router-link>
+
         </template>
 
         <template v-slot:header="props">
