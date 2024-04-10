@@ -22,8 +22,9 @@ export const useEntradaStore = defineStore('entrada', () => {
             console.log('a');
             let res = await axios.post("entrada/agregar", data);
             console.log('a', res);
-            return res.data.entrada
+            return res.data.entrd
         } catch (error) {
+            console.log(error);
             throw error
         }
     }
