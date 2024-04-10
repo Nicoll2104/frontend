@@ -127,24 +127,6 @@ const columns = ref([
     align: "left",
     field: (row) => row.idPedido,
 },
-{
-    name: "Subtotal",
-    label: "Subtotal",
-    align: "left",
-    field: (row) => row.subtotal.toLocaleString(),
-},
-{
-    name: "Impuestos",
-    label: "Impuestos",
-    align: "left",
-    field: (row) => row.impuestos.toLocaleString(),
-},
-{
-    name: "Total",
-    label: "Total",
-    align: "left",
-    field: (row) => row.total.toLocaleString(),
-},
   {
     name: "opciones",
     label: "Opciones",
@@ -154,27 +136,27 @@ const columns = ref([
 const rows = ref([]);
 
 const data = ref({
-  codigo_presupuesto: "",
-  nombre: "",
-  presupuesto_inicial: "",
-  año: "",
+  fecha_entrega: "",
+  producto: "",
+  idUsuario: "",
+  idPedido: "",
 });
 
 const obtenerInfo = async () => {
   try {
-    const presupuestos = await usePresup.obtenerInfoPresup();
-    console.log("usePresup")
-    console.log(usePresup)
+    const salidas = await useSalida.obtenerInfoSalidas();
+    console.log("useSalida")
+    console.log(useSalida)
     console.log("dentro")
-    console.log(presupuestos);
+    console.log(salidas);
 
-    if (!presupuestos) return
+    if (!salidas) return
 
-    if (presupuestos.error) {
-      notificar('negative', presupuestos.error)
+    if (salidas.error) {
+      notificar('negative', salidas.error)
       return
     }
-    rows.value = presupuestos
+    rows.value = salidas
 
   } catch (error) {
     console.error(error);
@@ -195,10 +177,10 @@ const modal = ref(false);
 const opciones = {
   agregar: () => {
     data.value = {
-      codigo_presupuesto: "",
-      nombre: "",
-      presupuesto_inicial: "",
-      año: "",
+      fecha_entrega: "",
+  producto: "",
+  idUsuario: "",
+  idPedido: "",
     };
     modal.value = true;
     estado.value = "guardar";
@@ -218,7 +200,7 @@ const enviarInfo = {
   guardar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await usePresup.postItem(data.value);
+      const response = await useSalida.postsalida(data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -239,7 +221,7 @@ const enviarInfo = {
   editar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await usePresup.putItem(data.value._id, data.value);
+      const response = await useSalida.putsalida(data.value._id, data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -248,7 +230,7 @@ const enviarInfo = {
         return
       }
       console.log(rows.value);
-      rows.value.splice(buscarIndexLocal(response.data.items._id), 1, response.data.items);
+      rows.value.splice(buscarIndexLocal(response.data.salida._id), 1, response.data.salida);
       notificar('positive', 'Editado exitosamente')
       modal.value = false;
     } catch (error) {
