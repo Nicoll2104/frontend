@@ -19,7 +19,7 @@
             filled
             v-model="data.idProducto"
             :options="seletProducto"
-            label="Seleccione el lote"
+            label="Seleccione el producto"
             class="q-mx-auto"
             style="width: 300px"
           />
@@ -180,6 +180,7 @@ obtenerProducto();
 
 const obtenerInfo = async () => {
   try {
+    await Promise.all([obtenerProducto()]);
     const entradas = await useEntradas.obtenerInfoEntradas();
     console.log("useEntradas")
     console.log(useEntradas)
@@ -221,7 +222,10 @@ const opciones = {
     estado.value = "guardar";
   },
   editar: (info) => {
-    data.value = { ...info }
+    data.value = {
+      ...info,
+      idProducto: { label: info.idProducto.nombre, value: info.idProducto._id },
+    };
     modal.value = true;
     estado.value = "editar";
   },
@@ -235,6 +239,7 @@ const enviarInfo = {
   guardar: async () => {
     loadingmodal.value = true;
     try {
+      const info = { ...data.value, idProducto: data.value.idProducto.value };
       const response = await useEntradas.postEntrada(data.value);
       console.log(response);
       if (!response) return
@@ -256,17 +261,25 @@ const enviarInfo = {
   editar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await useEntradas.putEntrada(data.value._id, data.value);
+      const info = { ...data.value, idProducto: data.value.idProducto.value };
+      const response = await useEntradas.putEntrada(
+      data.value._id,
+        info
+      );
       console.log(response);
-      if (!response) return
+      if (!response) return;
       if (response.error) {
-        notificar('negative', response.error)
+        notificar("negative", response.error);
         loadingmodal.value = false;
-        return
+        return;
       }
       console.log(rows.value);
-      rows.value.splice(buscarIndexLocal(response.data.entrada._id), 1, response.data.entrada);
-      notificar('positive', 'Editado exitosamente')
+      rows.value.splice(
+        buscarIndexLocal(response.data.productos._id),
+        1,
+        response.data.productos
+      );
+      notificar("positive", "Editado exitosamente");
       modal.value = false;
     } catch (error) {
       console.log(error);
@@ -274,6 +287,13 @@ const enviarInfo = {
       loadingmodal.value = false;
     }
   },
+};
+const validateproducto = (value) => {
+  if (!value) {
+    return "Seleccione un producto";
+  }
+
+  return true;
 };
 
 const in_activar = {
@@ -319,7 +339,7 @@ const in_activar = {
 };
 
 function validarCampos() {
-  const loteValidation = validatelote(data.value.lote);
+  const productoValidation = validateproducto(data.value.idProducto);
   const arrData = Object.entries(data.value);
   console.log(arrData);
   for (const d of arrData) {
