@@ -8,14 +8,12 @@
           </q-toolbar>
   
           <q-card-section class="q-gutter-md">
-            <q-input class="input1" outlined v-model="data.codigo_presupuesto" label="Codigo presupuesto" type="number"
-              maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo de presupuesto']"></q-input>
-            <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
-              :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-            <q-input class="input1" outlined v-model="data.presupuesto_inicial" label="Presupuesto inicial" type="number"
-              maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto inicial']"></q-input>
-            <q-input class="input1" outlined v-model="data.año" label="Año" type="number" maxlength="15" lazy-rules
-              :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
+            <q-input class="input1" outlined v-model="data.cantidad" label="Cantidad" type="number"
+              maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo la cantidad']"></q-input>
+            <q-input class="input1" outlined v-model="data.total" label="Total" type="number" maxlength="15" lazy-rules
+              :rules="[val => val.trim() != '' || 'Ingrese un total']"></q-input>
+            <q-input class="input1" outlined v-model="data.idProducto" label="Producto" type="text"
+              maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el producto']"></q-input>
             <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
               <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
                 :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
@@ -88,11 +86,11 @@
   </template>
 <script setup>
 import { onMounted, ref } from "vue";
-/* import { usePresupStore } from "../stores/presupuesto.js"; */
+import { useEntradaStore } from "../stores/entradas.js"; 
 import { useQuasar } from 'quasar'
 
 const modelo = "Entradas";
-/* const usePresup = usePresupStore(); */
+const useEntradas = useEntradaStore(); 
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
@@ -100,50 +98,26 @@ const loadingmodal = ref(false);
 
 const columns = ref([
   {
-    name: "Item",
-    label: "Item",
+    name: "cantidad",
+    label: "Cantidad",
     align: "left",
-    field: (row) => row.item,
+    field: (row) => row.cantidad,
     sort: true,
     sortOrder: "da",
   },
   {
-    name: "producto",
-    label: "Producto",
+    name: "total",
+    label: "Total",
     align: "left",
-    field: (row) => row.producto,
+    field: (row) => row.total,
 
   },
   {
 
-  name: "cantidad",
-  label: "Cantidad",
+  name: "idProducto",
+  label: "Producto",
   align: "left",
-  field: (row) => row.cantidad.toLocaleString(),
-},
-{
-    name: "Valor Unitario",
-    label: "Valor Unitario",
-    align: "left",
-    field: (row) => row.vr_unitario.toLocaleString(),
-},
-{
-    name: "Subtotal",
-    label: "Subtotal",
-    align: "left",
-    field: (row) => row.subtotal.toLocaleString(),
-},
-{
-    name: "Impuestos",
-    label: "Impuestos",
-    align: "left",
-    field: (row) => row.impuestos.toLocaleString(),
-},
-{
-    name: "Total",
-    label: "Total",
-    align: "left",
-    field: (row) => row.total.toLocaleString(),
+  field: (row) => row.idProducto,
 },
   {
     name: "opciones",
@@ -154,27 +128,26 @@ const columns = ref([
 const rows = ref([]);
 
 const data = ref({
-  codigo_presupuesto: "",
-  nombre: "",
-  presupuesto_inicial: "",
-  año: "",
+  cantidad: "",
+  total: "",
+  idProducto: "",
 });
 
 const obtenerInfo = async () => {
   try {
-    const presupuestos = await usePresup.obtenerInfoPresup();
-    console.log("usePresup")
-    console.log(usePresup)
+    const entradas = await useEntradas.obtenerInfoEntradas();
+    console.log("useEntradas")
+    console.log(useEntradas)
     console.log("dentro")
-    console.log(presupuestos);
+    console.log(entradas);
 
-    if (!presupuestos) return
+    if (!entradas) return
 
-    if (presupuestos.error) {
-      notificar('negative', presupuestos.error)
+    if (entradas.error) {
+      notificar('negative', entradas.error)
       return
     }
-    rows.value = presupuestos
+    rows.value = entradas
 
   } catch (error) {
     console.error(error);
@@ -195,10 +168,9 @@ const modal = ref(false);
 const opciones = {
   agregar: () => {
     data.value = {
-      codigo_presupuesto: "",
-      nombre: "",
-      presupuesto_inicial: "",
-      año: "",
+      cantidad: "",
+      total: "",
+      idProducto: "",
     };
     modal.value = true;
     estado.value = "guardar";
@@ -218,7 +190,7 @@ const enviarInfo = {
   guardar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await usePresup.postItem(data.value);
+      const response = await useEntradas.postEntrada(data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -239,7 +211,7 @@ const enviarInfo = {
   editar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await usePresup.putItem(data.value._id, data.value);
+      const response = await useEntradas.putEntrada(data.value._id, data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -248,7 +220,7 @@ const enviarInfo = {
         return
       }
       console.log(rows.value);
-      rows.value.splice(buscarIndexLocal(response.data.items._id), 1, response.data.items);
+      rows.value.splice(buscarIndexLocal(response.data.entrada._id), 1, response.data.entrada);
       notificar('positive', 'Editado exitosamente')
       modal.value = false;
     } catch (error) {
@@ -262,7 +234,7 @@ const enviarInfo = {
 const in_activar = {
   putActivar: async (id) => {
     try {
-      const response = await usePresup.putActivar(id);
+      const response = await useEntradas.putActivar(id);
       console.log(response);
       console.log("Activando");
       if (!response) return
@@ -270,7 +242,7 @@ const in_activar = {
         notificar('negative', response.error)
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.items._id), 1, response.data.items);
+      rows.value.splice(buscarIndexLocal(response.data.entrada._id), 1, response.data.entrada);
       notificar('positive', 'Activado, exitosamente')
     } catch (error) {
       console.log(error);
@@ -282,7 +254,7 @@ const in_activar = {
   putInactivar: async (id) => {
     console.log("inactivar");
     try {
-      const response = await usePresup.putInactivar(id);
+      const response = await useEntradas.putInactivar(id);
       console.log("Desactivar");
       console.log(response);
       if (!response) return
@@ -291,7 +263,7 @@ const in_activar = {
 
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.items._id), 1, response.data.items);
+      rows.value.splice(buscarIndexLocal(response.data.entrada._id), 1, response.data.entrada);
     } catch (error) {
       console.log(error);
     } finally {

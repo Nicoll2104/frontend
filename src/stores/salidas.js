@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ref } from 'vue';
 
 export const useSalidaStore = defineStore('salida', () => {
-    const area = ref([]);
+    const salidas = ref([]);
 
     const obtenerInfoSalidas = async () => {
         try {
@@ -37,7 +37,7 @@ export const useSalidaStore = defineStore('salida', () => {
             let res = await axios.put(`salida/inactivar/${id}`);
             return res;
         } catch (error) {
-            console.log(error, "Error al cambiar el estado de la área");
+            console.log(error, "Error al cambiar el estado de la salida");
         }
     };
 
@@ -46,12 +46,12 @@ export const useSalidaStore = defineStore('salida', () => {
             let res = await axios.put(`salida/activar/${id}`);
             return res;
         } catch (error) {
-            console.log(error, "Error al cambiar el estado de la área");
+            console.log(error, "Error al cambiar el estado de la salida");
         }
     };
 
     return {
-        area,
+        salidas,
         obtenerInfoSalidas,
         postsalida,
         putsalida,
