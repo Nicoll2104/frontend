@@ -240,7 +240,7 @@ const enviarInfo = {
     loadingmodal.value = true;
     try {
       const info = { ...data.value, idProducto: data.value.idProducto.value };
-      const response = await useEntradas.postEntrada(data.value);
+      const response = await useEntradas.postEntrada(info);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -275,9 +275,9 @@ const enviarInfo = {
       }
       console.log(rows.value);
       rows.value.splice(
-        buscarIndexLocal(response.data.productos._id),
+        buscarIndexLocal(response.data.entrd._id),
         1,
-        response.data.productos
+        response.data.entrd
       );
       notificar("positive", "Editado exitosamente");
       modal.value = false;
