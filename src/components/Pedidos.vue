@@ -8,7 +8,7 @@
   
           </q-toolbar>
           <!-- inputs🃏👇-->
-          <!--  <q-card-section class="q-gutter-md row items-star justify-center continputs1">
+          <<q-card-section class="q-gutter-md row items-star justify-center continputs1">
               <q-input class="nombreinput modalinputs" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
               :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
               
@@ -109,10 +109,13 @@
           </template>
   
           <template v-slot:body-cell-opciones="props">
-            <q-td :props="props" class="botones">
-              <q-btn color="warning" icon="zoom_in" class="botonv1" @click="opciones.editar(props.row)" />
-            </q-td>
-          </template>
+          <q-td :props="props" class="botones">
+            <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
+            <router-link to="/Dis_presupuesto" class="ingresarcont">
+              <q-btn color="secondary" icon="zoom_in" class="botonv1" />
+            </router-link>
+          </q-td>
+        </template>
         </q-table>
   
         <router-link to="/Det_pedido" class="ingresarcont">
@@ -126,12 +129,12 @@
   <script setup>
   import { ref } from "vue";
   import { usePedidoStore } from "../stores/pedido.js";
-  import { useFichaStore } from "../stores/ficha.js";
+ /*  import { useDestinoStore } from "../stores/destino.js"; */
   import { useQuasar } from 'quasar'
   
   const modelo = "Pedidos";
   const usePedido = usePedidoStore();
-  const useFicha = useFichaStore();
+/*   const useDestino = useDestinoStore(); */
   const loadingTable = ref(true)
   const $q = useQuasar()
   const filter = ref("");
@@ -158,16 +161,36 @@
       sortOrder: "da",
     },
     {
-      name: "ficha",
-      label: "Ficha",
+      name: "fecha_entrega",
+      label: "Fecha entrega",
       align: "left",
-      field: (row) => row.ficha,
+      field: (row) => row.fecha_entrega,
+      sort: true,
+      sortOrder: "da",
+    },
+    {
+      name: "completado",
+      label: "Completado",
+      align: "left",
+      field: (row) => row.completado,
+    },
+    {
+      name: "destino",
+      label: "Destino",
+      align: "left",
+      field: (row) => row.destino,
     },
     {
       name: "instructor_encargado",
       label: "Instructor",
       align: "center",
       field: (row) => row.instructor_encargado,
+    },
+    {
+      name: "total",
+      label: "Total",
+      align: "center",
+      field: (row) => row.total,
     },
     {
       name: "opciones",
@@ -180,8 +203,11 @@
   
   const data = ref({
     fecha_creacion: "",
-    ficha: "",
+    fecha_entrega: "",
+    completado: "",
+    destino: "",
     instructor_encargado: "",
+    total: "",
   });
   
   /* const preciototal = data.cantidad * data.precioporunidad; */
@@ -215,11 +241,11 @@
     agregar: () => {
       data.value = {
         fecha_creacion: "",
-        ficha: "",
-        subtotal: "",
+        fecha_entrega: "",
+        completado: "",
+        destino: "",
+        instructor_encargado: "",
         total: "",
-        impuestos: "",
-  
       };
       modal.value = true;
       estado.value = "guardar";
