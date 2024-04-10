@@ -369,7 +369,10 @@ function validarCampos() {
       notificar("negative", "El producto es obligatoria");
       return;
     }
-    
+    if (productoValidation !== true) {
+      $q.notify({ type: "negative", message: productoValidation });
+      return;
+    }
   }
   enviarInfo[estado.value]();
 }
