@@ -30,13 +30,13 @@ const columns = ref([
     name: "año",
     label: "inico",
     align: "left",
-    field: (row) => row.fecha_inicio,
+    field: (row) => row.fecha_inicio.slice(0, -14),
   },
   {
     name: "año",
     label: "fin",
     align: "left",
-    field: (row) => row.fecha_fin,
+    field: (row) => row.fecha_fin.slice(0, -14),
   },
   {
     name: "año",
@@ -101,15 +101,19 @@ const modal = ref(false);
 const opciones = {
   agregar: () => {
     data.value = {
-      codigo: "",
-      nombre: "",
-      año: "",
-    };
+  codigo: "",
+  nombre: "",
+  fecha_inicio: "",
+  fecha_fin: "",
+  nivel_de_formacion: "",
+};
     modal.value = true;
     estado.value = "guardar";
   },
   editar: (info) => {
     data.value = { ...info }
+    data.value.fecha_inicio= info.fecha_inicio.slice(0, -14)
+    data.value.fecha_fin= info.fecha_inicio.slice(0, -14)
     modal.value = true;
     estado.value = "editar";
   },
@@ -122,7 +126,9 @@ function buscarIndexLocal(id) {
 const enviarInfo = {
   guardar: async () => {
     loadingmodal.value = true;
+    console.log('guardar');
     try {
+      console.log('response');
       const response = await useDestino.postDestinos(data.value);
       console.log(response);
       if (!response) return
@@ -153,7 +159,7 @@ const enviarInfo = {
         return
       }
       console.log(rows.value);
-      rows.value.splice(buscarIndexLocal(response.data.Destinos._id), 1, response.data.Destinos);
+      rows.value.splice(buscarIndexLocal(response.data.destinos._id), 1, response.data.destinos);
       notificar('positive', 'Editado exitosamente')
       modal.value = false;
     } catch (error) {
@@ -210,9 +216,7 @@ const in_activar = {
 function validarCampos() {
 
   const arrData = Object.entries(data.value)
-  console.log(arrData);
   for (const d of arrData) {
-    console.log(d);
     if (d[1] === null) {
       notificar('negative', "Por favor complete todos los campos")
       return
@@ -229,7 +233,7 @@ function validarCampos() {
       return
     }
 
-    if (d[0] === "nombre" && d[1].length > 15) {
+    if (d[0] === "nombre" && d[1].length > 45) {
       notificar('negative', 'El nombre no puede tener más de 15 caracteres')
       return
     }
@@ -239,6 +243,18 @@ function validarCampos() {
       return
     }
 
+    if (data.value.fecha_inicio.length > 10 || data.value.fecha_fin.length > 10){
+    notificar('negative', 'la fecha no es valida')
+      return
+  }
+  
+
+  if ( new Date(data.value.fecha_inicio) > new Date(data.value.fecha_fin) ) {
+    notificar('negative', 'la fecha de inicio debe ser antes de la fecha de cierre')
+      return
+  } 
+
+
    /*  if (d[0] === "email" && !d[1].includes('@')) {
       notificar('negative', 'Email no válido')
       return
@@ -246,6 +262,35 @@ function validarCampos() {
   }
   enviarInfo[estado.value]()
 }
+
+function validateDate (value) {
+
+  if (!value) {
+    return 'ingrese una fecha'
+  }
+
+  if (value.length > 10){
+    return `la fecha no es valida`;
+  }
+  
+
+  if ( new Date(data.value.fecha_inicio) > new Date(data.value.fecha_fin) ) {
+    return `la fecha de inicio debe ser antes de la fecha de cierre`;
+  } 
+
+  // esto para validar que la fecha no se pase de hoy 🚧
+/*   const today = new Date();
+
+  if ( new Date(value) > today) {
+    return `La fecha de pedido no puede ser anterior a la actual.`;
+  } */
+
+
+
+
+  return true;
+  }
+
 
 function notificar(tipo, msg) {
   $q.notify({
@@ -273,10 +318,12 @@ function notificar(tipo, msg) {
 
           <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="45" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-          <q-input class="input1" outlined v-model="data.fecha_inicio" label="fecha de inicio" type="text" maxlength="45" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese una fecha de inicio']"></q-input>
-          <q-input class="input1" outlined v-model="data.fecha_fin" label="fecha de finalizacion" type="text" maxlength="45" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese una fecha de finalizacion']"></q-input>
+
+          <q-input class="input1" outlined v-model="data.fecha_inicio" label="fecha de inicio" type="date" maxlength="45" lazy-rules
+            :rules="[val => validateDate(data.fecha_inicio) || 'Ingrese una fecha de inicio']"></q-input>
+
+          <q-input class="input1" outlined v-model="data.fecha_fin" label="fecha de finalizacion" type="date" maxlength="45" lazy-rules
+            :rules="[val => validateDate(data.fecha_fin) || 'Ingrese una fecha de finalizacion']"></q-input>
 
           <q-input class="input1" outlined v-model="data.nivel_de_formacion" label="nivel de formacion" type="text" maxlength="45" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nivel de formacion']"></q-input>
