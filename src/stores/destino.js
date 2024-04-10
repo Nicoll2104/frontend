@@ -19,10 +19,9 @@ export const useDestinoStore = defineStore('destino', () => {
 
     const postDestinos = async (data) =>{
         try {
-            console.log('a');
             let res = await axios.post("destino/agregar", data);
-            console.log('a', res);
-            return res.data.Destinos
+            console.log(res);
+            return res.data.destinos
         } catch (error) {
             throw error
         }
