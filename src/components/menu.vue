@@ -40,8 +40,7 @@ let menu1_content = ref([
 
 const rol = Cookies.get('rol')
 
-let menu2_content = ref({
-    Administrador: [
+let menu2_content = ref([
     { ruta: "/Dependencias", titulo: "Dependencias", desplegable: false},
     { ruta: "/Destino", titulo: "Destino", desplegable: false},
     { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
@@ -52,32 +51,8 @@ let menu2_content = ref({
     { ruta: "/Productos", titulo: "Producto", desplegable: false },
     { ruta: "/Usuario", titulo: "Usuario", desplegable: false },
     { ruta: "/Contrato", titulo: "Contrato", desplegable: false },
-    ],
-    Instructor:[
-    { ruta: "/Dependencias", titulo: "Dependencias", desplegable: false},
-    { ruta: "/Destino", titulo: "Destino", desplegable: false},
-    { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
-    { ruta: "/Areas", titulo: "Area tematica", desplegable: false },
-    { ruta: "/Pedidos", titulo: "Pedidos", desplegable: false },
-    { ruta: "/Entradas", titulo: "Entradas", desplegable: false },
-    { ruta: "/Salidas", titulo: "Salidas", desplegable: false },
-    { ruta: "/Productos", titulo: "Producto", desplegable: false },
-    { ruta: "/Usuario", titulo: "Usuario", desplegable: false },
-    { ruta: "/Contrato", titulo: "Contrato", desplegable: false },
-    ],
-    Bodega:[
-    { ruta: "/Dependencias", titulo: "Dependencias", desplegable: false},
-    { ruta: "/Destino", titulo: "Destino", desplegable: false},
-    { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
-    { ruta: "/Areas", titulo: "Area tematica", desplegable: false },
-    { ruta: "/Pedidos", titulo: "Pedidos", desplegable: false },
-    { ruta: "/Entradas", titulo: "Entradas", desplegable: false },
-    { ruta: "/Salidas", titulo: "Salidas", desplegable: false },
-    { ruta: "/Productos", titulo: "Producto", desplegable: false },
-    { ruta: "/Usuario", titulo: "Usuario", desplegable: false },
-    { ruta: "/Contrato", titulo: "Contrato", desplegable: false },
-    ],
-});
+    ]
+);
 
 
 
@@ -136,7 +111,7 @@ let menu2_content = ref({
                     <div class="opcionescont">
 
                         <router-link 
-                        v-for="(item, index) in menu2_content[rol]" :key="index" :to="item.ruta">
+                        v-for="(item, index) in menu2_content" :key="index" :to="item.ruta">
                     <!-- ❄️❄️Expandibles❄️❄️ -->
                         <q-expansion-item v-if="item.desplegable !== false" :label=item.titulo class="botones_principales"
                         header-class="bg-accent text-black" expand-icon-class="text-black">
