@@ -216,7 +216,6 @@ const in_activar = {
 function validarCampos() {
 
   const arrData = Object.entries(data.value)
-  console.log(arrData);
   for (const d of arrData) {
     if (d[1] === null) {
       notificar('negative', "Por favor complete todos los campos")
@@ -244,6 +243,18 @@ function validarCampos() {
       return
     }
 
+    if (data.value.fecha_inicio.length > 10 || data.value.fecha_fin.length > 10){
+    notificar('negative', 'la fecha no es valida')
+      return
+  }
+  
+
+  if ( new Date(data.value.fecha_inicio) > new Date(data.value.fecha_fin) ) {
+    notificar('negative', 'la fecha de inicio debe ser antes de la fecha de cierre')
+      return
+  } 
+
+
    /*  if (d[0] === "email" && !d[1].includes('@')) {
       notificar('negative', 'Email no válido')
       return
@@ -259,7 +270,7 @@ function validateDate (value) {
   }
 
   if (value.length > 10){
-    return `la fecha no valida`;
+    return `la fecha no es valida`;
   }
   
 
