@@ -15,7 +15,7 @@
             lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el valor del presupuesto']"></q-input>
 
           <q-select outlined options-dense label="Distribucion de presupuesto" lazy-rules
-            v-model="data.distribucion_presupuesto" :options="disPresupuesto.distribucion"
+            v-model="data.idProducto" :options="disPresupuesto.distribucion"
             :option-label="item => item.nombre ? 'Nombre: ' + item.nombre + ' Valor: ' + item.presupuesto_inicial : ''"
             :rules="[val => val.nombre !== '' || 'Seleccione el codigo auxiliar del lote']" />
 

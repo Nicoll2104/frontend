@@ -12,8 +12,17 @@
               maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo la cantidad']"></q-input>
             <q-input class="input1" outlined v-model="data.total" label="Total" type="number" maxlength="15" lazy-rules
               :rules="[val => val.trim() != '' || 'Ingrese un total']"></q-input>
-            <q-input class="input1" outlined v-model="data.idProducto" label="Producto" type="text"
-              maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el producto']"></q-input>
+<!--             <q-input class="input1" outlined v-model="data.idProducto" label="Producto" type="text"
+              maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el producto']"></q-input> -->
+
+              <q-select
+            filled
+            v-model="data.idProducto"
+            :options="seletProducto"
+            label="Seleccione el lote"
+            class="q-mx-auto"
+            style="width: 300px"
+          />
             <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
               <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
                 :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
@@ -87,10 +96,12 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useEntradaStore } from "../stores/entradas.js"; 
+import { useProductoStore } from "../stores/producto.js"; 
 import { useQuasar } from 'quasar'
 
 const modelo = "Entradas";
 const useEntradas = useEntradaStore(); 
+const useProducto = useProductoStore(); 
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
@@ -117,8 +128,14 @@ const columns = ref([
   name: "idProducto",
   label: "Producto",
   align: "left",
-  field: (row) => row.idProducto,
+  field: (row) => row.idProducto.nombre,
 },
+{
+    name: "status",
+    label: "Estado",
+    align: "center",
+    field: (row) => row.status,
+  },
   {
     name: "opciones",
     label: "Opciones",
@@ -132,6 +149,34 @@ const data = ref({
   total: "",
   idProducto: "",
 });
+
+ let seletProducto = ref([]);
+
+ const obtenerProducto = async () => {
+  try {
+    const idProducto = await useProducto.obtenerInfoProducto();
+    console.log("Todos los producto:", idProducto);
+
+    seletProducto.value = idProducto.map((idProducto) => ({
+      label: `${idProducto.nombre}`,
+      value: String(idProducto._id),
+    }));
+
+    seletProducto.value.sort((a, b) => {
+      if (a.label < b.label) {
+        return -1;
+      }
+      if (a.label > b.label) {
+        return 1;
+      }
+      return 0;
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+obtenerProducto();
 
 const obtenerInfo = async () => {
   try {
@@ -274,46 +319,39 @@ const in_activar = {
 };
 
 function validarCampos() {
-
-  const arrData = Object.entries(data.value)
+  const loteValidation = validatelote(data.value.lote);
+  const arrData = Object.entries(data.value);
   console.log(arrData);
   for (const d of arrData) {
     console.log(d);
     if (d[1] === null) {
-      notificar('negative', "Por favor complete todos los campos")
-      return
+      notificar("negative", "Por favor complete todos los campos");
+      return;
     }
-    if (typeof d[1] === 'string') {
+    if (typeof d[1] === "string") {
       if (d[1].trim() === "") {
-        notificar('negative', "Por favor complete todos los campos")
-        return
-      }
-    }
-
-    if (d[0] === "codigo_presupuesto" && d[1].toString().length < 6) {
-      notificar('negative', "El codigo debe tener más de 6 digitos")
-      return
-    }
-
-    if (d[0] === "nombre" && d[1].length > 15) {
-      notificar('negative', 'El nombre no puede tener más de 15 caracteres')
-      return
-    }
-
-    if (d[0] === "presupuesto_inicial") {
-      const presupuesto = parseFloat(d[1]);
-      if (isNaN(presupuesto) || presupuesto <= 0) {
-        notificar('negative', "El presupuesto inicial debe ser mayor que cero");
+        notificar("negative", "Por favor complete todos los campos");
         return;
       }
     }
 
-    if (d[0] === "año" && d[1].length !== 4) {
-      notificar('negative', 'El año tiene que tener 4 caracteres')
-      return
+    if (d[0] === "cantidad" && d[1].toString().length < 1) {
+      notificar("negative", "La cantidad es obligatoria");
+      return;
     }
+
+    if (d[0] === "total" && d[1].length > 1) {
+      notificar("negative", "El total es obligatoria");
+      return;
+    }
+
+    if (d[0] === "idProducto" && d[1].toString().length < 1) {
+      notificar("negative", "El producto es obligatoria");
+      return;
+    }
+    
   }
-  enviarInfo[estado.value]()
+  enviarInfo[estado.value]();
 }
 
 function notificar(tipo, msg) {
