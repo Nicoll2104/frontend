@@ -249,7 +249,7 @@ obtenerProducto();
 
 const obtenerInfo = async () => {
   try {
-    await Promise.all([obtenerProducto()]);
+
     const detPedido = await useDetPedido.obtenerInfodetPedido();
     console.log("useDetPedido");
     console.log(useDetPedido);

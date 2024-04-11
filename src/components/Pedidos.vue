@@ -174,11 +174,39 @@ import { useProductoStore } from "../stores/producto.js";
 
   let seletDestino = ref([]);
   let seletInstructor = ref([]);
+  let seletProducto = ref([]);
 
+
+  const obtenerProducto = async () => {
+  try {
+    const producto = await useProductos.obtenerInfoProducto();
+    console.log("Todos los productos:", producto);
+
+    seletProducto.value = producto.map((producto_id) => ({
+      label: `${producto_id.nombre}`,
+      value: String(producto_id._id),
+    }));
+
+    seletProducto.value.sort((a, b) => {
+      if (a.label < b.label) {
+        return -1;
+      }
+      if (a.label > b.label) {
+        return 1;
+      }
+      return 0;
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+obtenerProducto();
 
 const obtenerDestino = async () => {
   try {
-    const destinos = await useDestino.obtenerInfoDestinos();
+    const res = await useDestino.obtenerInfoDestinos();
+    const destinos = res.destinos
     console.log("Todos los Destinos:", destinos);
 
     seletDestino.value = destinos.map((destino) => ({
@@ -199,8 +227,6 @@ const obtenerDestino = async () => {
     console.error(error);
   }
 };
-
-obtenerDestino();
 
 const obtenerUsuario = async () => {
   try {
@@ -226,7 +252,7 @@ const obtenerUsuario = async () => {
   }
 };
 
-obtenerUsuario();
+
   
   /* const preciototal = data.cantidad * data.precioporunidad; */
   
@@ -259,9 +285,7 @@ obtenerUsuario();
     await Promise.all([obtenerProducto()]);
     const res = await useDetPedido.obtenerInfodetPedido();
     const detPedido = res.Det_pedido
-    console.log("useDetPedido");
-    console.log(useDetPedido);
-    console.log("dentro");
+    console.log("detaleeeeeee");
     console.log(detPedido);
 
     if (!detPedido) return;
@@ -270,18 +294,27 @@ obtenerUsuario();
       notificar("negative", detPedido.error);
       return;
     }
-    /* rows.value = detPedido.Det_pedido; */
+    /* rows.value = detPedido; */
 
+/* for (let i = 0 ; i < detPedido.length; i++) {
+  if (!detPedido[i]) continue;
+  const pedido = rows.value.find((p) => p._id === detPedido[i].pedido);
+  console.log("Pedido encontrado", pedido);
+  if (!pedido) continue;
+  if (!pedido.detalle) {
+    pedido.detalle = [];
+  }
+  pedido.detalle.push(detPedido[i]);
+}
 
-
-
+ */ 
   } catch (error) {
     console.error(error);
   } finally {
     loadingTable.value = false;
   }
 };
-console.log("Antes de la línea 101");
+
 
 obtenerInfo2();
   

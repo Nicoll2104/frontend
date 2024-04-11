@@ -13,7 +13,6 @@ export const useUsuarioStore = defineStore("usuario", () => {
   const obtenerInfoUsuarios = async () => {
     try {
       let responseUsuarios = await axios.get("usuario/ver");
-      console.log(responseUsuarios);
       return responseUsuarios.data;
     } catch (error) {
       throw error;
