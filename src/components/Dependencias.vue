@@ -345,11 +345,12 @@ function notificar(tipo, msg) {
               @click="props.expand = !props.expand" :icon="props.expand ? 'remove' : 'add'"/>
           </q-td>
         </template> -->
-
+<!--q -->
         <template v-slot:body="props">
-  <q-tr :props="props">
-    <q-td v-for="col in props.cols" :key="col.name" :props="props" :auto-width="col.name == 'opciones'">
-      <q-div v-if="col.name != 'opciones' && col.name != 'status' ">
+  <q-tr :props="props" >
+    <q-td v-for="col in props.cols" :key="col.name" :props="props"
+    :auto-width="col.name == 'opciones'" :class="props.row.expanded ? 'no-border ' : ''">
+      <q-div v-if="col.name != 'opciones' && col.name != 'status' " >
         {{ col.value }}
       </q-div>
       <q-div v-else-if="col.name == 'status'">
@@ -361,23 +362,28 @@ function notificar(tipo, msg) {
       </q-div>
     </q-td>
   </q-tr>
-  <q-tr v-show="props.row.expanded" :props="props" class="bg-grey-2 ">
-    <q-td colspan="100%">
-      <div class="text-center " v-if="props.row.detalle" >
-        <q-btn colspan="100%" :loading="loadingTableDist" class="text-lowercase" flat >
-          codigo presupuestal: {{ props.row.detalle.codigo_presupuestal}}
-          | presupuesto actual: {{ props.row.detalle.presupuesto_actual}}
-          | presupuesto_asignado: {{ props.row.detalle.presupuesto_asignado}}
+
+  <div class="show-p" :style="{ height: props.row.expanded ? '100px' : '1px' }">
+  <q-tr v-show="true" :props="props" >
+    <q-td colspan="100%" class="" >
+
+      <div class="text-center "  v-if="props.row.detalle" >
+         <q-btn colspan="100%" :loading="loadingTableDist" class="text-lowercase" flat >
+          <q-div class="q-mx-sm"><b>codigo presupuestal:</b> {{ props.row.detalle.codigo_presupuestal}}</q-div>
+          <q-div class="q-mx-sm"><b>presupuesto actual:</b> {{ props.row.detalle.presupuesto_actual}}</q-div>
+          <q-div class="q-mx-sm"><b>presupuesto asignado:</b> {{ props.row.detalle.presupuesto_asignado}}</q-div>
         </q-btn>
       </div>
       <div class="text-center " v-if="!props.row.detalle" >
-        <q-btn @click="opciones.agregar" label="Añadir" color="grey-6"
-        class="text-capitalize text-white">
-              <q-icon name="style" color="white" right />
+        <q-btn @click="opciones.agregar" label="crear" color="grey-6"
+        class="text-capitalize text-white ">
+              <q-icon name="add" color="white" right />
             </q-btn>
       </div>
+ 
     </q-td>
   </q-tr>
+   </div>
 </template>
       </q-table>
     </div>
@@ -398,6 +404,12 @@ warning: Color para advertencias o mensajes importantes.
 * {
   margin: 0px;
   padding: 0px;
+  transition: height 0.5s ease; 
+}
+
+.show-p {
+  overflow: hidden;
+
 }
 
 .modal {
