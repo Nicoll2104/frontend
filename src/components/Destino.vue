@@ -326,13 +326,9 @@ function notificar(tipo, msg) {
           <q-input class="input1" outlined v-model="data.fecha_fin" label="fecha de finalizacion" type="date" maxlength="45" lazy-rules
             :rules="[val => validateDate(data.fecha_fin) || 'Ingrese una fecha de finalizacion']"></q-input>
 
-          <q-input class="input1" outlined v-model="data.nivel_de_formacion" label="nivel de formacion" type="text" maxlength="45" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese un nivel de formacion']"></q-input>
-
-
-
-
-
+            <q-select v-model="data.nivel_de_formacion"
+              :options="['Técnico', 'Tecnólogo', 'Curso', 'Proyecto']" label="Nivel de Formación" outlined emit-value map-options
+              :rules="[val => !!val || 'Seleccione un nivel de formación']"/>
           <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
             <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
