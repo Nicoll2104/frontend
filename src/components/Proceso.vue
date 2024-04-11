@@ -8,8 +8,12 @@
         </q-toolbar>
 
         <q-card-section class="q-gutter-md">
-            <q-input class="input1" outlined v-model="data.nombre" label="Nombre o Razón social" type="text" maxlength="20" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el nombre o Razón social']"></q-input>
+            <q-input class="input1" outlined v-model="data.codigo" label="Codigo" type="number"
+            maxlength="10" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese un código']"></q-input>
+            <q-input class="input1" outlined v-model="data.presupuestoAsignado" label="Presupuesto Asignado" type="number"
+            maxlength="10" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto asignado']"></q-input>
+            <q-input class="input1" outlined v-model="data.presupuestoAsignado" label="Presupuesto Asignado" type="number"
+            maxlength="10" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto asignado']"></q-input>
             <q-input class="input1" outlined v-model="data.dni" label="Identificación" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un número de identificación']"></q-input>
             <q-input class="input1" outlined v-model="data.correo" label="Correo electrónico" type="text" maxlength="20" lazy-rules
@@ -125,7 +129,7 @@
   /* import { useProveedorStore } from "../stores/proveedor.js"; */
   import { useQuasar } from "quasar";
   
-  const modelo = "Proveedor";
+  const modelo = "Proceso";
   const useProveedor = useProveedorStore();
   const loadingTable = ref(true);
   const $q = useQuasar();
@@ -133,6 +137,12 @@
   const loadingmodal = ref(false);
   
   const columns = ref([
+  {
+      name: "codigo",
+      label: "Codigo",
+      align: "left",
+      field: (row) => row.codigo,
+    },
     {
       name: "nombre",
       label: "Nombre",
