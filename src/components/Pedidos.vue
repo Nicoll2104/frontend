@@ -9,56 +9,21 @@
           </q-toolbar>
           <!-- inputs🃏👇-->
           <q-card-section class="q-gutter-md row items-star justify-center continputs1">
-              <q-input class="nombreinput modalinputs" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
-              :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-              
-              <q-input class="cedulainput modalinputs" outlined v-model="data.cedula" label="cedula" type="text" maxlength="15" lazy-rules
-              :rules="[val => val.trim() != '' || 'Ingrese una cedula']"></q-input>
-  
-              <q-input class="fechainput modalinputs" outlined v-model="data.fecha" label="fecha" type="date" maxlength="15" lazy-rules
-              :rules="[val => val.trim() != '' || 'Ingrese una fecha']"></q-input>
-  
-              <q-input class="fichainput modalinputs" outlined v-model="data.ficha" label="ficha" type="text" maxlength="15" lazy-rules
-              :rules="[val => val.trim() != '' || 'Ingrese una ficha']"></q-input>
-            
+              <q-input class="nombreinput modalinputs" outlined v-model="data.fecha_creacion" label="Fecha de creación" type="date" maxlength="15" lazy-rules
+              :rules="[val => val.trim() != '' || 'Ingrese la fecha de creación']"></q-input>
+              <q-input class="nombreinput modalinputs" outlined v-model="data.fecha_entrega" label="Fecha de entrega" type="date" maxlength="15" lazy-rules
+              :rules="[val => val.trim() != '' || 'Ingrese la fecha de entrega']"></q-input>
+              <q-select filled v-model="data.completado" :options="seletcompletado" label="Completado SI o NO" class="q-mx-auto" style="width: 300px"/>
+              <q-select filled v-model="data.destino" :options="seletDestino" label="Seleccione el destino" class="q-mx-auto" style="width: 300px"/>
+              <q-select filled v-model="data.instructor_encargado" :options="seletInstructor" label="Seleccione el instructor" class="q-mx-auto" style="width: 300px"/>
             </q-card-section>
-  
-            <q-card-section class="q-gutter-md row items-star justify-center continputs1">
-  
-              <q-input class="productoinput modalinputs" outlined v-model="data.producto" label="producto" type="text" maxlength="15" lazy-rules
-              :rules="[val => val.trim() != '' || 'Ingrese un producto']"></q-input>
-              
-              <q-input class="cantidadinput modalinputs" outlined v-model="data.cantidad" label="cantidad" type="number" maxlength="15" lazy-rules
-              :rules="[val => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
-  
-              <q-select class="unidadmedidainput modalinputs" outlined v-model="data.unidadmedida" :options="selectunidadmedida" label="Selecciona la unidad de medida" 
-              lazy-rules
-              :rules="[val => val.trim() != '' || 'Ingrese una unidad de medida']"/>
-  
-              <q-input class="precioporunidadinput modalinputs" outlined v-model="data.precioporunidad" label="precio por unidad" type="number" maxlength="15" lazy-rules
-              :rules="[val => val.trim() != '' || 'Ingrese un precio por unidad']"></q-input>
-  
-              <q-input class="impuestoinput modalinputs" outlined v-model="data.impuesto" label="impuesto" type="number" maxlength="15" lazy-rules
-              :rules="[val => val.trim() != '' || 'Ingrese impuesto']"></q-input>
-  
-              <q-input class="preciototalinput modalinputs" v-model="preciototal" outlined label="Precio total" type="number" disable >
-                {{data.cantidad * data.precioporunidad }}
-              </q-input>
-  
-            </q-card-section> -->
-  
           <!-- inputs🃏☝ -->
-  
           <!-- btns 🛑👇 -->
           <q-card-section class="q-gutter-md row items-end justify-end continputs1">
             <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px" color="secondary" label="guardar">
               <q-icon name="style" color="white" right />
             </q-btn>
-  
-            <q-btn :loading="loadingmodal" padding="10px" color="secondary" label="imprimir">
-              <q-icon name="print" color="white" right />
-            </q-btn>
-  
+
             <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white" v-close-popup>
               <q-icon name="cancel" color="white" right />
             </q-btn>
@@ -75,6 +40,9 @@
           <template v-slot:top>
             <h4 class="titulo-cont">
               {{ modelo + ' ' }}
+              <q-btn @click="opciones.agregar" label="Crear Pedido" color="secondary">
+              <q-icon name="add_circle" color="white" right />
+            </q-btn>
             </h4>
             <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar">
               <template v-slot:append>
@@ -132,12 +100,12 @@
   <script setup>
   import { ref } from "vue";
   import { usePedidoStore } from "../stores/pedido.js";
- /*  import { useDestinoStore } from "../stores/destino.js"; */
+  import { useDestinoStore } from "../stores/destino.js";
   import { useQuasar } from 'quasar'
   
   const modelo = "Pedidos";
   const usePedido = usePedidoStore();
-/*   const useDestino = useDestinoStore(); */
+  const useDestino = useDestinoStore();
   const loadingTable = ref(true)
   const $q = useQuasar()
   const filter = ref("");
@@ -181,7 +149,7 @@
       name: "destino",
       label: "Destino",
       align: "left",
-      field: (row) => row.destino,
+      field: (row) => row.destino.nombre,
     },
     {
       name: "instructor_encargado",
@@ -213,11 +181,40 @@
     instructor_encargado: "",
     total: "",
   });
+
+  let seletDestino = ref([]);
+
+const obtenerDestino = async () => {
+  try {
+    const destinos = await useDestino.obtenerInfoDestinos();
+    console.log("Todos los Destinos:", destinos);
+
+    seletDestino.value = destinos.map((destino) => ({
+      label: `${destino.nombre}`,
+      value: String(destino._id),
+    }));
+
+    seletDestino.value.sort((a, b) => {
+      if (a.label < b.label) {
+        return -1;
+      }
+      if (a.label > b.label) {
+        return 1;
+      }
+      return 0;
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+obtenerDestino();
   
   /* const preciototal = data.cantidad * data.precioporunidad; */
   
   const obtenerInfo = async () => {
     try {
+      await Promise.all([obtenerDestino()]);
       const pedidos = await usePedido.obtenerInfoPedido();
   
       console.log(pedidos);
@@ -255,7 +252,10 @@
       estado.value = "guardar";
     },
     editar: (info) => {
-      data.value = { ...info }
+      data.value = {
+      ...info,
+      lote: { label: info.destino.nombre, value: info.destino._id },
+    };
       modal.value = true;
       estado.value = "editar";
     },
@@ -265,11 +265,19 @@
     return rows.value.findIndex((r) => r._id === id);
   }
   
+  const validateDestino = (value) => {
+  if (!value) {
+    return "Seleccione una ficha o proyecto";
+  }
+
+  return true;
+};
   const enviarInfo = {
     guardar: async () => {
       loadingmodal.value = true;
       try {
-        const response = await useCliente.guardar(data.value);
+        const info = { ...data.value, destino: data.value.destino.value };
+        const response = await usePedido.postPedido (info);
         console.log(response);
         if (!response) return
         if (response.error) {
@@ -278,7 +286,7 @@
           return
         }
   
-        rows.value.unshift(response.cliente);
+        rows.value.unshift(response.destino);
         notificar('positive', 'Guardado exitosamente')
         modal.value = false;
       } catch (error) {
@@ -290,7 +298,7 @@
     editar: async () => {
       loadingmodal.value = true;
       try {
-        const response = await useCliente.editar(data.value._id, data.value);
+        const response = await useDestino.editar(data.value._id, data.value);
         console.log(response);
         if (!response) return
         if (response.error) {
@@ -347,7 +355,8 @@
   };
   
   function validarCampos() {
-  
+
+    const destinoValidation = validateDestino(data.value.destino);
     const arrData = Object.entries(data.value)
     console.log(arrData);
     for (const d of arrData) {
@@ -371,17 +380,17 @@
         notificar('negative', "La fecha de entrega es obligatoria")
         return
       }
-      if (d[0] === "subtotal" && d[1].toString().length < 1) {
-        notificar('negative', "El subtotal es obligatorio")
+      if (d[0] === "instructor_encargado" && d[1].toString().length < 1) {
+        notificar('negative', "El instructor encargado es obligatorio")
         return
       }
       if (d[0] === "total" && d[1].toString().length < 1) {
-        notificar('negative', "El subtotal es obligatorio")
+        notificar('negative', "El total es obligatorio")
         return
       }
   
-      if (d[0] === "cedula" && d[1].toString().length < 8) {
-        notificar('negative', "La cedula debe tener más de 8 digitos")
+      if (d[0] === "destino" && d[1].toString().length < 8) {
+        notificar('negative', "La ficha o el contrato es obligatorio")
         return
       }
   
@@ -389,6 +398,10 @@
         notificar('negative', 'Email no válido')
         return
       }
+      if (destinoValidation !== true) {
+      $q.notify({ type: "negative", message: destinoValidation });
+      return;
+    }
     }
     enviarInfo[estado.value]()
   }

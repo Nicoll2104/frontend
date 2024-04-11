@@ -23,7 +23,7 @@ export const useDestinoStore = defineStore('destino', () => {
             console.log(res);
             return res.data.destinos
         } catch (error) {
-            throw error
+            return error.response.data;
         }
     }
 
@@ -32,7 +32,7 @@ export const useDestinoStore = defineStore('destino', () => {
             let res = await axios.put(`destino/modificar/${id}`, data);
             return res
         } catch (error) {
-            throw error;
+            return error.response.data;
         }
     };
 

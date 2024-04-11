@@ -24,7 +24,7 @@ export const useLoteStore = defineStore('lote', () => {
             console.log('a', res);
             return res.data.lote
         } catch (error) {
-            throw error
+            return error.response.data;
         }
     }
 
@@ -33,7 +33,7 @@ export const useLoteStore = defineStore('lote', () => {
             let res = await axios.put(`lote/modificar/${id}`, data);
             return res
         } catch (error) {
-            throw error;
+            return error.response.data;
         }
     };
 

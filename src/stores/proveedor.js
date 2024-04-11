@@ -24,7 +24,7 @@ export const useProveedorStore = defineStore('provedor', () => {
             console.log('a', res);
             return res.data.provedores
         } catch (error) {
-            throw error
+            return error.response.data;
         }
     }
 
@@ -33,7 +33,7 @@ export const useProveedorStore = defineStore('provedor', () => {
             let res = await axios.put(`provedor/modificar/${id}`, data);
             return res
         } catch (error) {
-            throw error;
+            return error.response.data;
         }
     };
 
