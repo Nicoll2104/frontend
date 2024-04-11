@@ -162,7 +162,7 @@ import { useProductoStore } from "../stores/producto.js";
   ]);
   
   const rows = ref([]);
-  
+  const rowsPedido = ref([])
   const data = ref({
     fecha_creacion: "",
     fecha_entrega: "",
@@ -294,20 +294,22 @@ const obtenerUsuario = async () => {
       notificar("negative", detPedido.error);
       return;
     }
-    /* rows.value = detPedido; */
+   
+    rowsPedido.value = detPedido;
 
-/* for (let i = 0 ; i < detPedido.length; i++) {
-  if (!detPedido[i]) continue;
-  const pedido = rows.value.find((p) => p._id === detPedido[i].pedido);
-  console.log("Pedido encontrado", pedido);
-  if (!pedido) continue;
-  if (!pedido.detalle) {
-    pedido.detalle = [];
+for (let i = 0; i < rowsPedido.value.length; i++) {
+  if (!rowsPedido.value[i].Det_pedido) {
+    continue;
   }
-  pedido.detalle.push(detPedido[i]);
+  
+  console.log(i);
+const Index = rowsPedido.value.findIndex(objeto => objeto._id === rowsPedido.value[i].Det_pedido._id);
+console.log(Index)
+if (Index !== -1) {
+  rowsPedido.value[Index].detalle = rowsPedido.value[i];
 }
 
- */ 
+}
   } catch (error) {
     console.error(error);
   } finally {
