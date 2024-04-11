@@ -24,6 +24,7 @@ export const useEntradaStore = defineStore('entrada', () => {
             console.log('a', res);
             return res.data.entradas
         } catch (error) {
+            console.log(error);
             throw error
         }
     }

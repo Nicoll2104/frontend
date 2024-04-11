@@ -1,10 +1,10 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import { useDestinoStore } from "../stores/destino.js";
+import { useDependStore } from "../stores/dependencia.js";
 import { useQuasar } from 'quasar'
 
-const modelo = "Destino (Fichas/Proyectos)";
-const useDestino = useDestinoStore();
+const modelo = "Distribucion de Dependencias";
+const usePresup = useDependStore();
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
@@ -27,24 +27,6 @@ const columns = ref([
 
   },
   {
-    name: "año",
-    label: "inico",
-    align: "left",
-    field: (row) => row.fecha_inicio.slice(0, -14),
-  },
-  {
-    name: "año",
-    label: "fin",
-    align: "left",
-    field: (row) => row.fecha_fin.slice(0, -14),
-  },
-  {
-    name: "año",
-    label: "nivel de formacion",
-    align: "left",
-    field: (row) => row.nivel_de_formacion,
-  },
-  {
     name: "status",
     label: "Estado",
     align: "center",
@@ -61,26 +43,23 @@ const rows = ref([]);
 const data = ref({
   codigo: "",
   nombre: "",
-  fecha_inicio: "",
-  fecha_fin: "",
-  nivel_de_formacion: "",
 });
 
 const obtenerInfo = async () => {
   try {
-    const res = await useDestino.obtenerInfoDestinos();
-    const Destinos = res.destinos
+    const dependencias = await usePresup.obtenerInfoDepend();
+    console.log("usePresup")
+    console.log(usePresup)
+    console.log("dentro")
+    console.log(dependencias);
 
-    if (!Destinos) return
+    if (!dependencias) return
 
-    if (Destinos.error) {
-      notificar('negative', Destinos.error)
+    if (dependencias.error) {
+      notificar('negative', dependencias.error)
       return
     }
-    rows.value = Destinos
-    console.log('--------')
-    console.log(rows.value)
-
+    rows.value = dependencias
 
   } catch (error) {
     console.error(error);
@@ -101,19 +80,14 @@ const modal = ref(false);
 const opciones = {
   agregar: () => {
     data.value = {
-  codigo: "",
-  nombre: "",
-  fecha_inicio: "",
-  fecha_fin: "",
-  nivel_de_formacion: "",
-};
+      codigo: "",
+      nombre: "",
+    };
     modal.value = true;
     estado.value = "guardar";
   },
   editar: (info) => {
     data.value = { ...info }
-    data.value.fecha_inicio= info.fecha_inicio.slice(0, -14)
-    data.value.fecha_fin= info.fecha_inicio.slice(0, -14)
     modal.value = true;
     estado.value = "editar";
   },
@@ -126,10 +100,8 @@ function buscarIndexLocal(id) {
 const enviarInfo = {
   guardar: async () => {
     loadingmodal.value = true;
-    console.log('guardar');
     try {
-      console.log('response');
-      const response = await useDestino.postDestinos(data.value);
+      const response = await usePresup.postDepend(data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -150,7 +122,7 @@ const enviarInfo = {
   editar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await useDestino.putDestino(data.value._id, data.value);
+      const response = await usePresup.putDepend(data.value._id, data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -159,7 +131,7 @@ const enviarInfo = {
         return
       }
       console.log(rows.value);
-      rows.value.splice(buscarIndexLocal(response.data.destinos._id), 1, response.data.destinos);
+      rows.value.splice(buscarIndexLocal(response.data.dependencia._id), 1, response.data.dependencia);
       notificar('positive', 'Editado exitosamente')
       modal.value = false;
     } catch (error) {
@@ -168,12 +140,12 @@ const enviarInfo = {
       loadingmodal.value = false;
     }
   },
-};                                          
+};
+
 const in_activar = {
   putActivar: async (id) => {
     try {
-      console.log(id);
-      const response = await useDestino.putActivar(id);
+      const response = await usePresup.putActivar(id);
       console.log(response);
       console.log("Activando");
       if (!response) return
@@ -181,10 +153,11 @@ const in_activar = {
         notificar('negative', response.error)
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.destinos._id), 1, response.data.destinos);
+      rows.value.splice(buscarIndexLocal(response.data.items._id), 1, response.data.items);
       notificar('positive', 'Activado, exitosamente')
     } catch (error) {
       console.log(error);
+      notificar('negative', response.error.data.error)
     } finally {
       loadingmodal.value = false;
     }
@@ -192,8 +165,8 @@ const in_activar = {
   putInactivar: async (id) => {
     console.log("inactivar");
     try {
+      const response = await usePresup.putInactivar(id);
       console.log("Desactivar");
-      const response = await useDestino.putInactivar(id);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -201,8 +174,7 @@ const in_activar = {
 
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.destinos._id), 1, response.data.destinos);
-      notificar('negative', 'Inactivado exitosamente')
+      rows.value.splice(buscarIndexLocal(response.data.items._id), 1, response.data.items);
     } catch (error) {
       console.log(error);
     } finally {
@@ -212,11 +184,12 @@ const in_activar = {
   },
 };
 
-
 function validarCampos() {
 
   const arrData = Object.entries(data.value)
+  console.log(arrData);
   for (const d of arrData) {
+    console.log(d);
     if (d[1] === null) {
       notificar('negative', "Por favor complete todos los campos")
       return
@@ -233,64 +206,14 @@ function validarCampos() {
       return
     }
 
-    if (d[0] === "nombre" && d[1].length > 45) {
+    if (d[0] === "nombre" && d[1].length > 15) {
       notificar('negative', 'El nombre no puede tener más de 15 caracteres')
       return
     }
 
-    if (d[0] === "año" && d[1].length !== 4) {
-      notificar('negative', 'El año tiene que tener 4 caracteres')
-      return
-    }
-
-    if (data.value.fecha_inicio.length > 10 || data.value.fecha_fin.length > 10){
-    notificar('negative', 'la fecha no es valida')
-      return
-  }
-  
-
-  if ( new Date(data.value.fecha_inicio) > new Date(data.value.fecha_fin) ) {
-    notificar('negative', 'la fecha de inicio debe ser antes de la fecha de cierre')
-      return
-  } 
-
-
-   /*  if (d[0] === "email" && !d[1].includes('@')) {
-      notificar('negative', 'Email no válido')
-      return
-    } */
   }
   enviarInfo[estado.value]()
 }
-
-function validateDate (value) {
-
-  if (!value) {
-    return 'ingrese una fecha'
-  }
-
-  if (value.length > 10){
-    return `la fecha no es valida`;
-  }
-  
-
-  if ( new Date(data.value.fecha_inicio) > new Date(data.value.fecha_fin) ) {
-    return `la fecha de inicio debe ser antes de la fecha de cierre`;
-  } 
-
-  // esto para validar que la fecha no se pase de hoy 🚧
-/*   const today = new Date();
-
-  if ( new Date(value) > today) {
-    return `La fecha de pedido no puede ser anterior a la actual.`;
-  } */
-
-
-
-
-  return true;
-  }
-
 
 function notificar(tipo, msg) {
   $q.notify({
@@ -300,7 +223,6 @@ function notificar(tipo, msg) {
   })
 }
 </script>
-
 
 <template>
   <div>
@@ -312,36 +234,20 @@ function notificar(tipo, msg) {
         </q-toolbar>
 
         <q-card-section class="q-gutter-md">
-
-          <q-input class="input1" outlined v-model="data.codigo" label="Codigo" type="number" maxlength="15" lazy-rules 
-          :rules="[val => val.trim() != '' || 'Ingrese el codigo']"></q-input>
-
-          <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="45" lazy-rules
+          <q-input class="input1" outlined v-model="data.codigo" label="Codigo" type="number"
+            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese un codigo']"></q-input>
+          <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-
-          <q-input class="input1" outlined v-model="data.fecha_inicio" label="fecha de inicio" type="date" maxlength="45" lazy-rules
-            :rules="[val => validateDate(data.fecha_inicio) || 'Ingrese una fecha de inicio']"></q-input>
-
-          <q-input class="input1" outlined v-model="data.fecha_fin" label="fecha de finalizacion" type="date" maxlength="45" lazy-rules
-            :rules="[val => validateDate(data.fecha_fin) || 'Ingrese una fecha de finalizacion']"></q-input>
-
-          <q-input class="input1" outlined v-model="data.nivel_de_formacion" label="nivel de formacion" type="text" maxlength="45" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese un nivel de formacion']"></q-input>
-
-
-
-
-
           <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
             <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
-            :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
+              :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
               <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
             </q-btn>
-            <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white" v-close-popup>
+            <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white"
+              v-close-popup>
               <q-icon name="cancel" color="white" right />
             </q-btn>
           </q-card-section>
-
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -392,15 +298,16 @@ function notificar(tipo, msg) {
         <template v-slot:body-cell-opciones="props">
           <q-td :props="props" class="botones">
             <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
+            <router-link to="/Dis_presupuesto" class="ingresarcont">
+              <q-btn color="secondary" icon="zoom_in" class="botonv1" />
+            </router-link>
           </q-td>
         </template>
       </q-table>
     </div>
+
   </div>
 </template>
-
-
-
 <style scoped>
 /* 
 primary: Color principal del tema.
@@ -457,4 +364,4 @@ warning: Color para advertencias o mensajes importantes.
   font-size: 10px;
   font-weight: bold;
 }
-</style>
+</style>../stores/dependencia.js
