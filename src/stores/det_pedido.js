@@ -60,7 +60,7 @@ import axios from 'axios';
 import { ref } from 'vue';
 
 export const usedetPedidoStore = defineStore('detPedido', () => {
-    const detPedidos = ref([]);
+    const Det_pedido = ref([]);
 
     const obtenerInfodetPedido = async () => {
         try {
@@ -68,7 +68,7 @@ export const usedetPedidoStore = defineStore('detPedido', () => {
             console.log (responsedetPedidos);
             // lotes.value = responseLotes.data; 
             return responsedetPedidos.data
-            console.log(detPedidos)
+            console.log(Det_pedido)
         } catch (error) {
             throw error
         }
@@ -79,7 +79,7 @@ export const usedetPedidoStore = defineStore('detPedido', () => {
             console.log('a');
             let res = await axios.post("detPedido/agregar", data);
             console.log('a', res);
-            return res.data.lotes
+            return res.data.Det_pedido
         } catch (error) {
             throw error
         }
@@ -112,7 +112,7 @@ export const usedetPedidoStore = defineStore('detPedido', () => {
     }
 
     return {
-        detPedidos,
+        Det_pedido,
         obtenerInfodetPedido, postDetPedido, putDetPedido, putInactivar, putActivar
     };
 });

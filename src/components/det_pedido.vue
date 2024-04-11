@@ -2,7 +2,7 @@
     <div class="q-pa-xl row items-start q-gutter-md justify-center ">
       <q-card class="my-card">
         <h5>Detalle Pedido</h5>
-        <q-btn color="warning" icon-right="edit_note">Detalle de salida</q-btn>
+        <q-btn color="warning" icon-right="edit_note" @click="mostrarModalAgregar">Detalle de salida</q-btn>
         <q-dialog v-model="showAgregar">
           <q-card class="modal">
             <q-toolbar>
@@ -11,11 +11,16 @@
             </q-toolbar>
 
             <q-card-section class="q-gutter-md">
-              <q-select class="productoinput modalinputs" outlined v-model="data.producto_id" :options="selectProdut"
-                label="Producto" lazy-rules :rules="[val => val != '' || 'Seleccione el producto']" />
               <q-input class="input1" outlined v-model="data.cantidad" label="Cantidad" type="number" maxlength="15"
                 lazy-rules :rules="[val => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
-              <q-btn @click="agregarDetallePedido(data.producto_id, data.cantidad)" :loading="loadingmodal"
+                <q-select class="pedidoinput modalinputs" outlined v-model="data.pedido_id" :options="selectPedido"
+                label="Pedido" lazy-rules :rules="[val => val != '' || 'Seleccione el pedido']" />
+              <q-select class="productoinput modalinputs" outlined v-model="data.producto_id" :options="selectProdut"
+                label="Producto" lazy-rules :rules="[val => val != '' || 'Seleccione el producto']" />
+                <q-input class="input1" outlined v-model="data.subtotal" label="Subtotal" type="number" maxlength="15"
+                lazy-rules :rules="[val => val.trim() != '' || 'Ingrese un subtotal']"></q-input>
+              
+              <q-btn @click="agregarDetallePedido( data.cantidad, data.pedido_id, data.producto_id,data.subtotal)" :loading="loadingmodal"
                 padding="10px" :label="estado == 'editar' ? 'Editar' : 'Guardar'"
                 :color="estado == 'editar' ? 'warning' : 'secondary'">
                 <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
@@ -106,10 +111,9 @@ const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
 const loadingmodal = ref(false);
-const fichaStore = useFichaStore();
 const productoStore = useProductoStore();
-const usuarioStore = useUsuarioStore();
 const detPedidoStore = usedetPedidoStore();
+const showAgregar = ref(false);
 const enviarInfoestado = ref(false);
 const PedidoStore = usePedidoStore()
 
@@ -121,11 +125,24 @@ const columns = ref([
     field: (row) => row.cantidad,
   },
   {
+    name: "pedido_id",
+    label: "Pedido",
+    align: "left",
+    field: (row) => row.pedido_id,
+  },
+  {
     name: "producto_id",
     label: "Producto",
     align: "left",
     field: (row) => row.producto_id,
   },
+  {
+    name: "subtotal",
+    label: "Subtotal",
+    align: "left",
+    field: (row) => row.subtotal,
+  },
+
 
 ]);
 const rows = ref([]);
@@ -133,35 +150,14 @@ let options = ref([]);
 let itemsPre = ref([]);
 
 let selectProdut = ref([]);
-let seletFicha = ref([]);
+let selectPedido = ref([]);
 
-/* let showDetalleDiv = ref(false); */
-let showAgregar = ref(false);
-
-const dataPedido = ref({
-  fecha_pedido: "",
-  ficha: "",
-  validateDate: (value) => {
-    const today = new Date();
-    const selectedDate = parse(value, 'yyyy-MM-dd', new Date());
-    const isValidDate = isValid(selectedDate);
-
-    if (!isValidDate) {
-      return `Por favor ingrese una fecha válida para fecha de pedido.`;
-    }
-
-    if (!isAfter(selectedDate, today)) {
-      return `La fecha de pedido no puede ser anterior a la actual.`;
-    }
-
-    return true;
-  },
-});
 
 const data = ref({
   cantidad: "",
   pedido_id: "",
   producto_id: "",
+  subtotal:"",
 });
 
 const opciones = {
@@ -170,6 +166,7 @@ const opciones = {
       cantidad: "",
       pedido_id: "",
       producto_id: "",
+      subtotal:"",
     };
     showAgregar.value = true;
     estado.value = "guardar";
@@ -181,98 +178,10 @@ const opciones = {
   },
 };
 
-
-const validateFicha = (value) => {
-  if (!value) {
-    return 'Seleccione una ficha.';
-  }
-
-  return true;
+const mostrarModalAgregar = () => {
+  showAgregar.value = true; 
 };
 
-const validarCamposPedidos = () => {
-  const fechaPedidoValidation = dataPedido.value.validateDate(dataPedido.value.fecha_pedido);
-  const fichaValidation = validateFicha(dataPedido.value.ficha);
-
-  if (fechaPedidoValidation !== true) {
-    $q.notify({ type: 'negative', message: fechaPedidoValidation });
-    return;
-  }
-  if (fichaValidation !== true) {
-    $q.notify({ type: 'negative', message: fichaValidation });
-    return;
-  }
-};
-async function crearPedido() {
-  validarCamposPedidos();
-
-  if (enviarInfoestado.value) {
-    try {
-      const response = await crearPedidoAlServidor(dataPedido.value);
-
-      if (response.status === 'success') {
-        dataPedido.value = {
-          fecha_pedido: "",
-          ficha: ""
-        };
-
-        $q.notify({
-          type: 'positive',
-          message: 'Pedido creado exitosamente.'
-        });
-
-        // Set showDetalleDiv to true
-        showDetalleDiv.value = true;
-      } else {
-        $q.notify({
-          type: 'negative',
-          message: 'Error al crear el pedido. Por favor, inténtelo de nuevo más tarde.'
-        });
-      }
-    } catch (error) {
-      console.error('Error al crear el pedido:', error);
-      $q.notify({
-        type: 'negative',
-        message: 'Error al crear el pedido. Por favor, inténtelo de nuevo más tarde.'
-      });
-    }
-  }
-}
-
-async function enviarPedidoAlServidor(pedido) {
-  try {
-    const response = await PedidoStore.postPedido(pedido);
-    console.log(response)
-    return response.data;
-  } catch (error) {
-    console.error('Error al enviar el pedido al servidor:', error);
-    throw new Error('Error al enviar el pedido al servidor.');
-  }
-}
-
-
-function convertirFecha(cadenaFecha) {
-  const fecha = new Date(cadenaFecha);
-  const offset = 5 * 60;
-  fecha.setMinutes(fecha.getMinutes() + offset);
-  const año = fecha.getFullYear();
-  const mes = (fecha.getMonth() + 1).toString().padStart(2, "0");
-  const dia = fecha.getDate().toString().padStart(2, "0");
-
-  const fechaFormateada = `${dia}/${mes}/${año}`;
-  return fechaFormateada;
-}
-
-const agregarPedido = (pedido) => {
-  rows.value.push(pedido);
-};
-
-function sortBy(array, key) {
-  return array.sort((a, b) => (a[key] > b[key] ? 1 : -1));
-}
-
-
-// funcion traer informacion de producto
 const obtenerProducto = async () => {
   try {
     const producto = await productoStore.obtenerInfoProducto();
@@ -289,171 +198,49 @@ const obtenerProducto = async () => {
 }
 obtenerProducto();
 
-async function agregarDetallePedido() {
-  if (validacionDetallePedido.value == true) {
-    try {
-      showDefault();
-      await ticketStore.postDetPedido({
-        cantidad: Number,
-        pedido_id: pedido._rawValue.value,
-        producto_id: producto._rawValue.value,
-
-      });
-      cancelShow();
-      greatMessage.value = "Ticket Agregado";
-      generarTicket();
-      showGreat();
-      generarListaAsientos()
-    } catch (error) {
-      console.log(error);
-      cancelShow();
-      badMessage.value = error.response.data.error.errors[0].msg;
-      showBad();
-    };
-  } else {
-    cancelShow();
-    badMessage.value = "Agrega un Cliente"
-    showBad();
-  };
-};
-
-/* const agregarDetallePedido = (producto, cantidad) => {
-  if (!producto || !cantidad) {
-    notificar('negative', 'Por favor seleccione un producto y una cantidad.');
-    return;
-  }
-
-  const newRow = {
-    cantidad,
-    pedido_id: dataPedido.value._id,
-    producto_id: producto._id,
-    producto_nombre: producto.nombre,
-  };
-
-  rows.value.push(newRow);
-
-  // Limpiar los campos del modal después de agregar una nueva fila
-  data.value.cantidad = '';
-  data.value.producto_id = '';
-
-  notificar('positive', 'Detalle de pedido agregado exitosamente.');
-}; */
-
-const obtenerFicha = async () => {
+ const obtenerPedido = async () => {
   try {
-    const ficha = await fichaStore.obtenerInfoFichas();
-    const fichaAct = ficha.filter(fichas => fichas.status === "1")
-    console.log("fichas activas", fichaAct);
-    seletFicha.value = fichaAct.map((items) => ({
-      label: `${items.codigo_ficha}`,
-      value: String(items._id)
+    const pedidos = await PedidoStore.obtenerInfoPedido();
+    const pedidoAct = pedidos.filter(pedidos => pedidos.status === "1")
+    selectPedido.value = pedidoAct.map((pedido_id) => ({
+      label: `${pedido_id.completado}` + `${- pedido_id.total}`,
+      value: String(pedido_id._id)
     }));
-    sortBy(seletFicha.value, 'label');
+    sortBy(selectPedido.value, 'label');
+    console.log("select de pedidos", selectPedido);
   } catch (error) {
     console.error(error);
   }
 }
-
-obtenerFicha();
-
-const obtenerUsuarios = async () => {
-  try {
-    const usuario = await usuarioStore.obtenerInfoUsuarios();
-    const usuarioAct = usuario.filter(usuarios => usuarios.status === "1")
-    const instructores = usuarioAct.filter(usuario => usuario.rol.toLowerCase() === "instructor");
-    console.log("usuarios activos", usuarioAct);
-    console.log("instuctores", instructores);
-    seletusuario.value = usuarioAct.map((items) => ({
-      label: `${items.nombre}+${items.rol}`,
-      value: String(items._id)
-    }));
-    sortBy(seletusuario.value, 'label');
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-obtenerUsuarios();
-
-function notificar(tipo, mensaje) {
-  console.log(`Tipo de notificación: ${tipo}, Mensaje: ${mensaje}`);
-}
-
-const enviarInfoPedido = {
-  guardar: async () => {
-    loadingmodal.value = true;
-    try {
-      const response = await useCliente.guardar(data.value);
-      console.log(response);
-      if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
-        loadingmodal.value = false;
-        return
-      }
-
-      rows.value.unshift(response.cliente);
-      notificar('positive', 'Guardado exitosamente')
-      modal.value = false;
-    } catch (error) {
-      console.log(error);
-    } finally {
-      loadingmodal.value = false;
-      showDetalleDiv.value = true;
-    }
-  },
-  editar: async () => {
-    loadingmodal.value = true;
-    try {
-      const response = await useCliente.editar(data.value._id, data.value);
-      console.log(response);
-      if (!response) return
-      if (response.error) {
-        notificar('negative', response.error)
-        loadingmodal.value = false;
-        return
-      }
-      rows.value.splice(buscarIndexLocal(response._id), 1, response);
-      notificar('positive', 'Editado exitosamente')
-      modal.value = false;
-    } catch (error) {
-      console.log(error);
-    } finally {
-      loadingmodal.value = false;
-    }
-  },
-};
-
-
-
+obtenerPedido(); 
 const obtenerInfo = async () => {
   try {
-    // Esperar a que se completen todas las promesas
-    await Promise.all([obtenerProducto(), obtenerFicha(), obtenerUsuarios()]);
+    await Promise.all([obtenerProducto(), obtenerPedido()]);
+    const det_pedido = await detPedidoStore.obtenerInfodetPedido();
+    console.log("detPedidoStore");
+    console.log(detPedidoStore);
+    console.log("dentro");
+    console.log(det_pedido);
 
-    const detPedido = await detPedidoStore.obtenerInfodetPedido();
-    console.log("detPedidoStore")
-    console.log(detPedidoStore)
-    console.log("dentro")
-    console.log(detPedido);
+    if (!det_pedido) return;
 
-    if (!detPedido) return
-
-    if (detPedido.error) {
-      notificar('negative', detPedido.error)
-      return
+    if (det_pedido.error) {
+      notificar("negative", det_pedido.error);
+      return;
     }
-    rows.value = detPedido.Det_pedido
-
-
+    rows.value = det_pedido;
   } catch (error) {
     console.error(error);
   } finally {
-    loadingTable.value = false
+    loadingTable.value = false;
   }
 };
+console.log("Antes de la línea 101");
 
-obtenerInfo();
+
+  obtenerInfo();
+  console.log("inicio");
+;
 
 
 const in_activar = {
