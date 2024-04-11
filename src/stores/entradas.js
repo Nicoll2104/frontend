@@ -7,11 +7,11 @@ export const useEntradaStore = defineStore('entrada', () => {
 
     const obtenerInfoEntradas = async () => {
         try {
-            let responseEntradas = await axios.get('entrada/ver');
-            console.log (responseEntradas);
+            let responseEntrada = await axios.get('entrada/ver');
+            console.log (responseEntrada);
             // lotes.value = responseLotes.data; 
-            return responseEntradas.data
-            console.log(lotes)
+            return responseEntrada.data
+            console.log(entradas)
         } catch (error) {
             throw error
         }
@@ -22,7 +22,7 @@ export const useEntradaStore = defineStore('entrada', () => {
             console.log('a');
             let res = await axios.post("entrada/agregar", data);
             console.log('a', res);
-            return res.data.lotes
+            return res.data.entradas
         } catch (error) {
             throw error
         }
@@ -52,7 +52,7 @@ export const useEntradaStore = defineStore('entrada', () => {
         } catch (error) {
             console.log(error, "Error al cambiar el estado de la entrada");
         }
-    }
+    } 
 
     return {
         entradas,
