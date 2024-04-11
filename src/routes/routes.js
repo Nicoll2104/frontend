@@ -17,6 +17,7 @@ import Usuario from '../components/usuario.vue'
 import Entradas from '../components/entradas.vue'
 import proveedor from '../components/proveedor.vue'
 import Perfil from '../components/perfil.vue'
+import Proceso from '../components/Proceso.vue'
 
 
 
@@ -65,6 +66,7 @@ const routes = [
         {path: '/Destino', component:Destino, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Lotes', component:Lotes, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Areas', component:Areas, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/Proceso', component:Proceso, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Pedidos', component:Pedidos, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Contrato', component:Contrato, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Productos', component:Productos, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},

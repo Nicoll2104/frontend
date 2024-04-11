@@ -3,7 +3,7 @@
       <q-dialog v-model="modal" persistent color="primary">
         <q-card class="modal">
           <q-toolbar>
-            <q-toolbar-title> Agregar {{ modelo }}</q-toolbar-title>
+            <q-toolbar-title> Agregar / Editar {{ modelo }}</q-toolbar-title>
             <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
   
           </q-toolbar>
@@ -59,7 +59,7 @@
             </q-tr>
           </template>
   
-          <template v-slot:body-cell-Estado="props">
+   <!--        <template v-slot:body-cell-Estado="props">
             <q-td :props="props" class="botones">
               <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.estado === 1
                 ? 'Activo'
@@ -74,26 +74,23 @@
                 props.row.estado = 'load';
                 " />
             </q-td>
-          </template>
+          </template> -->
   
           <template v-slot:body-cell-opciones="props">
           <q-td :props="props" class="botones" auto-width>
-
+            
             <q-btn color="warning" icon="edit" class="text-caption q-pa-sm q-ma-xs" @click="opciones.editar(props.row)" />
             
-            <router-link to="/Dis_presupuesto" class="ingresarcont">
+            <router-link to="/det_pedido" class="ingresarcont">
               <q-btn color="secondary" icon="zoom_in" class="text-caption q-pa-sm q-ma-xs" />
             </router-link>
+
+
 
           </q-td>
         </template>
         </q-table>
   
-        <router-link to="/Det_pedido" class="ingresarcont">
-          <q-btn class="ingresar opcion" color="primary">Detalle Pedido
-            <q-icon name="style" color="white" right />
-          </q-btn>
-        </router-link>
       </div>
     </div>
   </template>
@@ -101,27 +98,22 @@
   import { ref } from "vue";
   import { usePedidoStore } from "../stores/pedido.js";
   import { useDestinoStore } from "../stores/destino.js";
+  import { useUsuarioStore } from "../stores/usuario.js";
+  import { usedetPedidoStore } from "../stores/det_pedido.js";
+import { useProductoStore } from "../stores/producto.js";
   import { useQuasar } from 'quasar'
   
   const modelo = "Pedidos";
   const usePedido = usePedidoStore();
   const useDestino = useDestinoStore();
+  const useUsuario = useUsuarioStore();
+  const useDetPedido = usedetPedidoStore();
+  const useProductos = useProductoStore();
   const loadingTable = ref(true)
   const $q = useQuasar()
   const filter = ref("");
   const loadingmodal = ref(false);
   
-  /* const columns = ref([
-    { name: 'fecha_creacion', align: 'center', label: 'Fecha creacion', field: 'fecha creacion'},
-    { name: 'fecha_entrega', align: 'center', label: 'Fecha entrega', field: 'fecha entrega'},
-    { name: 'ficha',align: 'center',  label: 'Ficha', field: 'ficha' },
-    { name: 'instructor_encargado',align: 'center',  label: 'Instructor encargado', field: 'instructor encargado' },
-    { name: 'subtotal',align: 'center',  label: 'Subtotal', field: 'subtotal' },
-    { name: 'total',align: 'center',  label: 'Total', field: 'total' },
-    { name: 'impuestos',align: 'center',  label: 'Impuestos', field: 'Impuestos' },
-    { name: 'Items',align: 'center',  label: 'Items', field: 'items' },
-    { name: 'Estado',align: 'center',  label: 'Estado', field: 'status' },
-  ]); */
   const columns = ref([
     {
       name: "fecha_creacion",
@@ -143,7 +135,7 @@
       name: "completado",
       label: "Completado",
       align: "left",
-      field: (row) => row.completado,
+      field: (row) => row.completado==!'true'?'no': 'si',
     },
     {
       name: "destino",
@@ -155,7 +147,7 @@
       name: "instructor_encargado",
       label: "Instructor",
       align: "center",
-      field: (row) => row.instructor_encargado,
+      field: (row) => row.instructor_encargado.nombre,
     },
     {
       name: "total",
@@ -172,7 +164,7 @@
   ]);
   
   const rows = ref([]);
-  
+  const rowsPedido = ref([])
   const data = ref({
     fecha_creacion: "",
     fecha_entrega: "",
@@ -183,10 +175,40 @@
   });
 
   let seletDestino = ref([]);
+  let seletInstructor = ref([]);
+  let seletProducto = ref([]);
+
+
+  const obtenerProducto = async () => {
+  try {
+    const producto = await useProductos.obtenerInfoProducto();
+    console.log("Todos los productos:", producto);
+
+    seletProducto.value = producto.map((producto_id) => ({
+      label: `${producto_id.nombre}`,
+      value: String(producto_id._id),
+    }));
+
+    seletProducto.value.sort((a, b) => {
+      if (a.label < b.label) {
+        return -1;
+      }
+      if (a.label > b.label) {
+        return 1;
+      }
+      return 0;
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+obtenerProducto();
 
 const obtenerDestino = async () => {
   try {
-    const destinos = await useDestino.obtenerInfoDestinos();
+    const res = await useDestino.obtenerInfoDestinos();
+    const destinos = res.destinos
     console.log("Todos los Destinos:", destinos);
 
     seletDestino.value = destinos.map((destino) => ({
@@ -208,13 +230,37 @@ const obtenerDestino = async () => {
   }
 };
 
-obtenerDestino();
+const obtenerUsuario = async () => {
+  try {
+    const usuario = await useUsuario.obtenerInfoUsuarios();
+    console.log("Todos los Instructores:", usuario);
+
+    seletInstructor.value = usuario.map((instructor_encargado) => ({
+      label: `${instructor_encargado.nombre}`,
+      value: String(instructor_encargado._id),
+    }));
+
+    seletInstructor.value.sort((a, b) => {
+      if (a.label < b.label) {
+        return -1;
+      }
+      if (a.label > b.label) {
+        return 1;
+      }
+      return 0;
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
   
   /* const preciototal = data.cantidad * data.precioporunidad; */
   
   const obtenerInfo = async () => {
     try {
-      await Promise.all([obtenerDestino()]);
+      await Promise.all([obtenerDestino(), obtenerUsuario(), ]);
       const pedidos = await usePedido.obtenerInfoPedido();
   
       console.log(pedidos);
@@ -235,6 +281,46 @@ obtenerDestino();
   };
   
   obtenerInfo();
+
+  const obtenerInfo2 = async () => {
+  try {
+    await Promise.all([obtenerProducto()]);
+    const res = await useDetPedido.obtenerInfodetPedido();
+    const detPedido = res.Det_pedido
+    console.log("detaleeeeeee");
+    console.log(detPedido);
+
+    if (!detPedido) return;
+
+    if (detPedido.error) {
+      notificar("negative", detPedido.error);
+      return;
+    }
+   
+    rowsPedido.value = detPedido;
+
+for (let i = 0; i < rowsPedido.value.length; i++) {
+  if (!rowsPedido.value[i].Det_pedido) {
+    continue;
+  }
+  
+  console.log(i);
+const Index = rowsPedido.value.findIndex(objeto => objeto._id === rowsPedido.value[i].Det_pedido._id);
+console.log(Index)
+if (Index !== -1) {
+  rowsPedido.value[Index].detalle = rowsPedido.value[i];
+}
+
+}
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loadingTable.value = false;
+  }
+};
+
+
+obtenerInfo2();
   
   const estado = ref("guardar");
   const modal = ref(false);
@@ -252,10 +338,14 @@ obtenerDestino();
       estado.value = "guardar";
     },
     editar: (info) => {
+  // Asignar la fecha completa al objeto data.value
       data.value = {
-      ...info,
-      lote: { label: info.destino.nombre, value: info.destino._id },
-    };
+        ...info,
+        destino: info.destino._id, // Asignar solo el ID del destino
+        instructor_encargado: info.instructor_encargado._id, // Asignar solo el ID del instructor
+        fecha_creacion: info.fecha_creacion, // Mantener la fecha completa
+        fecha_entrega: info.fecha_entrega, // Mantener la fecha completa
+      };
       modal.value = true;
       estado.value = "editar";
     },
@@ -298,16 +388,21 @@ obtenerDestino();
     editar: async () => {
       loadingmodal.value = true;
       try {
-        const response = await useDestino.editar(data.value._id, data.value);
+        const response = await usePedido.editar(data.value._id, {
+          ...data.value,
+          destino: data.value.destino,
+          instructor_encargado: data.value.instructor_encargado,
+        });
         console.log(response);
-        if (!response) return
+        if (!response) return;
         if (response.error) {
-          notificar('negative', response.error)
+          notificar('negative', response.error);
           loadingmodal.value = false;
-          return
+          return;
         }
-        rows.value.splice(buscarIndexLocal(response._id), 1, response);
-        notificar('positive', 'Editado exitosamente')
+        const index = rows.value.findIndex((pedido) => pedido._id === response._id);
+        rows.value.splice(index, 1, response);
+        notificar('positive', 'Editado exitosamente');
         modal.value = false;
       } catch (error) {
         console.log(error);
