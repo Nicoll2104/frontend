@@ -3,7 +3,7 @@
       <q-dialog v-model="modal" persistent color="primary">
         <q-card class="modal">
           <q-toolbar>
-            <q-toolbar-title> Agregar {{ modelo }}</q-toolbar-title>
+            <q-toolbar-title> Agregar / Editar {{ modelo }}</q-toolbar-title>
             <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
   
           </q-toolbar>
@@ -59,7 +59,7 @@
             </q-tr>
           </template>
   
-          <template v-slot:body-cell-Estado="props">
+   <!--        <template v-slot:body-cell-Estado="props">
             <q-td :props="props" class="botones">
               <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.estado === 1
                 ? 'Activo'
@@ -74,11 +74,11 @@
                 props.row.estado = 'load';
                 " />
             </q-td>
-          </template>
+          </template> -->
   
           <template v-slot:body-cell-opciones="props">
           <q-td :props="props" class="botones" auto-width>
-
+            
             <q-btn color="warning" icon="edit" class="text-caption q-pa-sm q-ma-xs" @click="opciones.editar(props.row)" />
             
             <router-link to="/det_pedido" class="ingresarcont">
@@ -301,12 +301,14 @@ obtenerInfo2();
       estado.value = "guardar";
     },
     editar: (info) => {
+  // Asignar la fecha completa al objeto data.value
       data.value = {
-      ...info,
-      destino: { label: info.destino.nombre, value: info.destino._id },
-      instructor_encargado: { label: info.usuario.nombre, value: info.usuario._id },
-
-    };
+        ...info,
+        destino: info.destino._id, // Asignar solo el ID del destino
+        instructor_encargado: info.instructor_encargado._id, // Asignar solo el ID del instructor
+        fecha_creacion: info.fecha_creacion, // Mantener la fecha completa
+        fecha_entrega: info.fecha_entrega, // Mantener la fecha completa
+      };
       modal.value = true;
       estado.value = "editar";
     },
@@ -349,16 +351,21 @@ obtenerInfo2();
     editar: async () => {
       loadingmodal.value = true;
       try {
-        const response = await useDestino.editar(data.value._id, data.value);
+        const response = await usePedido.editar(data.value._id, {
+          ...data.value,
+          destino: data.value.destino,
+          instructor_encargado: data.value.instructor_encargado,
+        });
         console.log(response);
-        if (!response) return
+        if (!response) return;
         if (response.error) {
-          notificar('negative', response.error)
+          notificar('negative', response.error);
           loadingmodal.value = false;
-          return
+          return;
         }
-        rows.value.splice(buscarIndexLocal(response._id), 1, response);
-        notificar('positive', 'Editado exitosamente')
+        const index = rows.value.findIndex((pedido) => pedido._id === response._id);
+        rows.value.splice(index, 1, response);
+        notificar('positive', 'Editado exitosamente');
         modal.value = false;
       } catch (error) {
         console.log(error);
