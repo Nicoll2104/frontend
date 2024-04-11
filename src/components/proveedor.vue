@@ -237,7 +237,7 @@
     guardar: async () => {
       loadingmodal.value = true;
       try {
-        const response = await useProveedor.postProveedor(info);
+        const response = await useProveedor.postProveedor(data.value);
         console.log(response);
         if (!response) return;
         if (response.error) {
@@ -260,9 +260,7 @@
       try {
         const info = { ...data.value};
         const response = await useProveedor.putProveedor(
-          data.value._id,
-          info
-        );
+          data.value._id, data.value);
         console.log(response);
         if (!response) return;
         if (response.error) {
@@ -272,9 +270,9 @@
         }
         console.log(rows.value);
         rows.value.splice(
-          buscarIndexLocal(response.data.proveedores._id),
+          buscarIndexLocal(response.data.provedores._id),
           1,
-          response.data.proveedores
+          response.data.provedores
         );
         notificar("positive", "Editado exitosamente");
         modal.value = false;
@@ -299,7 +297,7 @@
           return;
         }
         rows.value.splice(
-          buscarIndexLocal(response.data.proveedores._id),
+          buscarIndexLocal(response.data.provedores._id),
           1,
           response.data.proveedores
         );
@@ -321,9 +319,9 @@
           return;
         }
         rows.value.splice(
-          buscarIndexLocal(response.data.proveedores._id),
+          buscarIndexLocal(response.data.provedores._id),
           1,
-          response.data.proveedores
+          response.data.provedores
         );
         notificar("positive", "Inactivado exitosamente");
       } catch (error) {
@@ -365,10 +363,10 @@
         notificar("negative", "El telefono es obligatorio");
         return;
       }
-      if (loteValidation !== true) {
+/*       if (loteValidation !== true) {
         $q.notify({ type: "negative", message: loteValidation });
         return;
-      }
+      } */
     }
     enviarInfo[estado.value]();
   }

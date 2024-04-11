@@ -22,7 +22,7 @@ export const useProveedorStore = defineStore('provedor', () => {
             console.log('a');
             let res = await axios.post("provedor/agregar", data);
             console.log('a', res);
-            return res.data.proveedores
+            return res.data.provedores
         } catch (error) {
             throw error
         }
