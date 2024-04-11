@@ -47,10 +47,13 @@ let menu2_content = ref({
     { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
     { ruta: "/Areas", titulo: "Area tematica", desplegable: false },
     { ruta: "/Pedidos", titulo: "Pedidos", desplegable: false },
-    { ruta: "/proveedor", titulo: "Proveedor", desplegable: false },
     { ruta: "/Productos", titulo: "Producto", desplegable: false },
     { ruta: "/Usuario", titulo: "Usuario", desplegable: false },
-    { ruta: "/Contrato", titulo: "Contrato", desplegable: false },
+    { ruta: "", titulo: "Compras", desplegable: [
+        {ruta: "/Contrato", titulo: "Contrato"},
+        {ruta: "/proveedor", titulo: "Proveedor"},
+        {ruta: "/Proceso", titulo: "Proceso"},
+    ] },
     ],
     Instructor:[
     { ruta: "/Dependencias", titulo: "Dependencias", desplegable: false},
@@ -58,10 +61,13 @@ let menu2_content = ref({
     { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
     { ruta: "/Areas", titulo: "Area tematica", desplegable: false },
     { ruta: "/Pedidos", titulo: "Pedidos", desplegable: false },
-    { ruta: "/proveedor", titulo: "Proveedor", desplegable: false },
     { ruta: "/Productos", titulo: "Producto", desplegable: false },
     { ruta: "/Usuario", titulo: "Usuario", desplegable: false },
-    { ruta: "/Contrato", titulo: "Contrato", desplegable: false },
+    { ruta: "", titulo: "Compras", desplegable: [
+        {ruta: "/Contrato", titulo: "Contrato"},
+        {ruta: "/proveedor", titulo: "Proveedor"},
+        {ruta: "/Proceso", titulo: "Proceso"},
+    ] },
     ],
     Bodega:[
     { ruta: "/Dependencias", titulo: "Dependencias", desplegable: false},
@@ -69,10 +75,13 @@ let menu2_content = ref({
     { ruta: "/Lotes", titulo: "Lotes", desplegable: false },
     { ruta: "/Areas", titulo: "Area tematica", desplegable: false },
     { ruta: "/Pedidos", titulo: "Pedidos", desplegable: false },
-    { ruta: "/proveedor", titulo: "Proveedor", desplegable: false },
     { ruta: "/Productos", titulo: "Producto", desplegable: false },
     { ruta: "/Usuario", titulo: "Usuario", desplegable: false },
-    { ruta: "/Contrato", titulo: "Contrato", desplegable: false },
+    { ruta: "", titulo: "Compras", desplegable: [
+        {ruta: "/Contrato", titulo: "Contrato"},
+        {ruta: "/proveedor", titulo: "Proveedor"},
+        {ruta: "/Proceso", titulo: "Proceso"},
+    ] },
     ],
 });
 
