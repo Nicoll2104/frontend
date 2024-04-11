@@ -97,12 +97,16 @@
   import { usePedidoStore } from "../stores/pedido.js";
   import { useDestinoStore } from "../stores/destino.js";
   import { useUsuarioStore } from "../stores/usuario.js";
+  import { usedetPedidoStore } from "../stores/det_pedido.js";
+import { useProductoStore } from "../stores/producto.js";
   import { useQuasar } from 'quasar'
   
   const modelo = "Pedidos";
   const usePedido = usePedidoStore();
   const useDestino = useDestinoStore();
   const useUsuario = useUsuarioStore();
+  const useDetPedido = usedetPedidoStore();
+  const useProductos = useProductoStore();
   const loadingTable = ref(true)
   const $q = useQuasar()
   const filter = ref("");
@@ -249,6 +253,37 @@ obtenerUsuario();
   };
   
   obtenerInfo();
+
+  const obtenerInfo2 = async () => {
+  try {
+    await Promise.all([obtenerProducto()]);
+    const res = await useDetPedido.obtenerInfodetPedido();
+    const detPedido = res.Det_pedido
+    console.log("useDetPedido");
+    console.log(useDetPedido);
+    console.log("dentro");
+    console.log(detPedido);
+
+    if (!detPedido) return;
+
+    if (detPedido.error) {
+      notificar("negative", detPedido.error);
+      return;
+    }
+    /* rows.value = detPedido.Det_pedido; */
+
+
+
+
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loadingTable.value = false;
+  }
+};
+console.log("Antes de la línea 101");
+
+obtenerInfo2();
   
   const estado = ref("guardar");
   const modal = ref(false);
