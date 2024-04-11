@@ -133,6 +133,7 @@
 
     <div class="q-p-md">
       <q-table
+        dense
         :rows="rows"
         :columns="columns"
         class="tabla"
@@ -210,11 +211,11 @@
         </template>
 
         <template v-slot:body-cell-opciones="props">
-          <q-td :props="props" class="botones">
+          <q-td :props="props" class="botones" auto-width>
             <q-btn
               color="warning"
               icon="edit"
-              class="botonv1"
+              class="text-caption q-pa-sm q-ma-xs"
               @click="opciones.editar(props.row)"
             />
           </q-td>
@@ -298,8 +299,10 @@ const columns = ref([
   },
   {
     name: "opciones",
-    label: "Opciones",
+    label: "",
     field: "opciones",
+    align: "center",
+
   },
 ]);
 const rows = ref([]);

@@ -24,7 +24,7 @@
     </q-dialog>
 
     <div class="q-pa-md">
-      <q-table :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
+      <q-table dense :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
         rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
         no-results-label="No hay resultados para la busqueda" wrap-cells="false">
         <template v-slot:top>
@@ -67,8 +67,8 @@
         </template>
 
         <template v-slot:body-cell-opciones="props">
-          <q-td :props="props" class="botones">
-            <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
+          <q-td :props="props" class="botones" auto-width>
+            <q-btn color="warning" icon="edit" class="text-caption q-pa-sm q-mx-xs" @click="opciones.editar(props.row)" />
           </q-td>
         </template>
       </q-table>
@@ -105,8 +105,9 @@ const columns = ref([
   },
   {
     name: "opciones",
-    label: "Opciones",
+    label: "",
     field: "opciones",
+    align: "center",
   },
 ]);
 const rows = ref([]);
@@ -302,7 +303,7 @@ $q.notify({
 .tabla {
   padding: 0 20px;
   margin: 10px auto;
-  max-width: 1000px;
+  max-width: 600px;
   /* min-height: 710px; */
   border: 0px solid black;
 }

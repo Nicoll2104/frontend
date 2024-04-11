@@ -29,19 +29,19 @@ const columns = ref([
   {
     name: "año",
     label: "inico",
-    align: "left",
+    align: "center",
     field: (row) => row.fecha_inicio.slice(0, -14),
   },
   {
     name: "año",
     label: "fin",
-    align: "left",
+    align: "center",
     field: (row) => row.fecha_fin.slice(0, -14),
   },
   {
     name: "año",
     label: "nivel de formacion",
-    align: "left",
+    align: "center",
     field: (row) => row.nivel_de_formacion,
   },
   {
@@ -52,8 +52,9 @@ const columns = ref([
   },
   {
     name: "opciones",
-    label: "Opciones",
+    label: "",
     field: "opciones",
+    align: "center"
   },
 ]);
 const rows = ref([]);
@@ -349,7 +350,7 @@ function notificar(tipo, msg) {
     <div class="q-pa-md">
       <q-table :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
         rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
-        no-results-label="No hay resultados para la busqueda" wrap-cells="false">
+        no-results-label="No hay resultados para la busqueda" dense>
         <template v-slot:top>
           <h4 class="titulo-cont">
             {{ modelo + ' ' }}
@@ -372,7 +373,7 @@ function notificar(tipo, msg) {
           </q-tr>
         </template>
 
-        <template v-slot:body-cell-status="props">
+        <template v-slot:body-cell-status="props" >
           <q-td :props="props" class="botones">
             <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.status == 1
               ? 'Activo'
@@ -390,8 +391,8 @@ function notificar(tipo, msg) {
         </template>
 
         <template v-slot:body-cell-opciones="props">
-          <q-td :props="props" class="botones">
-            <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
+          <q-td :props="props" class="botones" auto-width>
+            <q-btn color="warning" icon="edit" class="text-caption q-pa-sm q-mx-sm"  @click="opciones.editar(props.row)" />
           </q-td>
         </template>
       </q-table>

@@ -1,11 +1,14 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useDependStore } from "../stores/dependencia.js";
+import { useDistDependStore } from "../stores/dis_dependencia.js";
 import { useQuasar } from 'quasar'
 
 const modelo = "Dependencias";
-const usePresup = useDependStore();
+const useDependencias = useDependStore();
+const useDistDependencias = useDistDependStore();
 const loadingTable = ref(true)
+const loadingTableDist = ref(true)
 const $q = useQuasar()
 const filter = ref("");
 const loadingmodal = ref(false);
@@ -18,6 +21,7 @@ const columns = ref([
     field: (row) => row.codigo,
     sort: true,
     sortOrder: "da",
+
   },
   {
     name: "nombre",
@@ -34,11 +38,13 @@ const columns = ref([
   },
   {
     name: "opciones",
-    label: "Opciones",
+    label: "",
     field: "opciones",
+    align: "center",
   },
 ]);
 const rows = ref([]);
+const rowsDist = ref([])
 
 const data = ref({
   codigo: "",
@@ -47,10 +53,7 @@ const data = ref({
 
 const obtenerInfo = async () => {
   try {
-    const dependencias = await usePresup.obtenerInfoDepend();
-    console.log("usePresup")
-    console.log(usePresup)
-    console.log("dentro")
+    const dependencias = await useDependencias.obtenerInfoDepend();
     console.log(dependencias);
 
     if (!dependencias) return
@@ -67,11 +70,50 @@ const obtenerInfo = async () => {
     loadingTable.value = false
   }
 };
+
+const obtenerInfoDist = async () => {
+  try {
+    const res = await useDistDependencias.obtenerInfoDepend();
+    const dependencias = res.distribucion;
+    console.log("useDistDependencias");
+    console.log(dependencias);
+
+    if (!dependencias) return;
+
+    if (dependencias.error) {
+      notificar('negative', dependencias.error);
+      return;
+    }
+
+    rowsDist.value = dependencias;
+
+    for (let i = 0; i < rowsDist.value.length; i++) {
+      if (!rowsDist.value[i].dependencia) {
+        continue;
+      }
+      
+      console.log(i);
+  const Index = rows.value.findIndex(objeto => objeto._id === rowsDist.value[i].dependencia._id);
+  console.log(Index)
+  if (Index !== -1) {
+    // Asigna el detalle encontrado a una propiedad de la fila
+    rows.value[Index].detalle = rowsDist.value[i];
+  }
+
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loadingTableDist.value = false;
+  }
+};
 console.log("Antes de la línea 101");
+
 
 onMounted(() => {
   obtenerInfo();
   console.log("inicio");
+  obtenerInfoDist()
 });
 
 
@@ -101,7 +143,7 @@ const enviarInfo = {
   guardar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await usePresup.postDepend(data.value);
+      const response = await useDependencias.postDepend(data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -122,7 +164,7 @@ const enviarInfo = {
   editar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await usePresup.putDepend(data.value._id, data.value);
+      const response = await useDependencias.putDepend(data.value._id, data.value);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -131,7 +173,7 @@ const enviarInfo = {
         return
       }
       console.log(rows.value);
-      rows.value.splice(buscarIndexLocal(response.data.dependencia._id), 1, response.data.dependencia);
+      rows.value.splice(buscarIndexLocal(response.data.dep._id), 1, response.data.dep);
       notificar('positive', 'Editado exitosamente')
       modal.value = false;
     } catch (error) {
@@ -145,7 +187,7 @@ const enviarInfo = {
 const in_activar = {
   putActivar: async (id) => {
     try {
-      const response = await usePresup.putActivar(id);
+      const response = await useDependencias.putActivar(id);
       console.log(response);
       console.log("Activando");
       if (!response) return
@@ -153,7 +195,7 @@ const in_activar = {
         notificar('negative', response.error)
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.items._id), 1, response.data.items);
+      rows.value.splice(buscarIndexLocal(response.data.dep._id), 1, response.data.dep);
       notificar('positive', 'Activado, exitosamente')
     } catch (error) {
       console.log(error);
@@ -165,7 +207,7 @@ const in_activar = {
   putInactivar: async (id) => {
     console.log("inactivar");
     try {
-      const response = await usePresup.putInactivar(id);
+      const response = await useDependencias.putInactivar(id);
       console.log("Desactivar");
       console.log(response);
       if (!response) return
@@ -174,7 +216,7 @@ const in_activar = {
 
         return
       }
-      rows.value.splice(buscarIndexLocal(response.data.items._id), 1, response.data.items);
+      rows.value.splice(buscarIndexLocal(response.data.dep._id), 1, response.data.dep);
     } catch (error) {
       console.log(error);
     } finally {
@@ -253,9 +295,9 @@ function notificar(tipo, msg) {
     </q-dialog>
 
     <div class="q-pa-md">
-      <q-table :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
+      <q-table :rows="rows" :columns="columns" class="tabla " row-key="name" :loading="loadingTable" :filter="filter"
         rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
-        no-results-label="No hay resultados para la busqueda" wrap-cells="false">
+        no-results-label="No hay resultados para la busqueda" dense>
         <template v-slot:top>
           <h4 class="titulo-cont">
             {{ modelo + ' ' }}
@@ -278,9 +320,9 @@ function notificar(tipo, msg) {
           </q-tr>
         </template>
 
-        <template v-slot:body-cell-status="props">
+<!--         <template v-slot:body-cell-status="props">
           <q-td :props="props" class="botones">
-            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.status == 1
+            <q-btn class="botonv1" padding="10px" :label="props.row.status == 1
               ? 'Activo'
               : props.row.status == 0
                 ? 'Inactivo'
@@ -296,13 +338,47 @@ function notificar(tipo, msg) {
         </template>
 
         <template v-slot:body-cell-opciones="props">
-          <q-td :props="props" class="botones">
-            <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
-            <router-link to="/Dis_presupuesto" class="ingresarcont">
-              <q-btn color="secondary" icon="zoom_in" class="botonv1" />
-            </router-link>
+          <q-td :props="props" class="botones" auto-width>
+            <q-btn color="warning" icon="edit" class="text-caption q-pa-sm q-mx-sx" @click="opciones.editar(props.row)" />
+              
+              <q-btn color="secondary" icon="zoom_in" class="text-caption q-pa-sm q-mx-sm" 
+              @click="props.expand = !props.expand" :icon="props.expand ? 'remove' : 'add'"/>
           </q-td>
-        </template>
+        </template> -->
+
+        <template v-slot:body="props">
+  <q-tr :props="props">
+    <q-td v-for="col in props.cols" :key="col.name" :props="props" :auto-width="col.name == 'opciones'">
+      <q-div v-if="col.name != 'opciones' && col.name != 'status' ">
+        {{ col.value }}
+      </q-div>
+      <q-div v-else-if="col.name == 'status'">
+        <q-btn class="botonv1" padding="10px" :label="props.row.status == 1 ? 'Activo' : props.row.status == 0 ? 'Inactivo' : '‎  ‎   ‎   ‎   ‎ '" :color="props.row.status == 1 ? 'primary' : 'secondary'" :loading="props.row.status == 'load'" loading-indicator-size="small" @click="props.row.status == 1 ? in_activar.putInactivar(props.row._id) : in_activar.putActivar(props.row._id); props.row.status = 'load';" />
+      </q-div>
+      <q-div v-else-if="col.name == 'opciones' ">
+        <q-btn color="warning" icon="edit" class="text-caption q-pa-sm q-mx-xs" @click="opciones.editar(props.row)" />
+        <q-btn class="text-caption q-pa-sm q-mx-xs" @click="props.row.expanded = !props.row.expanded" :icon="props.row.expanded ? 'zoom_out' : 'zoom_in'" :color="props.row.expanded ? 'grey' : 'secondary'"/>
+      </q-div>
+    </q-td>
+  </q-tr>
+  <q-tr v-show="props.row.expanded" :props="props" class="bg-grey-2 ">
+    <q-td colspan="100%">
+      <div class="text-center " v-if="props.row.detalle" >
+        <q-btn colspan="100%" :loading="loadingTableDist" class="text-lowercase" flat >
+          codigo presupuestal: {{ props.row.detalle.codigo_presupuestal}}
+          | presupuesto actual: {{ props.row.detalle.presupuesto_actual}}
+          | presupuesto_asignado: {{ props.row.detalle.presupuesto_asignado}}
+        </q-btn>
+      </div>
+      <div class="text-center " v-if="!props.row.detalle" >
+        <q-btn @click="opciones.agregar" label="Añadir" color="grey-6"
+        class="text-capitalize text-white">
+              <q-icon name="style" color="white" right />
+            </q-btn>
+      </div>
+    </q-td>
+  </q-tr>
+</template>
       </q-table>
     </div>
 
@@ -332,9 +408,10 @@ warning: Color para advertencias o mensajes importantes.
 .tabla {
   padding: 0 20px;
   margin: 10px auto;
-  max-width: 1200px;
-  /* min-height: 710px; */
+  max-width: 700px;  
+
   border: 0px solid black;
+
 }
 
 .titulo-cont {
@@ -355,13 +432,12 @@ warning: Color para advertencias o mensajes importantes.
   font-size: 15px;
 }
 
-.botonv1 {
-  font-size: 10px;
-  font-weight: bold;
-}
+
 
 .botonv1 {
   font-size: 10px;
   font-weight: bold;
 }
-</style>../stores/dependencia.js
+
+
+</style>

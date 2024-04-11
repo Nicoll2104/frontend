@@ -64,8 +64,10 @@ const columns = ref([
   },
   {
     name: "opciones",
-    label: "Opciones",
+    label: "",
     field: "opciones",
+    align: "center",
+
   },
 ]);
 
@@ -317,7 +319,7 @@ function prompt() {
     </q-dialog>
 
     <div class="q-pa-md">
-      <q-table :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
+      <q-table dense :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
         rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
         no-results-label="No hay resultados para la busqueda" wrap-cells="false">
         <template v-slot:top>
@@ -357,8 +359,8 @@ function prompt() {
         </template>
 
         <template v-slot:body-cell-opciones="props">
-          <q-td :props="props" class="botones">
-            <q-btn color="warning" icon="zoom_in" class="botonv1" @click="opciones.editar(props.row)" />
+          <q-td :props="props" class="botones" auto-width>
+            <q-btn color="warning" icon="zoom_in" class="text-caption q-pa-sm q-ma-xs" @click="opciones.editar(props.row)" />
           </q-td>
         </template>
       
