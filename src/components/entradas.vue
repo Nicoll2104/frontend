@@ -375,7 +375,8 @@ const in_activar = {
       }
       const index = buscarIndexLocal(response.data.entradas._id);
       if (index !== -1) {
-        rows.value[index] = response.data.entradas;
+        // Actualiza solo el estado de la entrada
+        rows.value[index].status = response.data.entradas.status;
         notificar("positive", "Activado exitosamente");
       } else {
         notificar("negative", "No se pudo encontrar la entrada para activar");
@@ -395,7 +396,8 @@ const in_activar = {
       }
       const index = buscarIndexLocal(response.data.entradas._id);
       if (index !== -1) {
-        rows.value[index] = response.data.entradas;
+        // Actualiza solo el estado de la entrada
+        rows.value[index].status = response.data.entradas.status;
         notificar("positive", "Inactivado exitosamente");
       } else {
         notificar("negative", "No se pudo encontrar la entrada para inactivar");
@@ -405,6 +407,7 @@ const in_activar = {
     }
   },
 };
+
 
 function validarCampos() {
   const ProductoValidation = validateProducto(data.value.idProducto);

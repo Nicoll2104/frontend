@@ -8,7 +8,7 @@
   
           </q-toolbar>
           <!-- inputs🃏👇-->
-          <<q-card-section class="q-gutter-md row items-star justify-center continputs1">
+          <q-card-section class="q-gutter-md row items-star justify-center continputs1">
               <q-input class="nombreinput modalinputs" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
               :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
               
@@ -159,7 +159,7 @@
       name: "fecha_creacion",
       label: "Fecha creacion",
       align: "left",
-      field: (row) => row.fecha_creacion,
+      field: (row) => row.fecha_creacion.slice(0, -14),
       sort: true,
       sortOrder: "da",
     },
@@ -167,7 +167,7 @@
       name: "fecha_entrega",
       label: "Fecha entrega",
       align: "left",
-      field: (row) => row.fecha_entrega,
+      field: (row) => row.fecha_entrega.slice(0, -14),
       sort: true,
       sortOrder: "da",
     },
