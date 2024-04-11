@@ -85,6 +85,8 @@
               <q-btn color="secondary" icon="zoom_in" class="text-caption q-pa-sm q-ma-xs" />
             </router-link>
 
+
+
           </q-td>
         </template>
         </q-table>
