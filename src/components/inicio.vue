@@ -42,7 +42,7 @@ const rol = Cookies.get('rol')
 let content = ref({
   Administrador: [
     { ruta: "/Presupuesto", titulo: "Presupuesto", img: presupuesto },
-    { ruta: "/Fichas", titulo: "Fichas", img: fichas2 },
+    { ruta: "/Destino", titulo: "Destino", img: fichas2 },
     { ruta: "/Lotes", titulo: "Lotes", img: lotes },
     { ruta: "/Areas", titulo: "Area tematica", img: areas },
     { ruta: "/Pedidos", titulo: "Pedido", img: pedido },
@@ -51,7 +51,7 @@ let content = ref({
   ],
   Instructor: [
   { ruta: "/Presupuesto", titulo: "Presupuesto", img: presupuesto },
-    { ruta: "/Fichas", titulo: "Fichas", img: fichas2 },
+    { ruta: "/Destino", titulo: "Destino", img: fichas2 },
     { ruta: "/Lotes", titulo: "Lotes", img: lotes },
     { ruta: "/Areas", titulo: "Areas", img: areas },
     { ruta: "/Pedidos", titulo: "Pedido", img: pedido },
@@ -59,7 +59,7 @@ let content = ref({
   ],
   Bodega: [
   { ruta: "/Presupuesto", titulo: "Presupuesto", img: presupuesto },
-    { ruta: "/Fichas", titulo: "Fichas", img: fichas2 },
+    { ruta: "/Destino", titulo: "Destino", img: fichas2 },
     { ruta: "/Lotes", titulo: "Lotes", img: lotes },
     { ruta: "/Areas", titulo: "Areas", img: areas },
     { ruta: "/Pedidos", titulo: "Pedido", img: pedido },
