@@ -89,11 +89,6 @@
         </template>
         </q-table>
   
-        <router-link to="/Det_pedido" class="ingresarcont">
-          <q-btn class="ingresar opcion" color="primary">Detalle Pedido
-            <q-icon name="style" color="white" right />
-          </q-btn>
-        </router-link>
       </div>
     </div>
   </template>
