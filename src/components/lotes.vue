@@ -8,12 +8,8 @@
         </q-toolbar>
 
         <q-card-section class="q-gutter-md">
-          <q-input class="input1" outlined v-model="data.codigo" label="Codigo" type="number"
-            maxlength="15" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el codigo']"></q-input>
           <q-input class="input1" outlined v-model="data.nombre" label="Nombre" type="text" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'Ingrese un nombre']"></q-input>
-          <q-input class="input1" outlined v-model="data.año" label="Año" type="number" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese el año']"></q-input>
           <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
             <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
             :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
@@ -77,10 +73,6 @@
         </template>
       </q-table>
     </div>
-
-    <router-link to="/Dis_presupuesto" class="ingresarcont">
-      <q-btn class="distribucion" color="primary" icon-right="chevron_right">Distribucion de presupuesto</q-btn>
-    </router-link>
   </div>
 </template>
 
@@ -98,25 +90,11 @@ const loadingmodal = ref(false);
 
 const columns = ref([
   {
-    name: "codigo",
-    label: "Codigo",
-    align: "left",
-    field: (row) => row.codigo,
-    sort: true,
-    sortOrder: "da",
-  },
-  {
     name: "nombre",
     label: "Nombre",
     align: "left",
     field: (row) => row.nombre,
 
-  },
-  {
-    name: "año",
-    label: "Año",
-    align: "left",
-    field: (row) => row.año,
   },
   {
     name: "status",
@@ -134,9 +112,7 @@ const columns = ref([
 const rows = ref([]);
 
 const data = ref({
-  codigo: "",
   nombre: "",
-  año: "",
 });
 
 const obtenerInfo = async () => {
@@ -174,9 +150,7 @@ const modal = ref(false);
 const opciones = {
   agregar: () => {
     data.value = {
-      codigo: "",
       nombre: "",
-      año: "",
     };
     modal.value = true;
     estado.value = "guardar";
@@ -296,12 +270,6 @@ function validarCampos() {
         return
       }
     }
-
-    if (d[0] === "codigo" && d[1].toString().length < 6) {
-      notificar('negative', "El codigo debe tener más de 6 digitos")
-      return
-    }
-
     if (d[0] === "nombre" && d[1].length > 15) {
       notificar('negative', 'El nombre no puede tener más de 15 caracteres')
       return
