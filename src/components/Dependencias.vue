@@ -385,7 +385,7 @@ function notificar(tipo, msg) {
   </q-tr>
    </div>
 </template>
-      </q-table>
+  </q-table>
     </div>
 
   </div>
