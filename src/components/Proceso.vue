@@ -11,15 +11,11 @@
             <q-input class="input1" outlined v-model="data.codigo" label="Codigo" type="number"
             maxlength="10" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese un código']"></q-input>
             <q-input class="input1" outlined v-model="data.presupuestoAsignado" label="Presupuesto Asignado" type="number"
-            maxlength="10" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto asignado']"></q-input>
-            <q-input class="input1" outlined v-model="data.presupuestoAsignado" label="Presupuesto Asignado" type="number"
-            maxlength="10" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el presupuesto asignado']"></q-input>
-            <q-input class="input1" outlined v-model="data.dni" label="Identificación" type="text" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese un número de identificación']"></q-input>
-            <q-input class="input1" outlined v-model="data.correo" label="Correo electrónico" type="text" maxlength="20" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese un correo electronico']"></q-input>
-            <q-input class="input1" outlined v-model="data.telefono" label="Telefono" type="number"
-            maxlength="10" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese un número de telefono']"></q-input>
+            maxlength="10" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el Presupuesto Asignado']"></q-input>
+            <q-input class="input1" outlined v-model="data.presupuestoDisponible" label="Presupuesto Disponible" type="number"
+            maxlength="10" lazy-rules :rules="[val => val.trim() != '' || 'Ingrese el Presupuesto Disponible']"></q-input>
+            <q-input class="input1" outlined v-model="data.fecha" label="Fecha" type="date" maxlength="45" lazy-rules
+            :rules="[val => validateDate(data.fecha) || 'Ingrese una fecha']"></q-input>
           <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0;">
             <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
               :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
@@ -126,11 +122,11 @@
   
   <script setup>
   import { onMounted, ref } from "vue";
-  /* import { useProveedorStore } from "../stores/proveedor.js"; */
+  import { useProcesoStore } from "../stores/Proceso.js";
   import { useQuasar } from "quasar";
   
   const modelo = "Proceso";
-  const useProveedor = useProveedorStore();
+  const useProceso = useProcesoStore();
   const loadingTable = ref(true);
   const $q = useQuasar();
   const filter = ref("");
@@ -144,28 +140,22 @@
       field: (row) => row.codigo,
     },
     {
-      name: "nombre",
-      label: "Nombre",
+      name: "presupuestoAsignado",
+      label: "Presupuesto Asignado",
       align: "left",
-      field: (row) => row.nombre,
+      field: (row) => row.presupuestoAsignado,
     },
     {
-      name: "dni",
-      label: "Identificación",
+      name: "presupuestoDisponible",
+      label: "Presupuesto Disponible",
       align: "left",
-      field: (row) => row.dni,
+      field: (row) => row.presupuestoDisponible,
     },
     {
-      name: "correo",
-      label: "Correo",
+      name: "fecha",
+      label: "Fecha",
       align: "left",
-      field: (row) => row.correo,
-    },
-    {
-      name: "telefono",
-      label: "Telefono",
-      align: "left",
-      field: (row) => row.telefono,
+      field: (row) => row.fecha.slice(0, -14),
     },
     {
       name: "status",
@@ -185,27 +175,27 @@
   
   const data = ref({
     nombre: "",
-    dni: "",
-    correo: "",
-    telefono: "",
+    presupuestoAsignado: "",
+    presupuestoDisponible: "",
+    fecha: "",
   });
   
   
   const obtenerInfo = async () => {
     try {
-      const proveedores = await useProveedor.obtenerInfoProveedor();
-      console.log("useProveedor");
-      console.log(useProveedor);
+      const procesos = await useProceso.obtenerInfoProceso();
+      console.log("useProceso");
+      console.log(useProceso);
       console.log("dentro");
-      console.log(proveedores);
+      console.log(procesos);
   
-      if (!proveedores) return;
+      if (!procesos) return;
   
-      if (proveedores.error) {
-        notificar("negative", proveedores.error);
+      if (procesos.error) {
+        notificar("negative", procesos.error);
         return;
       }
-      rows.value = proveedores;
+      rows.value = procesos;
     } catch (error) {
       console.error(error);
     } finally {
@@ -225,21 +215,19 @@
     agregar: () => {
       data.value = {
         nombre: "",
-        dni: "",
-        correo: "",
-        telefono: "",
+        presupuestoAsignado: "",
+        presupuestoDisponible: "",
+        fecha: "",
       };
       modal.value = true;
       estado.value = "guardar";
     },
     editar: (info) => {
-      data.value = {
-        ...info,
-      };
-      console.log(data.value);
-      modal.value = true;
-      estado.value = "editar";
-    },
+    data.value = { ...info }
+    data.value.fecha= info.fecha.slice(0, -14)
+    modal.value = true;
+    estado.value = "editar";
+  },
   };
 
   function buscarIndexLocal(id) {
@@ -250,7 +238,7 @@
     guardar: async () => {
       loadingmodal.value = true;
       try {
-        const response = await useProveedor.postProveedor(data.value);
+        const response = await useProceso.postProceso(data.value);
         console.log(response);
         if (!response) return;
         if (response.error) {
@@ -271,8 +259,7 @@
     editar: async () => {
       loadingmodal.value = true;
       try {
-        const info = { ...data.value};
-        const response = await useProveedor.putProveedor(
+        const response = await useProceso.putProceso(
           data.value._id, data.value);
         console.log(response);
         if (!response) return;
@@ -283,9 +270,9 @@
         }
         console.log(rows.value);
         rows.value.splice(
-          buscarIndexLocal(response.data.provedores._id),
+          buscarIndexLocal(response.data.procesos._id),
           1,
-          response.data.provedores
+          response.data.procesos
         );
         notificar("positive", "Editado exitosamente");
         modal.value = false;
@@ -301,7 +288,7 @@
     putActivar: async (id) => {
       try {
         console.log(id);
-        const response = await useProveedor.putActivar(id);
+        const response = await useProceso.putActivar(id);
         console.log(response);
         console.log("Activando");
         if (!response) return;
@@ -310,9 +297,9 @@
           return;
         }
         rows.value.splice(
-          buscarIndexLocal(response.data.provedores._id),
+          buscarIndexLocal(response.data.procesos._id),
           1,
-          response.data.proveedores
+          response.data.procesos
         );
         notificar("positive", "Activado, exitosamente");
       } catch (error) {
@@ -324,7 +311,7 @@
       console.log("inactivar");
       console.log(id);
       try {
-        const response = await useProveedor.putInactivar(id);
+        const response = await useProceso.putInactivar(id);
         console.log(response);
         if (!response) return;
         if (response.error) {
@@ -332,9 +319,9 @@
           return;
         }
         rows.value.splice(
-          buscarIndexLocal(response.data.provedores._id),
+          buscarIndexLocal(response.data.procesos._id),
           1,
-          response.data.provedores
+          response.data.procesos
         );
         notificar("positive", "Inactivado exitosamente");
       } catch (error) {
@@ -360,22 +347,23 @@
         }
       }
   
-      if (d[0] === "nombre" && d[1].length > 15) {
-        notificar("negative", "El nombre no puede tener más de 15 caracteres");
+      if (d[0] === "codigo" && d[1].length > 15) {
+        notificar("negative", "El codigo no puede tener más de 15 caracteres");
         return;
       }
-      if (d[0] === "dni" && d[1].length > 15) {
-        notificar("negative", "La identificacion no puede tener más de 15 caracteres");
+      if (d[0] === "presupuestoAsignado" && d[1].length > 15) {
+        notificar("negative", "El presupuesto Asignado es obligatorio");
         return;
       }
-      if (d[0] === "correo" && d[1].toString().length < 1) {
-        notificar("negative", "El correo es obligatoria");
+      if (d[0] === "presupuestoDisponible" && d[1].toString().length < 1) {
+        notificar("negative", "El presupuesto Disponible es obligatorio");
         return;
       }
-      if (d[0] === "telefono" && d[1].toString().length < 1) {
-        notificar("negative", "El telefono es obligatorio");
-        return;
-      }
+
+      if (data.value.fecha.length > 10 ){
+    notificar('negative', 'la fecha no es valida')
+      return
+  }
 /*       if (loteValidation !== true) {
         $q.notify({ type: "negative", message: loteValidation });
         return;
@@ -384,6 +372,22 @@
     enviarInfo[estado.value]();
   }
   
+  function validateDate (value) {
+
+if (!value) {
+  return 'ingrese una fecha'
+}
+
+if (value.length > 10){
+  return `la fecha no es valida`;
+}
+
+if ( new Date(value) > today) {
+  return `La fecha de pedido no puede ser anterior a la actual.`;
+} 
+
+return true;
+}
   function notificar(tipo, msg) {
     $q.notify({
       type: tipo,
