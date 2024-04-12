@@ -2,15 +2,15 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import { ref } from 'vue';
 
-export const useDistDependStore = defineStore('DistDependencia', () => {
-    const disDependencias = ref([]);
+export const useDistLoteDependStore = defineStore('DistDependencia', () => {
+    const dislotedepens = ref([]);
 
     const obtenerInfoDepend = async () => {
         try {
-            let responseDepend = await axios.get('disDependencia/ver');
+            let responseDepend = await axios.get('dislotedepen/ver');
             // lotes.value = responseLotes.data; 
             return responseDepend.data
-            console.log(disDependencias)
+            console.log(dislotedepens)
         } catch (error) {
             throw error
         }
@@ -19,7 +19,7 @@ export const useDistDependStore = defineStore('DistDependencia', () => {
     const postDepend = async (data) =>{
         try {
             console.log('a');
-            let res = await axios.post("disDependencia/agregar", data);
+            let res = await axios.post("dislotedepen/agregar", data);
             console.log('a', res);
             return res.data.dep
         } catch (error) {
@@ -29,7 +29,7 @@ export const useDistDependStore = defineStore('DistDependencia', () => {
 
     const putDepend = async (id, data) => {
         try {
-            let res = await axios.put(`disDependencia/modificar/${id}`, data);
+            let res = await axios.put(`dislotedepen/modificar/${id}`, data);
             return res
         } catch (error) {
             throw error;
@@ -38,7 +38,7 @@ export const useDistDependStore = defineStore('DistDependencia', () => {
 
     const putInactivar = async (id)=>{
         try {
-            let r = await axios.put(`disDependencia/inactivar/${id}`)
+            let r = await axios.put(`dislotedepen/inactivar/${id}`)
             return r
         } catch (error) {
             console.log(error, "Error al cambiar el estado del presupuesto");
@@ -46,7 +46,7 @@ export const useDistDependStore = defineStore('DistDependencia', () => {
     }
     const  putActivar = async (id)=>{
         try {
-            let r = await axios.put(`disDependencia/activar/${id}`)
+            let r = await axios.put(`dislotedepen/activar/${id}`)
             return r
         } catch (error) {
             console.log(error, "Error al cambiar el estado del presupuesto");
@@ -54,7 +54,7 @@ export const useDistDependStore = defineStore('DistDependencia', () => {
     }
 
     return {
-        useDistDependStore,
+        useDistLoteDependStore,
         obtenerInfoDepend, postDepend, putDepend, putInactivar, putActivar
     };
 });

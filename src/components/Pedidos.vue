@@ -13,9 +13,12 @@
               :rules="[val => val.trim() != '' || 'Ingrese la fecha de creación']"></q-input>
               <q-input class="nombreinput modalinputs" outlined v-model="data.fecha_entrega" label="Fecha de entrega" type="date" maxlength="15" lazy-rules
               :rules="[val => val.trim() != '' || 'Ingrese la fecha de entrega']"></q-input>
-              <q-select filled v-model="data.completado" :options="seletcompletado" label="Completado SI o NO" class="q-mx-auto" style="width: 300px"/>
-              <q-select filled v-model="data.destino" :options="seletDestino" label="Seleccione el destino" class="q-mx-auto" style="width: 300px"/>
-              <q-select filled v-model="data.instructor_encargado" :options="seletInstructor" label="Seleccione el instructor" class="q-mx-auto" style="width: 300px"/>
+              <q-select class="nombreinput modalinputs" outlined v-model="data.completado" label="Completado SI o NO" 
+              :options="seletcompletado" lazy-rules :rules="[val => val.trim() != '' || 'selecione si o no']"/>
+              <q-select class="nombreinput modalinputs" outlined v-model="data.destino" label="Seleccione el destino"
+              :options="seletDestino" lazy-rules :rules="[val => val.trim() != '' || 'selecione el destino']"/>
+              <q-select class="nombreinput modalinputs" outlined v-model="data.instructor_encargado" label="Seleccione el instructor" 
+              :options="seletInstructor" lazy-rules :rules="[val => val.trim() != '' || 'selecione el instructor']"/>
             </q-card-section>
           <!-- inputs🃏☝ -->
           <!-- btns 🛑👇 -->
@@ -177,6 +180,16 @@ import { useProductoStore } from "../stores/producto.js";
   let seletDestino = ref([]);
   let seletInstructor = ref([]);
   let seletProducto = ref([]);
+  let seletcompletado = ref([
+    {
+    label: 'Si',
+    value: true
+  },
+  {
+    label: 'No',
+    value: false
+  },
+  ])
 
 
   const obtenerProducto = async () => {
@@ -341,6 +354,7 @@ obtenerInfo2();
   // Asignar la fecha completa al objeto data.value
       data.value = {
         ...info,
+        completado: info.completado? {label: 'Si',value: true}:{label: 'No',value: false} ,
         destino: info.destino._id, // Asignar solo el ID del destino
         instructor_encargado: info.instructor_encargado._id, // Asignar solo el ID del instructor
         fecha_creacion: info.fecha_creacion, // Mantener la fecha completa

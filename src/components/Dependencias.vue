@@ -1,12 +1,12 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useDependStore } from "../stores/dependencia.js";
-import { useDistDependStore } from "../stores/dis_dependencia.js";
+import { useDistLoteDependStore } from "../stores/dis_lote_dependencia";
 import { useQuasar } from 'quasar'
 
 const modelo = "Dependencias";
 const useDependencias = useDependStore();
-const useDistDependencias = useDistDependStore();
+const useDistLoteDepend = useDistLoteDependStore();
 const loadingTable = ref(true)
 const loadingTableDist = ref(true)
 const $q = useQuasar()
@@ -73,9 +73,9 @@ const obtenerInfo = async () => {
 
 const obtenerInfoDist = async () => {
   try {
-    const res = await useDistDependencias.obtenerInfoDepend();
+    const res = await useDistLoteDepend.obtenerInfoDepend();
     const dependencias = res.distribucion;
-    console.log("useDistDependencias");
+    console.log("useDistLoteDepend");
     console.log(dependencias);
 
     if (!dependencias) return;
@@ -346,11 +346,11 @@ function notificar(tipo, msg) {
           </q-td>
         </template> -->
 <!--q -->
-        <template v-slot:body="props">
-  <q-tr :props="props" >
+  <template v-slot:body="props">
+  <tr :props="props" >
     <q-td v-for="col in props.cols" :key="col.name" :props="props"
     :auto-width="col.name == 'opciones'" :class="props.row.expanded ? 'no-border ' : ''">
-      <q-div v-if="col.name != 'opciones' && col.name != 'status' " >
+      <q-div v-if="col.name != 'opciones' && col.name != 'status' ">
         {{ col.value }}
       </q-div>
       <q-div v-else-if="col.name == 'status'">
@@ -361,11 +361,12 @@ function notificar(tipo, msg) {
         <q-btn class="text-caption q-pa-sm q-mx-xs" @click="props.row.expanded = !props.row.expanded" :icon="props.row.expanded ? 'zoom_out' : 'zoom_in'" :color="props.row.expanded ? 'grey' : 'secondary'"/>
       </q-div>
     </q-td>
-  </q-tr>
-
-  <div class="show-p" :style="{ height: props.row.expanded ? '100px' : '1px' }">
-  <q-tr v-show="true" :props="props" >
-    <q-td colspan="100%" class="" >
+  </tr>
+  
+  <tr :class="!props.row.expanded ? 'sinaltura' : ''" colspan="100%" :props="props" >
+  <td :class="!props.row.expanded ? 'no-border sinaltura' : ''" colspan="100%"  >
+  <div class="show-p" :style="{ height: props.row.expanded ? '45px' : '0' }">
+  <q-div class="">
 
       <div class="text-center "  v-if="props.row.detalle" >
          <q-btn colspan="100%" :loading="loadingTableDist" class="text-lowercase" flat >
@@ -374,16 +375,20 @@ function notificar(tipo, msg) {
           <q-div class="q-mx-sm"><b>presupuesto asignado:</b> {{ props.row.detalle.presupuesto_asignado}}</q-div>
         </q-btn>
       </div>
-      <div class="text-center " v-if="!props.row.detalle" >
+
+      <q-div class="text-center " v-if="!props.row.detalle" >
         <q-btn @click="opciones.agregar" label="crear" color="grey-6"
         class="text-capitalize text-white ">
               <q-icon name="add" color="white" right />
             </q-btn>
-      </div>
- 
-    </q-td>
-  </q-tr>
-   </div>
+      </q-div>
+
+      <!-- QUE TalTnTO Tienes amigO eSta brutal -->
+  
+  </q-div>
+  </div>
+  </td>
+</tr>
 </template>
       </q-table>
     </div>
@@ -404,12 +409,22 @@ warning: Color para advertencias o mensajes importantes.
 * {
   margin: 0px;
   padding: 0px;
-  transition: height 0.5s ease; 
+  transition: height 0.5s ease, padding 0.5s ease; 
 }
 
 .show-p {
   overflow: hidden;
+}
 
+.sinaltura{
+  height: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+.paddingnone{
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
 }
 
 .modal {
