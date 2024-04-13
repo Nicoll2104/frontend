@@ -66,8 +66,8 @@ export const usePedidoStore = defineStore('pedido', () => {
     const obtenerInfoPedido = async () => {
         try {
             let responsePedido = await axios.get('pedido/ver');
-            console.log("ejecutando pedido");
-            console.log (responsePedido);
+
+
             // lotes.value = responseLotes.data; 
             return responsePedido.data
         } catch (error) {

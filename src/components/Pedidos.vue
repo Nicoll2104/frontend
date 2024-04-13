@@ -1,31 +1,4 @@
 <template>
-    <div>
-      <q-dialog v-model="modal" persistent color="primary">
-        <q-card class="modal">
-          <q-toolbar>
-            <q-toolbar-title> Agregar / Editar {{ modelo }}</q-toolbar-title>
-            <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
-  
-          </q-toolbar>
-          <!-- inputs🃏👇-->
-          <q-card-section class="q-gutter-md row items-star justify-center continputs1">
-              <q-input class="nombreinput modalinputs" outlined v-model="data.fecha_creacion" label="Fecha de creación" type="date" maxlength="15" lazy-rules
-              :rules="[val => val.trim() != '' || 'Ingrese la fecha de creación']"></q-input>
-              <q-input class="nombreinput modalinputs" outlined v-model="data.fecha_entrega" label="Fecha de entrega" type="date" maxlength="15" lazy-rules
-              :rules="[val => val.trim() != '' || 'Ingrese la fecha de entrega']"></q-input>
-              <q-select class="nombreinput modalinputs" outlined v-model="data.completado" label="Completado SI o NO" 
-              :options="seletcompletado" lazy-rules :rules="[val => val.trim() != '' || 'selecione si o no']"/>
-              <q-select class="nombreinput modalinputs" outlined v-model="data.destino" label="Seleccione el destino"
-              :options="seletDestino" lazy-rules :rules="[val => val.trim() != '' || 'selecione el destino']"/>
-              <q-select class="nombreinput modalinputs" outlined v-model="data.instructor_encargado" label="Seleccione el instructor" 
-              :options="seletInstructor" lazy-rules :rules="[val => val.trim() != '' || 'selecione el instructor']"/>
-            </q-card-section>
-          <!-- inputs🃏☝ -->
-          <!-- btns 🛑👇 -->
-          <q-card-section class="q-gutter-md row items-end justify-end continputs1">
-            <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px" color="secondary" label="guardar">
-              <q-icon name="style" color="white" right />
-            </q-btn>
   <div>
     <q-dialog v-model="modal" persistent color="primary">
       <q-card class="modal">
@@ -36,19 +9,17 @@
         </q-toolbar>
         <!-- inputs🃏👇-->
         <q-card-section class="q-gutter-md row items-star justify-center continputs1">
-          <q-input class="nombreinput modalinputs" outlined v-model="data.fecha_creacion" label="Fecha de creación"
-            type="date" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese la fecha de creación']"></q-input>
-          <q-input class="nombreinput modalinputs" outlined v-model="data.fecha_entrega" label="Fecha de entrega"
-            type="date" maxlength="15" lazy-rules
-            :rules="[val => val.trim() != '' || 'Ingrese la fecha de entrega']"></q-input>
-          <q-select filled v-model="data.completado" :options="seletcompletado" label="Completado SI o NO"
-            class="q-mx-auto" style="width: 300px" />
-          <q-select filled v-model="data.destino" :options="seletDestino" label="Seleccione el destino"
-            class="q-mx-auto" style="width: 300px" />
-          <q-select filled v-model="data.instructor_encargado" :options="seletInstructor"
-            label="Seleccione el instructor" class="q-mx-auto" style="width: 300px" />
-        </q-card-section>
+            <q-input class="nombreinput modalinputs" outlined v-model="data.fecha_creacion" label="Fecha de creación" type="date" maxlength="15" lazy-rules
+            :rules="[val => validateDate(val) || 'Ingrese la fecha de creación']" readonly/>
+            <q-input class="nombreinput modalinputs" outlined v-model="data.fecha_entrega" label="Fecha de entrega" type="date" maxlength="15" lazy-rules
+            :rules="[val => validateDate(val) || 'Ingrese la fecha de entrega']"/>
+            <q-select class="nombreinput modalinputs" outlined v-model="data.completado" label="Completado SI o NO" 
+            :options="seletcompletado" lazy-rules :rules="[val => val.trim() != '' || 'selecione si o no']"/>
+            <q-select class="nombreinput modalinputs" outlined v-model="data.destino" label="Seleccione el destino"
+            :options="seletDestino" lazy-rules :rules="[val => val.trim() != '' || 'selecione el destino']"/>
+            <q-select class="nombreinput modalinputs" outlined v-model="data.instructor_encargado" label="Seleccione el instructor" 
+            :options="seletInstructor" lazy-rules :rules="[val => val.trim() != '' || 'selecione el instructor']"/>
+          </q-card-section>
         <!-- inputs🃏☝ -->
         <!-- btns 🛑👇 -->
         <q-card-section class="q-gutter-md row items-end justify-end continputs1">
@@ -56,8 +27,7 @@
             <q-icon name="style" color="white" right />
           </q-btn>
 
-          <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white"
-            v-close-popup>
+          <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white" v-close-popup>
             <q-icon name="cancel" color="white" right />
           </q-btn>
 
@@ -67,15 +37,15 @@
     </q-dialog>
 
     <div class="q-pa-md">
-      <q-table dense :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable"
-        :filter="filter" rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
-        no-results-label="No hay resultados para la busqueda" wrap-cells="false">
+      <q-table dense :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
+        rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
+        no-results-label="No hay resultados para la busqueda" >
         <template v-slot:top>
           <h4 class="titulo-cont">
             {{ modelo + ' ' }}
             <q-btn @click="opciones.agregar" label="Crear Pedido" color="secondary">
-              <q-icon name="add_circle" color="white" right />
-            </q-btn>
+            <q-icon name="add_circle" color="white" right />
+          </q-btn>
           </h4>
           <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar">
             <template v-slot:append>
@@ -92,70 +62,38 @@
           </q-tr>
         </template>
 
-        <!--        <template v-slot:body-cell-Estado="props">
-            <q-td :props="props" class="botones">
-              <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.estado === 1
-                ? 'Activo'
-                : props.row.estado === 0
-                  ? 'Inactivo'
-                  : '‎  ‎   ‎   ‎   ‎ '
-                " :color="props.row.estado === 1 ? 'positive' : 'accent'" :loading="props.row.estado === 'load'"
-                loading-indicator-size="small" @click="
-                  props.row.estado === 1
-                    ? in_activar.inactivar(props.row._id)
-                    : in_activar.activar(props.row._id);
-                props.row.estado = 'load';
-                " />
-            </q-td>
-          </template> -->
-        <template v-slot:body="props">
-          <q-tr :props="props">
-            <q-td v-for="col in props.cols" :key="col.name" :props="props" :auto-width="col.name == 'opciones'"
-              :class="props.row.expanded ? 'no-border ' : ''">
-              <q-div v-if="col.name != 'opciones' && col.name != 'status'">
-                {{ col.value }}
-              </q-div>
-              <q-div v-else-if="col.name == 'status'">
-                <q-btn class="botonv1" padding="10px"
-                  :label="props.row.status == 1 ? 'Activo' : props.row.status == 0 ? 'Inactivo' : '‎  ‎   ‎   ‎   ‎ '"
-                  :color="props.row.status == 1 ? 'primary' : 'secondary'" :loading="props.row.status == 'load'"
-                  loading-indicator-size="small"
-                  @click="props.row.status == 1 ? in_activar.putInactivar(props.row._id) : in_activar.putActivar(props.row._id); props.row.status = 'load';" />
-              </q-div>
-              <q-div v-else-if="col.name == 'opciones'">
-                <q-btn color="warning" icon="edit" class="text-caption q-pa-sm q-mx-xs"
-                  @click="opciones.editar(props.row)" />
-                <q-btn class="text-caption q-pa-sm q-mx-xs" @click="props.row.expanded = !props.row.expanded"
-                  :icon="props.row.expanded ? 'zoom_out' : 'zoom_in'"
-                  :color="props.row.expanded ? 'grey' : 'secondary'" />
-              </q-div>
-            </q-td>
-          </q-tr>
+ <!--        <template v-slot:body-cell-Estado="props">
+          <q-td :props="props" class="botones">
+            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.estado === 1
+              ? 'Activo'
+              : props.row.estado === 0
+                ? 'Inactivo'
+                : '‎  ‎   ‎   ‎   ‎ '
+              " :color="props.row.estado === 1 ? 'positive' : 'accent'" :loading="props.row.estado === 'load'"
+              loading-indicator-size="small" @click="
+                props.row.estado === 1
+                  ? in_activar.inactivar(props.row._id)
+                  : in_activar.activar(props.row._id);
+              props.row.estado = 'load';
+              " />
+          </q-td>
+        </template> -->
 
-          <div class="show-p" :style="{ height: props.row.expanded ? '100px' : '1px' }">
-            <q-tr v-show="true" :props="props">
-              <q-td colspan="100%" class="">
+        <template v-slot:body-cell-opciones="props">
+        <q-td :props="props" class="botones" auto-width>
+          
+          <q-btn color="warning" icon="edit" class="text-caption q-pa-sm q-ma-xs" @click="opciones.editar(props.row)" />
+          
+          <router-link to="/det_pedido" class="ingresarcont">
+            <q-btn color="secondary" icon="zoom_in" class="text-caption q-pa-sm q-ma-xs" />
+          </router-link>
 
-                <div class="text-center " v-if="props.row.detalle">
-                  <q-btn colspan="100%" :loading="loadingTableDist" class="text-lowercase" flat>
-                    <q-div class="q-mx-sm"><b>codigo presupuestal:</b> {{
-                      props.row.detalle.codigo_presupuestal}}</q-div>
-                    <q-div class="q-mx-sm"><b>presupuesto actual:</b> {{ props.row.detalle.presupuesto_actual }}</q-div>
-                    <q-div class="q-mx-sm"><b>presupuesto asignado:</b> {{
-                      props.row.detalle.presupuesto_asignado}}</q-div>
-                  </q-btn>
-                </div>
-                <div class="text-center " v-if="!props.row.detalle">
-                  <q-btn @click="opciones.agregar" label="crear" color="grey-6" class="text-capitalize text-white ">
-                    <q-icon name="add" color="white" right />
-                  </q-btn>
-                </div>
 
-              </q-td>
-            </q-tr>
-          </div>
-        </template>
+
+        </q-td>
+      </template>
       </q-table>
+
     </div>
   </div>
 </template>
@@ -166,7 +104,7 @@ import { useDestinoStore } from "../stores/destino.js";
 import { useUsuarioStore } from "../stores/usuario.js";
 import { usedetPedidoStore } from "../stores/det_pedido.js";
 import { useProductoStore } from "../stores/producto.js";
-import { useQuasar } from 'quasar'
+import { date, useQuasar } from 'quasar'
 
 const modelo = "Pedidos";
 const usePedido = usePedidoStore();
@@ -200,7 +138,7 @@ const columns = ref([
     name: "completado",
     label: "Completado",
     align: "left",
-    field: (row) => row.completado == !'true' ? 'no' : 'si',
+    field: (row) => row.completado==!'true'?'no': 'si',
   },
   {
     name: "destino",
@@ -239,97 +177,94 @@ const data = ref({
   total: "",
 });
 
-  let seletDestino = ref([]);
-  let seletInstructor = ref([]);
-  let seletProducto = ref([]);
-  let seletcompletado = ref([
-    {
-    label: 'Si',
-    value: true
-  },
-  {
-    label: 'No',
-    value: false
-  },
-  ])
 let seletDestino = ref([]);
 let seletInstructor = ref([]);
 let seletProducto = ref([]);
+let seletcompletado = ref([
+  {
+  label: 'Si',
+  value: true
+},
+{
+  label: 'No',
+  value: false
+},
+])
 
 
 const obtenerProducto = async () => {
-  try {
-    const producto = await useProductos.obtenerInfoProducto();
-    console.log("Todos los productos:", producto);
+try {
+  const producto = await useProductos.obtenerInfoProducto();
+  console.log("Todos los productos:", producto);
 
-    seletProducto.value = producto.map((producto_id) => ({
-      label: `${producto_id.nombre}`,
-      value: String(producto_id._id),
-    }));
+  seletProducto.value = producto.map((producto_id) => ({
+    label: `${producto_id.nombre}`,
+    value: String(producto_id._id),
+  }));
 
-    seletProducto.value.sort((a, b) => {
-      if (a.label < b.label) {
-        return -1;
-      }
-      if (a.label > b.label) {
-        return 1;
-      }
-      return 0;
-    });
-  } catch (error) {
-    console.error(error);
-  }
+  seletProducto.value.sort((a, b) => {
+    if (a.label < b.label) {
+      return -1;
+    }
+    if (a.label > b.label) {
+      return 1;
+    }
+    return 0;
+  });
+} catch (error) {
+  console.error(error);
+}
 };
 
 obtenerProducto();
 
 const obtenerDestino = async () => {
-  try {
-    const res = await useDestino.obtenerInfoDestinos();
-    const destinos = res.destinos
-    console.log("Todos los Destinos:", destinos);
+try {
+  const res = await useDestino.obtenerInfoDestinos();
+  const destinos = res.destinos
+  console.log("Todos los Destinos:", destinos);
 
-    seletDestino.value = destinos.map((destino) => ({
-      label: `${destino.nombre}`,
-      value: String(destino._id),
-    }));
+  seletDestino.value = destinos.map((destino) => ({
+    label: `${destino.nombre}`,
+    value: String(destino._id),
+  }));
 
-    seletDestino.value.sort((a, b) => {
-      if (a.label < b.label) {
-        return -1;
-      }
-      if (a.label > b.label) {
-        return 1;
-      }
-      return 0;
-    });
-  } catch (error) {
-    console.error(error);
-  }
+  seletDestino.value.sort((a, b) => {
+    if (a.label < b.label) {
+      return -1;
+    }
+    if (a.label > b.label) {
+      return 1;
+    }
+    return 0;
+  });
+} catch (error) {
+  console.error(error);
+}
 };
 
 const obtenerUsuario = async () => {
-  try {
-    const usuario = await useUsuario.obtenerInfoUsuarios();
-    console.log("Todos los Instructores:", usuario);
+try {
+  const usuario = await useUsuario.obtenerInfoUsuarios();
+  console.log("Todos los Instructores:", usuario);
 
-    seletInstructor.value = usuario.map((instructor_encargado) => ({
-      label: `${instructor_encargado.nombre}`,
-      value: String(instructor_encargado._id),
-    }));
+  seletInstructor.value = usuario.map((instructor_encargado) => ({
+    label: `${instructor_encargado.nombre}`,
+    value: String(instructor_encargado._id),
+  }));
 
-    seletInstructor.value.sort((a, b) => {
-      if (a.label < b.label) {
-        return -1;
-      }
-      if (a.label > b.label) {
-        return 1;
-      }
-      return 0;
-    });
-  } catch (error) {
-    console.error(error);
-  }
+  seletInstructor.value.sort((a, b) => {
+    if (a.label < b.label) {
+      return -1;
+    }
+    if (a.label > b.label) {
+      return 1;
+    }
+    return 0;
+  });
+} catch (error) {
+  console.error(error);
+}
 };
 
 
@@ -338,7 +273,7 @@ const obtenerUsuario = async () => {
 
 const obtenerInfo = async () => {
   try {
-    await Promise.all([obtenerDestino(), obtenerUsuario(),]);
+    await Promise.all([obtenerDestino(), obtenerUsuario(), ]);
     const pedidos = await usePedido.obtenerInfoPedido();
 
     console.log(pedidos);
@@ -361,87 +296,59 @@ const obtenerInfo = async () => {
 obtenerInfo();
 
 const obtenerInfo2 = async () => {
-  try {
-    await Promise.all([obtenerProducto()]);
-    const res = await useDetPedido.obtenerInfodetPedido();
-    const detPedido = res.Det_pedido
-    console.log("detaleeeeeee");
-    console.log(detPedido);
+try {
+  await Promise.all([obtenerProducto()]);
+  const res = await useDetPedido.obtenerInfodetPedido();
+  const detPedido = res.Det_pedido
+  console.log("detaleeeeeee");
+  console.log(detPedido);
 
-    if (!detPedido) return;
+  if (!detPedido) return;
 
-    if (detPedido.error) {
-      notificar("negative", detPedido.error);
-      return;
-    }
-
-    rowsPedido.value = detPedido;
-
-    for (let i = 0; i < rowsPedido.value.length; i++) {
-      if (!rowsPedido.value[i].Det_pedido) {
-        continue;
-      }
-
-      console.log(i);
-      const Index = rowsPedido.value.findIndex(objeto => objeto._id === rowsPedido.value[i].Det_pedido._id);
-      console.log(Index)
-      if (Index !== -1) {
-        rowsPedido.value[Index].detalle = rowsPedido.value[i];
-      }
-
-    }
-  } catch (error) {
-    console.error(error);
-  } finally {
-    loadingTable.value = false;
+  if (detPedido.error) {
+    notificar("negative", detPedido.error);
+    return;
   }
+ 
+  rowsPedido.value = detPedido;
+
+for (let i = 0; i < rowsPedido.value.length; i++) {
+if (!rowsPedido.value[i].Det_pedido) {
+  continue;
+}
+
+console.log(i);
+const Index = rowsPedido.value.findIndex(objeto => objeto._id === rowsPedido.value[i].Det_pedido._id);
+console.log(Index)
+if (Index !== -1) {
+rowsPedido.value[Index].detalle = rowsPedido.value[i];
+}
+
+}
+} catch (error) {
+  console.error(error);
+} finally {
+  loadingTable.value = false;
+}
 };
 
 
 obtenerInfo2();
-  
-  const estado = ref("guardar");
-  const modal = ref(false);
-  const opciones = {
-    agregar: () => {
-      data.value = {
-        fecha_creacion: "",
-        fecha_entrega: "",
-        completado: "",
-        destino: "",
-        instructor_encargado: "",
-        total: "",
-      };
-      modal.value = true;
-      estado.value = "guardar";
-    },
-    editar: (info) => {
-  // Asignar la fecha completa al objeto data.value
-      data.value = {
-        ...info,
-        completado: info.completado? {label: 'Si',value: true}:{label: 'No',value: false} ,
-        destino: info.destino._id, // Asignar solo el ID del destino
-        instructor_encargado: info.instructor_encargado._id, // Asignar solo el ID del instructor
-        fecha_creacion: info.fecha_creacion, // Mantener la fecha completa
-        fecha_entrega: info.fecha_entrega, // Mantener la fecha completa
-      };
-      modal.value = true;
-      estado.value = "editar";
-    },
-  };
-  
-  function buscarIndexLocal(id) {
-    return rows.value.findIndex((r) => r._id === id);
-  }
-  
-  const validateDestino = (value) => {
+
+function fechahoy() {
+  var fechaDeHoy = new Date();
+  var año = fechaDeHoy.getFullYear();
+  var mes = ('0' + (fechaDeHoy.getMonth() + 1)).slice(-2); // Agrega ceros a la izquierda si el mes es menor a 10
+  var dia = ('0' + fechaDeHoy.getDate()).slice(-2); // Agrega ceros a la izquierda si el día es menor a 10
+  return año + '-' + mes + '-' + dia;
+}
 
 const estado = ref("guardar");
 const modal = ref(false);
 const opciones = {
   agregar: () => {
     data.value = {
-      fecha_creacion: "",
+      fecha_creacion: fechahoy(),
       fecha_entrega: "",
       completado: "",
       destino: "",
@@ -452,13 +359,14 @@ const opciones = {
     estado.value = "guardar";
   },
   editar: (info) => {
-    // Asignar la fecha completa al objeto data.value
+// Asignar la fecha completa al objeto data.value
     data.value = {
       ...info,
-      destino: info.destino._id, // Asignar solo el ID del destino
-      instructor_encargado: info.instructor_encargado._id, // Asignar solo el ID del instructor
-      fecha_creacion: info.fecha_creacion, // Mantener la fecha completa
-      fecha_entrega: info.fecha_entrega, // Mantener la fecha completa
+      completado: info.completado? {label: 'Si',value: true}:{label: 'No',value: false} ,
+      destino: {label: info.destino.nombre,value: info.destino}, // Asignar solo el ID del destino
+      instructor_encargado: {label: info.instructor_encargado.nombre ,value: info.instructor_encargado} , // Asignar solo el ID del instructor
+      fecha_creacion: info.fecha_creacion.slice(0, -14), // Mantener la fecha completa
+      fecha_entrega: info.fecha_entrega.slice(0, -14), // Mantener la fecha completa
     };
     modal.value = true;
     estado.value = "editar";
@@ -470,18 +378,18 @@ function buscarIndexLocal(id) {
 }
 
 const validateDestino = (value) => {
-  if (!value) {
-    return "Seleccione una ficha o proyecto";
-  }
+if (!value) {
+  return "Seleccione una ficha o proyecto";
+}
 
-  return true;
+return true;
 };
 const enviarInfo = {
   guardar: async () => {
     loadingmodal.value = true;
     try {
       const info = { ...data.value, destino: data.value.destino.value };
-      const response = await usePedido.postPedido(info);
+      const response = await usePedido.postPedido (info);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -489,7 +397,6 @@ const enviarInfo = {
         loadingmodal.value = false;
         return
       }
-
       rows.value.unshift(response.destino);
       notificar('positive', 'Guardado exitosamente')
       modal.value = false;
@@ -502,10 +409,19 @@ const enviarInfo = {
   editar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await usePedido.editar(data.value._id, {
+      console.log('---------------------')
+      console.log('peticion para editar:')
+      console.log({
         ...data.value,
-        destino: data.value.destino,
-        instructor_encargado: data.value.instructor_encargado,
+        completado: data.value.completado.value ,
+        destino: {...data.value.destino.value},
+        instructor_encargado: {...data.value.instructor_encargado.value}, 
+      })
+      const response = await usePedido.putPedido(data.value._id, {
+        ...data.value,
+        completado: data.value.completado.value ,
+        destino: {...data.value.destino.value},
+        instructor_encargado: {...data.value.instructor_encargado.value}, 
       });
       console.log(response);
       if (!response) return;
@@ -520,6 +436,11 @@ const enviarInfo = {
       modal.value = false;
     } catch (error) {
       console.log(error);
+      if (error.response){
+        if (error.response.data){
+          notificar('negative', error.response.data.error)
+        }
+      }
     } finally {
       loadingmodal.value = false;
     }
@@ -567,9 +488,7 @@ function validarCampos() {
 
   const destinoValidation = validateDestino(data.value.destino);
   const arrData = Object.entries(data.value)
-  console.log(arrData);
   for (const d of arrData) {
-    console.log(d);
     if (d[1] === null) {
       notificar('negative', "Por favor complete todos los campos")
       return
@@ -611,9 +530,29 @@ function validarCampos() {
       $q.notify({ type: "negative", message: destinoValidation });
       return;
     }
+
+    if (data.value.fecha_creacion.length > 10 || data.value.fecha_entrega.length > 10){
+    notificar('negative', 'la fecha no es valida')
+      return
+  }
+  
+
+  if ( new Date(data.value.fecha_creacion) >= new Date(data.value.fecha_entrega) ) {
+    notificar('negative', 'la fecha de entrega debe ser despues de la fecha de creacion')
+      return
+  } 
   }
   enviarInfo[estado.value]()
 }
+
+function validateDate (value) {
+  if (!value) {return 'ingrese una fecha'}
+  if (value.length > 10){return `la fecha no es valida`;}
+  if ( new Date(data.value.fecha_creacion) > new Date(data.value.fecha_entrega) ) {
+    return `la fecha de inicio debe ser antes de la fecha de cierre`;
+  } 
+  return true;
+  }
 
 function notificar(tipo, msg) {
   $q.notify({
@@ -643,15 +582,6 @@ function prompt() {
 }
 </script>
 <style scoped>
-/* 
-  primary: Color principal del tema.
-  secondary: Color secundario del tema.
-  accent: Color de acento.
-  positive: Color para indicar una acción positiva o éxito.
-  negative: Color para indicar una acción negativa o error.
-  info: Color para información o mensajes neutrales.
-  warning: Color para advertencias o mensajes importantes. 
-  */
 
 * {
   margin: 0px;

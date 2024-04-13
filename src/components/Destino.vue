@@ -113,8 +113,8 @@ const opciones = {
   },
   editar: (info) => {
     data.value = { ...info }
-    data.value.fecha_inicio= info.fecha_inicio.slice(0, -14)
-    data.value.fecha_fin= info.fecha_inicio.slice(0, -14)
+    data.value.fecha_inicio = info.fecha_inicio.slice(0, -14)
+    data.value.fecha_fin = info.fecha_inicio.slice(0, -14)
     modal.value = true;
     estado.value = "editar";
   },
@@ -265,30 +265,11 @@ function validarCampos() {
 }
 
 function validateDate (value) {
-
-  if (!value) {
-    return 'ingrese una fecha'
-  }
-
-  if (value.length > 10){
-    return `la fecha no es valida`;
-  }
-  
-
+  if (!value) {return 'ingrese una fecha'}
+  if (value.length > 10){return `la fecha no es valida`;}
   if ( new Date(data.value.fecha_inicio) > new Date(data.value.fecha_fin) ) {
     return `la fecha de inicio debe ser antes de la fecha de cierre`;
   } 
-
-  // esto para validar que la fecha no se pase de hoy 🚧
-/*   const today = new Date();
-
-  if ( new Date(value) > today) {
-    return `La fecha de pedido no puede ser anterior a la actual.`;
-  } */
-
-
-
-
   return true;
   }
 

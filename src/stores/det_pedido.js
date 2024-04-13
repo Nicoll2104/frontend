@@ -65,7 +65,7 @@ export const usedetPedidoStore = defineStore('detPedido', () => {
     const obtenerInfodetPedido = async () => {
         try {
             let responsedetPedidos = await axios.get('detPedido/ver');
-            console.log (responsedetPedidos);
+
             // lotes.value = responseLotes.data; 
             return responsedetPedidos.data
             console.log(Det_pedido)
