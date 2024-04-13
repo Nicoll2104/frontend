@@ -19,6 +19,8 @@
             :options="seletDestino" lazy-rules :rules="[val => val.trim() != '' || 'selecione el destino']"/>
             <q-select class="nombreinput modalinputs" outlined v-model="data.instructor_encargado" label="Seleccione el instructor" 
             :options="seletInstructor" lazy-rules :rules="[val => val.trim() != '' || 'selecione el instructor']"/>
+            <q-input class="nombreinput modalinputs" outlined v-model="data.total" label="total" type="number" maxlength="15" lazy-rules
+            :rules="[val => val.trim() != '' || 'selecione el destino']"/>
           </q-card-section>
         <!-- inputs🃏☝ -->
         <!-- btns 🛑👇 -->
