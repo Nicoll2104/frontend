@@ -21,114 +21,93 @@
             :options="seletInstructor" lazy-rules :rules="[val => val.trim() != '' || 'selecione el instructor']"/>
             <q-input class="nombreinput modalinputs" outlined v-model="data.total" label="total" type="number" maxlength="15" lazy-rules
             :rules="[val => val.trim() != '' || 'selecione el destino']"/>
+            <div>
+            <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px" color="secondary" label="guardar">
+              <q-icon name="style" color="white" right />
+            </q-btn>
+
+            <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white" v-close-popup>
+              <q-icon name="cancel" color="white" right />
+            </q-btn>
+          </div>
           </q-card-section>
         <!-- inputs🃏☝ -->
         <!-- btns 🛑👇 -->
-        <q-card-section class="q-gutter-md row items-end justify-end continputs1">
-          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px" color="secondary" label="guardar">
-            <q-icon name="style" color="white" right />
-          </q-btn>
-
-          <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white" v-close-popup>
-            <q-icon name="cancel" color="white" right />
-          </q-btn>
+       
+        <q-card-section class="q-gutter-md row items-star justify-center continputs1">
 
           <div>
-    <q-select
-      filled
-      v-model="data2.idProducto"
-      :options="seletProducto"
-      label="Seleccione el producto"
-      class="q-mx-auto"
-      style="width: 300px"
-    />
-    <q-input class="modalinputs" outlined v-model="data2.cantidad" label="Cantidad" type="number" maxlength="15"
-      lazy-rules :rules="[(val) => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
+            <q-toolbar-title class="justify-center"> Detalle Pedido</q-toolbar-title>
+            <div class="q-pa-md" style="padding: 10px;">
+            <q-select
+              filled
+              v-model="data2.idProducto"
+              :options="seletProducto"
+              padding="10px"
+              label="Seleccione el producto"
+              class="nombreinput modalinputs"
+              style="width: 250px" 
+            />
+            <q-input class="nombreinput modalinputs" outlined v-model="data2.cantidad" label="Cantidad" type="number" maxlength="15"
+              lazy-rules :rules="[(val) => val.trim() != '' || 'Ingrese una cantidad']" style="width: 250px"></q-input>
+            </div>
+            <q-btn @click="agregar" :loading="loadingmodal" padding="10px" color="secondary" label="Agregar">
+              <q-icon name="style" color="white" right />
+            </q-btn>
 
-    <q-btn @click="agregar" :loading="loadingmodal" padding="10px" color="secondary" label="Agregar">
-      <q-icon name="style" color="white" right />
-    </q-btn>
+            <q-table
+              :rows="tablaProductos"
+              :columns="columnasTabla"
+            />
+          </div>
 
-    <q-table
-      :rows="tablaProductos"
-      :columns="columnasTabla"
-    />
-  </div>
-
-        </q-card-section>
-        <!-- btns 🛑☝ -->
+      </q-card-section>
+            <!-- btns 🛑☝ -->
       </q-card>
-    </q-dialog>
+        </q-dialog>
 
-    <div class="q-pa-md">
-      <q-table dense :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
-        rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
-        no-results-label="No hay resultados para la busqueda" >
-        <template v-slot:top>
-          <h4 class="titulo-cont">
-            {{ modelo + ' ' }}
-            <q-btn @click="opciones.agregar" label="Crear Pedido" color="secondary">
-            <q-icon name="add_circle" color="white" right />
-          </q-btn>
-          </h4>
-          <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar">
-            <template v-slot:append>
-              <q-icon name="search" />
+        <div class="q-pa-md">
+          <q-table dense :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
+            rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
+            no-results-label="No hay resultados para la busqueda" >
+            <template v-slot:top>
+              <h4 class="titulo-cont">
+                {{ modelo + ' ' }}
+                <q-btn @click="opciones.agregar" label="Crear Pedido" color="secondary">
+                <q-icon name="add_circle" color="white" right />
+              </q-btn>
+              </h4>
+              <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar">
+                <template v-slot:append>
+                  <q-icon name="search" />
+                </template>
+              </q-input>
+
             </template>
-          </q-input>
 
-        </template>
+            <template v-slot:header="props">
+              <q-tr :props="props">
+                <q-th v-for="col in props.cols" :key="col.name" :props="props" class="encabezado">
+                  {{ col.label }}
+                </q-th>
+              </q-tr>
+            </template>
 
-        <template v-slot:header="props">
-          <q-tr :props="props">
-            <q-th v-for="col in props.cols" :key="col.name" :props="props" class="encabezado">
-              {{ col.label }}
-            </q-th>
-          </q-tr>
-        </template>
+            <template v-slot:body-cell-opciones="props">
+            <q-td :props="props" class="botones" auto-width>
+              
+              <q-btn color="warning" icon="edit" class="text-caption q-pa-sm q-ma-xs" @click="opciones.editar(props.row)" />
+    
+              <q-btn color="secondary" icon="zoom_in" class="text-caption q-pa-sm q-ma-xs" @click="mostrarModal()" />
 
-        <template v-slot:body-cell-opciones="props">
-        <q-td :props="props" class="botones" auto-width>
-          
-          <q-btn color="warning" icon="edit" class="text-caption q-pa-sm q-ma-xs" @click="opciones.editar(props.row)" />
- 
-          <q-btn color="secondary" icon="zoom_in" class="text-caption q-pa-sm q-ma-xs" @click="mostrarModal()" />
+            
+                <q-dialog v-model="showModal" persistent>
+        </q-dialog>
+            </q-td>
+          </template>
+          <div class="show-p" v-if="props.row.detalle">
+      </div>
 
-        
-            <q-dialog v-model="showModal" persistent>
-      <q-card class="modal">
-        <q-toolbar class="q-pr-xl q-pl-xl">
-          <q-toolbar-title class="text-h5">Agregar/Modificar {{ modelo }}</q-toolbar-title>
-          <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
-        </q-toolbar>
-
-        <q-card-section class="q-gutter-md row items-star justify-center continputs1">
-          <q-input class="modalinputs" outlined v-model="data.cantidad" label="Cantidad" type="number" maxlength="15"
-            lazy-rules :rules="[(val) => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
-
-          <q-select filled v-model="data.producto_id" :options="seletProducto" label="Seleccione el producto"
-            class="q-mx-auto" style="width: 300px" />
-        </q-card-section>
-
-        <q-input class="modalinputs" outlined v-model="data.subtotal" label="Subtotal" type="number" maxlength="15"
-          lazy-rules :rules="[(val) => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
-
-        <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0">
-          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
-            :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
-            <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
-          </q-btn>
-          <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white"
-            v-close-popup>
-            <q-icon name="cancel" color="white" right />
-          </q-btn>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
-        </q-td>
-      </template>
-      <div class="show-p" v-if="props.row.detalle">
-</div>
 
       </q-table>
 
