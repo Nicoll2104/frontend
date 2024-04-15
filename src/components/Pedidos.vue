@@ -33,6 +33,28 @@
             <q-icon name="cancel" color="white" right />
           </q-btn>
 
+          <div>
+    <q-select
+      filled
+      v-model="data2.idProducto"
+      :options="seletProducto"
+      label="Seleccione el producto"
+      class="q-mx-auto"
+      style="width: 300px"
+    />
+    <q-input class="modalinputs" outlined v-model="data2.cantidad" label="Cantidad" type="number" maxlength="15"
+      lazy-rules :rules="[(val) => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
+
+    <q-btn @click="guardar" :loading="loadingmodal" padding="10px" color="secondary" label="Agregar">
+      <q-icon name="style" color="white" right />
+    </q-btn>
+
+    <q-table
+      :rows="tablaProductos"
+      :columns="columnasTabla"
+    />
+  </div>
+
         </q-card-section>
         <!-- btns 🛑☝ -->
       </q-card>
@@ -133,6 +155,8 @@ const $q = useQuasar()
 const filter = ref("");
 const loadingmodal = ref(false);
 const showModal = ref(false);
+const tablaProductos = ref([]);
+
 
 
 const columns = ref([
@@ -183,9 +207,34 @@ const columns = ref([
     align: "center",
   },
 ]);
+
+
 const mostrarModal = () => {
   showModal.value = true;
 };
+
+const data2 = ref({
+  idProducto: null,
+  cantidad: null
+});
+
+const columnasTabla = [
+  { name: 'nombre', align: 'left', label: 'Producto', field: row => row.nombre },
+  { name: 'cantidad', align: 'left', label: 'Cantidad', field: 'cantidad' }
+];
+
+const guardar = () => {
+  if (data2.value.idProducto && data2.value.cantidad) {
+    tablaProductos.value.push({
+      nombre: seletProducto.value.find(producto => producto.value === data2.value.idProducto).label,
+      cantidad: data2.value.cantidad
+    });
+
+    data2.value.idProducto = null;
+    data2.value.cantidad = null;
+  }
+};
+
 
 const rows = ref([]);
 const rowsPedido = ref([])
@@ -197,6 +246,7 @@ const data = ref({
   instructor_encargado: "",
   total: "",
 });
+
 
 let seletDestino = ref([]);
 let seletInstructor = ref([]);
@@ -458,7 +508,7 @@ const enviarInfo = {
   guardar: async () => {
     loadingmodal.value = true;
     try {
-      const info = { ...data.value, instructor_encargado: data.value.instructor_encargado.value, destino:data.value.destino.value };
+      const info = { ...data.value, instructor_encargado: data.value.instructor_encargado.value, destino:data.value.destino.value, completado: data.value.completado.value };
       const response = await usePedido.postPedido(info);
       console.log(response);
       if (!response) return;
