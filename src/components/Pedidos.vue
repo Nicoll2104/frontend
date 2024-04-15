@@ -49,11 +49,12 @@
             <q-icon name="add_circle" color="white" right />
           </q-btn>
           </h4>
-          <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar">
+          <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar" >
             <template v-slot:append>
               <q-icon name="search" />
             </template>
           </q-input>
+
         </template>
 
         <template v-slot:header="props">
@@ -86,14 +87,31 @@
           
           <q-btn color="warning" icon="edit" class="text-caption q-pa-sm q-ma-xs" @click="opciones.editar(props.row)" />
           
-          <router-link to="/det_pedido" class="ingresarcont">
-            <q-btn color="secondary" icon="zoom_in" class="text-caption q-pa-sm q-ma-xs" />
-          </router-link>
+          <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar">
+  <template v-slot:append>
+    <q-icon name="search" @click="buscarDetallesPedido" />
+  </template>
+</q-input>
+
 
 
 
         </q-td>
       </template>
+      <div class="show-p" v-if="props.row.detalle">
+  <q-tr :props="props">
+    <q-td colspan="100%" class="">
+      <div class="text-center">
+        <q-btn colspan="100%" class="text-lowercase" flat>
+          <q-div class="q-mx-sm"><b>Código presupuestal:</b> {{ props.row.detalle.codigo_presupuestal }}</q-div>
+          <q-div class="q-mx-sm"><b>Presupuesto actual:</b> {{ props.row.detalle.presupuesto_actual }}</q-div>
+          <q-div class="q-mx-sm"><b>Presupuesto asignado:</b> {{ props.row.detalle.presupuesto_asignado }}</q-div>
+        </q-btn>
+      </div>
+    </q-td>
+  </q-tr>
+</div>
+
       </q-table>
 
     </div>
@@ -297,7 +315,7 @@ const obtenerInfo = async () => {
 
 obtenerInfo();
 
-const obtenerInfo2 = async () => {
+/* const obtenerInfo2 = async () => {
 try {
   await Promise.all([obtenerProducto()]);
   const res = await useDetPedido.obtenerInfodetPedido();
@@ -336,6 +354,54 @@ rowsPedido.value[Index].detalle = rowsPedido.value[i];
 
 
 obtenerInfo2();
+ */
+ const obtenerInfo2 = async () => {
+  try {
+    await Promise.all([obtenerProducto()]);
+    const res = await useDetPedido.obtenerInfodetPedido();
+    const detPedido = res.Det_pedido;
+    console.log("detaleeeeeee");
+    console.log(detPedido);
+
+    if (!detPedido) return;
+
+    if (detPedido.error) {
+      notificar("negative", detPedido.error);
+      return;
+    }
+
+    rowsPedido.value = detPedido;
+
+    for (let i = 0; i < rowsPedido.value.length; i++) {
+      if (!rowsPedido.value[i].Det_pedido) {
+        continue;
+      }
+
+      console.log(i);
+      const Index = rowsPedido.value.findIndex(
+        (objeto) => objeto._id === rowsPedido.value[i].Det_pedido._id
+      );
+      console.log(Index);
+      if (Index !== -1) {
+        rowsPedido.value[Index].detalle = rowsPedido.value[i];
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loadingTable.value = false;
+  }
+};
+
+const buscarDetallesPedido = () => {
+  if (pedidoSeleccionado.value) {
+    obtenerInfo2(); // Llamar a obtenerInfo2 en lugar de obtenerInfo cuando se hace clic en el botón de búsqueda
+  }
+};
+
+
+
+
 
 function fechahoy() {
   var fechaDeHoy = new Date();

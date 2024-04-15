@@ -3,72 +3,28 @@
     <q-dialog v-model="modal" persistent>
       <q-card class="modal">
         <q-toolbar class="q-pr-xl q-pl-xl">
-          <q-toolbar-title class="text-h5"
-            >Agregar/Modificar {{ modelo }}</q-toolbar-title
-          >
+          <q-toolbar-title class="text-h5">Agregar/Modificar {{ modelo }}</q-toolbar-title>
           <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
         </q-toolbar>
 
-        <q-card-section
-          class="q-gutter-md row items-star justify-center continputs1"
-        >
-          <q-input
-            class="modalinputs"
-            outlined
-            v-model="data.cantidad"
-            label="Cantidad"
-            type="number"
-            maxlength="15"
-            lazy-rules
-            :rules="[(val) => val.trim() != '' || 'Ingrese una cantidad']"
-          ></q-input>
+        <q-card-section class="q-gutter-md row items-star justify-center continputs1">
+          <q-input class="modalinputs" outlined v-model="data.cantidad" label="Cantidad" type="number" maxlength="15"
+            lazy-rules :rules="[(val) => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
 
-          <q-select
-            filled
-            v-model="data.producto_id"
-            :options="seletProducto"
-            label="Seleccione el producto"
-            class="q-mx-auto"
-            style="width: 300px"
-          />
+          <q-select filled v-model="data.producto_id" :options="seletProducto" label="Seleccione el producto"
+            class="q-mx-auto" style="width: 300px" />
         </q-card-section>
 
-        <q-input
-            class="modalinputs"
-            outlined
-            v-model="data.subtotal"
-            label="Subtotal"
-            type="number"
-            maxlength="15"
-            lazy-rules
-            :rules="[(val) => val.trim() != '' || 'Ingrese una cantidad']"
-          ></q-input>
+        <q-input class="modalinputs" outlined v-model="data.subtotal" label="Subtotal" type="number" maxlength="15"
+          lazy-rules :rules="[(val) => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
 
-        <q-card-section
-          class="q-gutter-md row items-end justify-end continputs1"
-          style="margin-top: 0"
-        >
-          <q-btn
-            @click="validarCampos"
-            :loading="loadingmodal"
-            padding="10px"
-            :color="estado == 'editar' ? 'warning' : 'secondary'"
-            :label="estado"
-          >
-            <q-icon
-              :name="estado == 'editar' ? 'edit' : 'style'"
-              color="white"
-              right
-            />
+        <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0">
+          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
+            :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
+            <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
           </q-btn>
-          <q-btn
-            :loading="loadingmodal"
-            padding="10px"
-            color="warning"
-            label="cancelar"
-            text-color="white"
-            v-close-popup
-          >
+          <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white"
+            v-close-popup>
             <q-icon name="cancel" color="white" right />
           </q-btn>
         </q-card-section>
@@ -76,19 +32,9 @@
     </q-dialog>
 
     <div class="q-p-md">
-      <q-table
-        :rows="rows"
-        :columns="columns"
-        class="tabla"
-        row-key="name"
-        :loading="loadingTable"
-        :filter="filter"
-        rows-per-page-label="visualización de filas"
-        page="2"
-        :rows-per-page-options="[10, 20, 40, 0]"
-        no-results-label="No hay resultados para la busqueda"
-        wrap-cells="false"
-      >
+      <q-table :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
+        rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
+        no-results-label="No hay resultados para la busqueda" wrap-cells="false">
         <template v-slot:top>
           <h4 class="titulo-cont">
             {{ modelo + " " }}
@@ -96,28 +42,16 @@
               <q-icon name="style" color="white" right />
             </q-btn>
           </h4>
-          <q-input
-            borderless
-            dense
-            debounce="300"
-            color="primary"
-            v-model="filter"
-            class="buscar"
-          >
-            <template v-slot:append>
-              <q-icon name="search" />
-            </template>
-          </q-input>
+
+
+<!-- <q-btn @click="mostrarDetalles(props.row)" label="Mostrar detalles" color="grey-6" class="text-capitalize text-white ">
+      <q-icon name="add" color="white" right />
+    </q-btn> -->
         </template>
 
         <template v-slot:header="props">
           <q-tr :props="props">
-            <q-th
-              v-for="col in props.cols"
-              :key="col.name"
-              :props="props"
-              class="encabezado"
-            >
+            <q-th v-for="col in props.cols" :key="col.name" :props="props" class="encabezado">
               {{ col.label }}
             </q-th>
           </q-tr>
@@ -125,39 +59,69 @@
 
         <template v-slot:body-cell-status="props">
           <q-td :props="props" class="botones">
-            <q-btn
-              class="botonv1"
-              text-size="1px"
-              padding="10px"
-              :label="
-                props.row.status == 1
-                  ? 'Activo'
-                  : props.row.status == 0
-                  ? 'Inactivo'
-                  : '‎  ‎   ‎   ‎   ‎ '
-              "
-              :color="props.row.status == 1 ? 'primary' : 'secondary'"
-              :loading="props.row.status == 'load'"
-              loading-indicator-size="small"
-              @click="
-                props.row.status == 1
-                  ? in_activar.putInactivar(props.row._id)
-                  : in_activar.putActivar(props.row._id);
-                props.row.status = 'load';
-              "
-            />
+            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.status == 1
+        ? 'Activo'
+        : props.row.status == 0
+          ? 'Inactivo'
+          : '‎  ‎   ‎   ‎   ‎ '
+      " :color="props.row.status == 1 ? 'primary' : 'secondary'" :loading="props.row.status == 'load'"
+              loading-indicator-size="small" @click="
+      props.row.status == 1
+        ? in_activar.putInactivar(props.row._id)
+        : in_activar.putActivar(props.row._id);
+    props.row.status = 'load';
+    " />
           </q-td>
         </template>
 
         <template v-slot:body-cell-opciones="props">
           <q-td :props="props" class="botones">
-            <q-btn
-              color="warning"
-              icon="edit"
-              class="botonv1"
-              @click="opciones.editar(props.row)"
-            />
+            <q-btn color="warning" icon="edit" class="botonv1" @click="opciones.editar(props.row)" />
           </q-td>
+        </template>
+
+        <template v-slot:body="props">
+          <q-tr :props="props">
+            <q-td v-for="col in props.cols" :key="col.name" :props="props" :auto-width="col.name == 'opciones'"
+              :class="props.row.expanded ? 'no-border ' : ''">
+              <q-div v-if="col.name != 'opciones' && col.name != 'status'">
+                {{ col.value }}
+              </q-div>
+              <q-div v-else-if="col.name == 'status'">
+                <q-btn class="botonv1" padding="10px"
+                  :label="props.row.status == 1 ? 'Activo' : props.row.status == 0 ? 'Inactivo' : '‎  ‎   ‎   ‎   ‎ '"
+                  :color="props.row.status == 1 ? 'primary' : 'secondary'" :loading="props.row.status == 'load'"
+                  loading-indicator-size="small"
+                  @click="props.row.status == 1 ? in_activar.putInactivar(props.row._id) : in_activar.putActivar(props.row._id); props.row.status = 'load';" />
+              </q-div>
+              <q-div v-else-if="col.name == 'opciones'">
+                <q-btn color="warning" icon="edit" class="text-caption q-pa-sm q-mx-xs"
+                  @click="opciones.editar(props.row)" />
+                <q-btn class="text-caption q-pa-sm q-mx-xs" @click="props.row.expanded = !props.row.expanded"
+                  :icon="props.row.expanded ? 'zoom_out' : 'zoom_in'"
+                  :color="props.row.expanded ? 'grey' : 'secondary'" />
+              </q-div>
+            </q-td>
+          </q-tr>
+
+          <div class="show-p" v-if="props.row.mostrarDetalles">
+    <q-tr :props="props">
+      <q-td colspan="100%" class="">
+        <div class="text-center " v-if="props.row.detalle">
+          <q-btn colspan="100%" :loading="loadingTableDist" class="text-lowercase" flat>
+            <q-div class="q-mx-sm"><b>codigo presupuestal:</b> {{ props.row.detalle.codigo_presupuestal }}</q-div>
+            <q-div class="q-mx-sm"><b>presupuesto actual:</b> {{ props.row.detalle.presupuesto_actual }}</q-div>
+            <q-div class="q-mx-sm"><b>presupuesto asignado:</b> {{ props.row.detalle.presupuesto_asignado }}</q-div>
+          </q-btn>
+        </div>
+        <div class="text-center " v-else>
+          <q-btn @click="props.row.mostrarDetalles = false" label="Ocultar detalles" color="grey-6" class="text-capitalize text-white ">
+            <q-icon name="remove" color="white" right />
+          </q-btn>
+        </div>
+      </q-td>
+    </q-tr>
+  </div>
         </template>
       </q-table>
     </div>
@@ -191,7 +155,7 @@ const columns = ref([
     name: "producto_id",
     label: "Producto",
     align: "left",
-    field: (row) => row.producto_id? row.producto_id.nombre: '',
+    field: (row) => row.producto_id ? row.producto_id.nombre : '',
   },
   {
     name: "subtotal",
@@ -212,11 +176,11 @@ const columns = ref([
   },
 ]);
 const rows = ref([]);
-
+const pedidoSeleccionado = ref(null);
 const data = ref({
   cantidad: "",
   producto_id: "",
-  subtotal:"",
+  subtotal: "",
 });
 
 let seletProducto = ref([]);
@@ -247,10 +211,10 @@ const obtenerProducto = async () => {
 
 obtenerProducto();
 
-const obtenerInfo = async () => {
-  try {
 
-    const detPedido = await useDetPedido.obtenerInfodetPedido();
+const obtenerInfo = async (idPedido) => {
+  try {
+    const detPedido = await useDetPedido.obtenerInfodetPedido(idPedido); // Pasar el idPedido al método de obtención de detalles del pedido
     console.log("useDetPedido");
     console.log(useDetPedido);
     console.log("dentro");
@@ -269,21 +233,27 @@ const obtenerInfo = async () => {
     loadingTable.value = false;
   }
 };
-console.log("Antes de la línea 101");
 
-onMounted(() => {
-  obtenerInfo();
-  console.log("inicio");
-});
+const mostrarDetalles = (row) => {
+  row.mostrarDetalles = true;
+}
 
+
+const buscarDetallesPedido = async () => {
+  if (pedidoSeleccionado.value) {
+    await obtenerInfo(pedidoSeleccionado.value);
+  }
+};
+
+  
 const estado = ref("guardar");
 const modal = ref(false);
 const opciones = {
   agregar: () => {
     data.value = {
       cantidad: "",
-  total: "",
-  producto_id: "",
+      total: "",
+      producto_id: "",
     };
     modal.value = true;
     estado.value = "guardar";
@@ -310,6 +280,7 @@ const validateProducto = (value) => {
 function buscarIndexLocal(id) {
   return rows.value.findIndex((r) => r._id === id);
 }
+
 
 const enviarInfo = {
   guardar: async () => {
