@@ -45,7 +45,7 @@
     <q-input class="modalinputs" outlined v-model="data2.cantidad" label="Cantidad" type="number" maxlength="15"
       lazy-rules :rules="[(val) => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
 
-    <q-btn @click="guardar" :loading="loadingmodal" padding="10px" color="secondary" label="Guardar">
+    <q-btn @click="guardar" :loading="loadingmodal" padding="10px" color="secondary" label="Agregar">
       <q-icon name="style" color="white" right />
     </q-btn>
 

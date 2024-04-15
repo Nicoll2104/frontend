@@ -4,13 +4,13 @@ import { useQuasar } from "quasar";
 import { useRouter } from "vue-router";
 import { useUsuarioStore } from "../stores/usuario.js";
 import Cookies from "js-cookie";
-import Codigo from './res_clave2.vue';
+import Nuevacontrasena from './res.clave3.vue'
 
 const UsuarioStore = useUsuarioStore();
 const router = useRouter();
 
 const data = ref({
-  correo: "",
+  codigo: ""
 });
 
 const $q = useQuasar();
@@ -39,7 +39,7 @@ function validarCampos() {
     }
   }
 
-  restablecerContrasena()
+  codigo();
 }
 
 let validacion = ref(false);
@@ -66,13 +66,12 @@ function cambiar() {
 
   restablecerContrasena();
 }
-const siguiente = ref(false)
-
-async function restablecerContrasena() {
+const siguiente2 = ref(false);
+async function codigo() {
   try {
     console.log("Esperando confirmación...");
     loading.value = true;
-    const response = await UsuarioStore.recuperar(data.value.correo);
+    const response = await UsuarioStore.codigo(data.value.codigo);
     console.log(response);
 
     if (!response) return;
@@ -81,8 +80,9 @@ async function restablecerContrasena() {
       notificar("negative", response.mensaje);
       return;
     }
-    Cookies.set('correo', data.value.correo, {expires: 1})
-    siguiente.value = true
+
+    Cookies.set("codigo", data.value.codigo, { expires: 1 });
+    siguiente2.value = true;
   } catch (error) {
     console.log(error);
   }
@@ -95,47 +95,44 @@ function notificar(tipo, msg) {
     position: "top",
   });
 }
-
 </script>
 
 <template>
-  <div>
-    <div class="cont bg-dark flex flex-center fullscreen" v-if="!siguiente">
-      <div class="olascont">
-        <img class="olaazul" src="../assets/olaazul.svg" />
-        <img class="olaverde" src="../assets/olaverde.svg" />
-      </div>
-      <q-card class="my-card q-ma-lg q-px-md q-py-lg">
-        <q-card-section class="q-py-none">
-          <p class="text-h3 text-primary text-bold">Restablecer Contraseña</p>
-          <q-div class="subtittle text-primary">
-            Por favor digite su correo y asigne una nueva contraseña</q-div
-          >
-        </q-card-section>
-        <q-card-section>
-          <q-input
-            inputstandout="bg-accent "
-            v-model="data.correo"
-            label="Correo electronico"
-            class="q-mb-lg input"
-          />
-        </q-card-section>
-  
-        <q-card-section>
-          <q-btn
-            push
-            color="secondary"
-            label="guardar"
-            class="float-right"
-            @click="validarCampos"
-            :loading="loading"
-          />
-        </q-card-section>
-      </q-card>
+  <div class="cont bg-dark flex flex-center fullscreen" v-if="!siguiente2">
+    <div class="olascont">
+      <img class="olaazul" src="../assets/olaazul.svg" />
+      <img class="olaverde" src="../assets/olaverde.svg" />
     </div>
-    <Codigo v-if="siguiente"></Codigo>
+    <q-card class="my-card q-ma-lg q-px-md q-py-lg">
+      <q-card-section class="q-py-none">
+        <p class="text-h3 text-primary text-bold">Restablecer Contraseña</p>
+        <q-div class="subtittle text-primary">
+          Por favor digite su correo</q-div
+        >
+      </q-card-section>
+      <q-card-section>
+        <q-input
+          inputstandout="bg-accent"
+          v-model="data.codigo"
+          label="codigo"
+          type="number"
+          class="q-mb-lg input"
+        />
+      </q-card-section>
 
+      <q-card-section>
+        <q-btn
+          push
+          color="secondary"
+          label="guardar"
+          class="float-right"
+          @click="validarCampos"
+          :loading="loading"
+        />
+      </q-card-section>
+    </q-card>
   </div>
+  <Nuevacontrasena v-if="siguiente2"></Nuevacontrasena>
 </template>
 
 <style lang="scss" scoped>
