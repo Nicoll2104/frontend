@@ -143,13 +143,13 @@
       name: "presupuestoAsignado",
       label: "Presupuesto Asignado",
       align: "left",
-      field: (row) => row.presupuestoAsignado,
+      field: (row) => formatoMonedaLocal(row.presupuestoAsignado),
     },
     {
       name: "presupuestoDisponible",
       label: "Presupuesto Disponible",
       align: "left",
-      field: (row) => row.presupuestoDisponible,
+      field: (row) => formatoMonedaLocal(row.presupuestoDisponible),
     },
     {
       name: "fecha",
@@ -379,14 +379,21 @@
     var inputDate = new Date(value);
 
     if (inputDate < currentDate) {
-        // La fecha ingresada es anterior a la fecha actual
         notificar('negative', 'La fecha no puede ser anterior a la fecha actual');
         return false;
     } else {
-        // La fecha ingresada es válida
         return true;
     }
 }
+
+  const formatoMonedaLocal = (numero) => {
+    return numero.toLocaleString('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    });
+  };
 
 
   function notificar(tipo, msg) {
