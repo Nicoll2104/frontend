@@ -45,7 +45,7 @@
     <q-input class="modalinputs" outlined v-model="data2.cantidad" label="Cantidad" type="number" maxlength="15"
       lazy-rules :rules="[(val) => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
 
-    <q-btn @click="guardar" :loading="loadingmodal" padding="10px" color="secondary" label="Agregar">
+    <q-btn @click="agregar" :loading="loadingmodal" padding="10px" color="secondary" label="Agregar">
       <q-icon name="style" color="white" right />
     </q-btn>
 
@@ -219,7 +219,7 @@ const data2 = ref({
 });
 
 const columnasTabla = [
-  { name: 'nombre', align: 'left', label: 'Producto', field: row => row.nombre },
+  { name: 'nombre', align: 'left', label: 'Producto', field: row => row.idProducto.label },
   { name: 'cantidad', align: 'left', label: 'Cantidad', field: 'cantidad' }
 ];
 
@@ -701,6 +701,11 @@ function prompt() {
   }).onDismiss(() => {
     // console.log('I am triggered on both OK and Cancel')
   })
+}
+
+function agregar(){
+  console.log(data2.value);
+  tablaProductos.value.push(data2.value)
 }
 </script>
 <style scoped>
