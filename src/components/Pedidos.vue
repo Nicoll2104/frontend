@@ -430,7 +430,6 @@ const opciones = {
     estado.value = "guardar";
   },
   editar: (info) => {
-// Asignar la fecha completa al objeto data.value
     data.value = {
       ...info,
       completado: info.completado? {label: 'Si',value: true}:{label: 'No',value: false} ,
@@ -459,18 +458,20 @@ const enviarInfo = {
   guardar: async () => {
     loadingmodal.value = true;
     try {
-      const info = { ...data.value, destino: data.value.destino.value };
-      const response = await usePedido.postPedido (info);
+      const info = { ...data.value, instructor_encargado: data.value.instructor_encargado.value, destino:data.value.destino.value };
+      const response = await usePedido.postPedido(info);
       console.log(response);
-      if (!response) return
+      if (!response) return;
       if (response.error) {
-        notificar('negative', response.error)
+        notificar("negative", response.error);
         loadingmodal.value = false;
-        return
+        return;
       }
-      rows.value.unshift(response.destino);
-      notificar('positive', 'Guardado exitosamente')
+
+      rows.value.unshift(response);
+      notificar("positive", "Guardado exitosamente");
       modal.value = false;
+      obtenerInfo();
     } catch (error) {
       console.log(error);
     } finally {
