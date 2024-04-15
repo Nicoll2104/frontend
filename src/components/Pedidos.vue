@@ -49,7 +49,7 @@
             <q-icon name="add_circle" color="white" right />
           </q-btn>
           </h4>
-          <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar" >
+          <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar">
             <template v-slot:append>
               <q-icon name="search" />
             </template>
@@ -87,11 +87,9 @@
           
           <q-btn color="warning" icon="edit" class="text-caption q-pa-sm q-ma-xs" @click="opciones.editar(props.row)" />
           
-          <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar">
-  <template v-slot:append>
-    <q-icon name="search" @click="buscarDetallesPedido" />
-  </template>
-</q-input>
+          <router-link to="/det_pedido" class="ingresarcont">
+            <q-btn color="secondary" icon="zoom_in" class="text-caption q-pa-sm q-ma-xs" />
+          </router-link>
 
 
 
