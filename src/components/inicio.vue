@@ -41,29 +41,35 @@ import { Cookies } from "quasar";
 const rol = Cookies.get('rol')
 let content = ref({
   Administrador: [
-    { ruta: "/Presupuesto", titulo: "Presupuesto", img: presupuesto },
+    { ruta: "/Dependencias", titulo: "Dependencias", img: presupuesto },
     { ruta: "/Destino", titulo: "Destino", img: fichas2 },
     { ruta: "/Lotes", titulo: "Lotes", img: lotes },
     { ruta: "/Areas", titulo: "Area tematica", img: areas },
     { ruta: "/Pedidos", titulo: "Pedido", img: pedido },
     { ruta: "/Productos", titulo: "Producto", img: producto },
     { ruta: "/Usuario", titulo: "Usuarios", img: usuario },
+    { ruta: "/Contrato", titulo: "Contrato", img: presupuesto },
+    { ruta: "/Proveedor", titulo: "Proveedor", img: presupuesto },
+    { ruta: "/Proceso", titulo: "Proceso", img: presupuesto },
   ],
   Instructor: [
-  { ruta: "/Presupuesto", titulo: "Presupuesto", img: presupuesto },
+  { ruta: "/Dependencias", titulo: "Dependencias", img: presupuesto },
     { ruta: "/Destino", titulo: "Destino", img: fichas2 },
     { ruta: "/Lotes", titulo: "Lotes", img: lotes },
     { ruta: "/Areas", titulo: "Areas", img: areas },
     { ruta: "/Pedidos", titulo: "Pedido", img: pedido },
     { ruta: "/Productos", titulo: "Producto", img: producto },
+    { ruta: "/Contrato", titulo: "Contrato", img: presupuesto },
+    { ruta: "/", titulo: "Contrato", img: presupuesto },
   ],
   Bodega: [
-  { ruta: "/Presupuesto", titulo: "Presupuesto", img: presupuesto },
+  { ruta: "/Dependencias", titulo: "Dependencias", img: presupuesto },
     { ruta: "/Destino", titulo: "Destino", img: fichas2 },
     { ruta: "/Lotes", titulo: "Lotes", img: lotes },
     { ruta: "/Areas", titulo: "Areas", img: areas },
     { ruta: "/Pedidos", titulo: "Pedido", img: pedido },
     { ruta: "/Productos", titulo: "Producto", img: producto },
+    { ruta: "/Compras", titulo: "Compras", img: presupuesto },
   ],
 });
 </script>
@@ -73,7 +79,7 @@ let content = ref({
   text-decoration: none;
 }
 .tarjetascont {
-  min-height: 60vh;
+  min-height: 50vh;
 }
 
 .img {
@@ -84,7 +90,7 @@ let content = ref({
 .tarjetasbtn {
   margin: 15px;
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.144);
-  width: 80vw !important;
+  width: 70vw !important;
   max-width: 400px;
 }
 
