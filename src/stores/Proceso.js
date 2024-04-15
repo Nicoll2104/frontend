@@ -22,7 +22,7 @@ export const useProcesoStore = defineStore('proceso', () => {
             console.log('a');
             let res = await axios.post("proceso/agregar", data);
             console.log('a', res);
-            return res.data.procesos
+            return res.data.Procesos
         } catch (error) {
             return error.response.data;
         }
