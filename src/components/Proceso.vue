@@ -155,7 +155,7 @@
       name: "fecha",
       label: "Fecha",
       align: "left",
-      field: (row) => row.fecha.slice(0, -14),
+      field: (row) => row.fecha,
     },
     {
       name: "status",
@@ -174,7 +174,6 @@
   const rows = ref([]);
   
   const data = ref({
-    nombre: "",
     presupuestoAsignado: "",
     presupuestoDisponible: "",
     fecha: "",
@@ -214,7 +213,6 @@
   const opciones = {
     agregar: () => {
       data.value = {
-        nombre: "",
         presupuestoAsignado: "",
         presupuestoDisponible: "",
         fecha: "",
@@ -270,9 +268,9 @@
         }
         console.log(rows.value);
         rows.value.splice(
-          buscarIndexLocal(response.data.procesos._id),
+          buscarIndexLocal(response.data.Procesos._id),
           1,
-          response.data.procesos
+          response.data.Procesos
         );
         notificar("positive", "Editado exitosamente");
         modal.value = false;
@@ -297,9 +295,11 @@
           return;
         }
         rows.value.splice(
-          buscarIndexLocal(response.data.procesos._id),
+          buscarIndexLocal(response.data.Procesos
+._id),
           1,
-          response.data.procesos
+          response.data.Procesos
+
         );
         notificar("positive", "Activado, exitosamente");
       } catch (error) {
@@ -319,9 +319,11 @@
           return;
         }
         rows.value.splice(
-          buscarIndexLocal(response.data.procesos._id),
+          buscarIndexLocal(response.data.Procesos
+._id),
           1,
-          response.data.procesos
+          response.data.Procesos
+
         );
         notificar("positive", "Inactivado exitosamente");
       } catch (error) {
@@ -372,22 +374,21 @@
     enviarInfo[estado.value]();
   }
   
-  function validateDate (value) {
+  function validateDate(value) {
+    var currentDate = new Date();
+    var inputDate = new Date(value);
 
-if (!value) {
-  return 'ingrese una fecha'
+    if (inputDate < currentDate) {
+        // La fecha ingresada es anterior a la fecha actual
+        notificar('negative', 'La fecha no puede ser anterior a la fecha actual');
+        return false;
+    } else {
+        // La fecha ingresada es válida
+        return true;
+    }
 }
 
-if (value.length > 10){
-  return `la fecha no es valida`;
-}
 
-if ( new Date(value) > today) {
-  return `La fecha de pedido no puede ser anterior a la actual.`;
-} 
-
-return true;
-}
   function notificar(tipo, msg) {
     $q.notify({
       type: tipo,
