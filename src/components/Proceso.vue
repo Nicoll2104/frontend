@@ -143,13 +143,13 @@
       name: "presupuestoAsignado",
       label: "Presupuesto Asignado",
       align: "left",
-      field: (row) => formatoMonedaLocal (row.presupuestoAsignado),
+      field: (row) => formatoMonedaLocal(row.presupuestoAsignado),
     },
     {
       name: "presupuestoDisponible",
       label: "Presupuesto Disponible",
       align: "left",
-      field: (row) => row.presupuestoDisponible,
+      field: (row) => formatoMonedaLocal(row.presupuestoDisponible),
     },
     {
       name: "fecha",
