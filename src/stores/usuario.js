@@ -148,6 +148,61 @@ const  putActivar = async (id)=>{
       }
     };
 
+    const recuperar = async (correo) => {
+      try {
+        const response = await axios.get(`${model}recuperar/${correo}`);
+        console.log(response);
+        return response;
+      } catch (error) {
+        console.error(error);
+        if (error.message === "Network Error") {
+          notificar("Sin conexión, por favor intente recargar");
+          return null;
+        }
+  
+        if (error.response.data.error === "Token no valido") {
+          salir();
+        }
+        return error.response.data;
+      }
+    };
+
+    const codigo = async (codigo) => {
+      try {
+        const response = await axios.get(`${model}codigo/${codigo}`);
+        return response;
+      } catch (error) {
+        console.error(error);
+        if (error.message === "Network Error") {
+          notificar("Sin conexión, por favor intente recargar");
+          return null;
+        }
+  
+        if (error.response.data.error === "Token no valido") {
+          salir();
+        }
+        return error.response.data;
+      }
+    };
+
+    const nuevacontrasena = async (info) => {
+      try {
+        const response = await axios.put(`${model}nuevacontrasena`, info);
+        return response;
+      } catch (error) {
+        console.error(error);
+        if (error.message === "Network Error") {
+          notificar("Sin conexión, por favor intente recargar");
+          return null;
+        }
+  
+        if (error.response.data.error === "Token no valido") {
+          salir();
+        }
+        return error.response.data;
+      }
+    };
+
   return {
     sesion,
     obtenerInfoUsuarios,
@@ -157,6 +212,9 @@ const  putActivar = async (id)=>{
     putInactivar,
     putActivar,
     login,
+    recuperar,
+    codigo,
+    nuevacontrasena
   }
 },{
   persist: true
