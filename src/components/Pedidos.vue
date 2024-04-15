@@ -65,49 +65,47 @@
           </q-tr>
         </template>
 
- <!--        <template v-slot:body-cell-Estado="props">
-          <q-td :props="props" class="botones">
-            <q-btn class="botonv1" text-size="1px" padding="10px" :label="props.row.estado === 1
-              ? 'Activo'
-              : props.row.estado === 0
-                ? 'Inactivo'
-                : '‎  ‎   ‎   ‎   ‎ '
-              " :color="props.row.estado === 1 ? 'positive' : 'accent'" :loading="props.row.estado === 'load'"
-              loading-indicator-size="small" @click="
-                props.row.estado === 1
-                  ? in_activar.inactivar(props.row._id)
-                  : in_activar.activar(props.row._id);
-              props.row.estado = 'load';
-              " />
-          </q-td>
-        </template> -->
-
         <template v-slot:body-cell-opciones="props">
         <q-td :props="props" class="botones" auto-width>
           
           <q-btn color="warning" icon="edit" class="text-caption q-pa-sm q-ma-xs" @click="opciones.editar(props.row)" />
-          
-          <router-link to="/det_pedido" class="ingresarcont">
-            <q-btn color="secondary" icon="zoom_in" class="text-caption q-pa-sm q-ma-xs" />
-          </router-link>
+ 
+          <q-btn color="secondary" icon="zoom_in" class="text-caption q-pa-sm q-ma-xs" @click="mostrarModal()" />
 
+        
+            <q-dialog v-model="showModal" persistent>
+      <q-card class="modal">
+        <q-toolbar class="q-pr-xl q-pl-xl">
+          <q-toolbar-title class="text-h5">Agregar/Modificar {{ modelo }}</q-toolbar-title>
+          <q-btn class="botonv1" flat round dense icon="close" v-close-popup />
+        </q-toolbar>
 
+        <q-card-section class="q-gutter-md row items-star justify-center continputs1">
+          <q-input class="modalinputs" outlined v-model="data.cantidad" label="Cantidad" type="number" maxlength="15"
+            lazy-rules :rules="[(val) => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
 
+          <q-select filled v-model="data.producto_id" :options="seletProducto" label="Seleccione el producto"
+            class="q-mx-auto" style="width: 300px" />
+        </q-card-section>
 
+        <q-input class="modalinputs" outlined v-model="data.subtotal" label="Subtotal" type="number" maxlength="15"
+          lazy-rules :rules="[(val) => val.trim() != '' || 'Ingrese una cantidad']"></q-input>
+
+        <q-card-section class="q-gutter-md row items-end justify-end continputs1" style="margin-top: 0">
+          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px"
+            :color="estado == 'editar' ? 'warning' : 'secondary'" :label="estado">
+            <q-icon :name="estado == 'editar' ? 'edit' : 'style'" color="white" right />
+          </q-btn>
+          <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white"
+            v-close-popup>
+            <q-icon name="cancel" color="white" right />
+          </q-btn>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
         </q-td>
       </template>
       <div class="show-p" v-if="props.row.detalle">
-  <q-tr :props="props">
-    <q-td colspan="100%" class="">
-      <div class="text-center">
-        <q-btn colspan="100%" class="text-lowercase" flat>
-          <q-div class="q-mx-sm"><b>Código presupuestal:</b> {{ props.row.detalle.codigo_presupuestal }}</q-div>
-          <q-div class="q-mx-sm"><b>Presupuesto actual:</b> {{ props.row.detalle.presupuesto_actual }}</q-div>
-          <q-div class="q-mx-sm"><b>Presupuesto asignado:</b> {{ props.row.detalle.presupuesto_asignado }}</q-div>
-        </q-btn>
-      </div>
-    </q-td>
-  </q-tr>
 </div>
 
       </q-table>
@@ -134,6 +132,8 @@ const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
 const loadingmodal = ref(false);
+const showModal = ref(false);
+
 
 const columns = ref([
   {
@@ -183,6 +183,9 @@ const columns = ref([
     align: "center",
   },
 ]);
+const mostrarModal = () => {
+  showModal.value = true;
+};
 
 const rows = ref([]);
 const rowsPedido = ref([])
@@ -353,6 +356,13 @@ rowsPedido.value[Index].detalle = rowsPedido.value[i];
 
 obtenerInfo2();
  */
+/*  const buscarDetallesPedido = () => {
+  if (pedidoSeleccionado.value) {
+    obtenerInfo2(); // Llama a la función para obtener los detalles del pedido
+    showModal.value = true; // Muestra el modal
+  }
+}; */
+
  const obtenerInfo2 = async () => {
   try {
     await Promise.all([obtenerProducto()]);
@@ -391,11 +401,6 @@ obtenerInfo2();
   }
 };
 
-const buscarDetallesPedido = () => {
-  if (pedidoSeleccionado.value) {
-    obtenerInfo2(); // Llamar a obtenerInfo2 en lugar de obtenerInfo cuando se hace clic en el botón de búsqueda
-  }
-};
 
 
 
