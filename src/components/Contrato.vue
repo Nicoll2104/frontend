@@ -1,66 +1,63 @@
 <script setup>
 import { ref } from "vue";
-import { usePedidoStore } from "../stores/pedido.js";
-import { useFichaStore } from "../stores/ficha.js";
+import { useContratoStore } from "../stores/contrato.js";
+import { useProveedorStore } from "../stores/proveedor.js";
+import { useUsuarioStore } from "../stores/usuario.js";
+import { useProcesoStore } from "../stores/Proceso.js";
 import { useQuasar } from 'quasar'
 
-const modelo = "Pedidos";
-const usePedido = usePedidoStore();
-const useFicha = useFichaStore();
+const modelo = "Contrato";
+const useContrato = useContratoStore();
+const useUsuario = useUsuarioStore();
+const useProveedor = useProveedorStore();
+const useProceso = useProcesoStore();
 const loadingTable = ref(true)
 const $q = useQuasar()
 const filter = ref("");
 const loadingmodal = ref(false);
 
-/* const columns = ref([
-  { name: 'fecha_creacion', align: 'center', label: 'Fecha creacion', field: 'fecha creacion'},
-  { name: 'fecha_entrega', align: 'center', label: 'Fecha entrega', field: 'fecha entrega'},
-  { name: 'ficha',align: 'center',  label: 'Ficha', field: 'ficha' },
-  { name: 'instructor_encargado',align: 'center',  label: 'Instructor encargado', field: 'instructor encargado' },
-  { name: 'subtotal',align: 'center',  label: 'Subtotal', field: 'subtotal' },
-  { name: 'total',align: 'center',  label: 'Total', field: 'total' },
-  { name: 'impuestos',align: 'center',  label: 'Impuestos', field: 'Impuestos' },
-  { name: 'Items',align: 'center',  label: 'Items', field: 'items' },
-  { name: 'Estado',align: 'center',  label: 'Estado', field: 'status' },
-]); */
 const columns = ref([
   {
-    name: "fecha_creacion",
-    label: "Fecha creacion",
+    name: "codigo",
+    label: "Codigo",
     align: "left",
-    field: (row) => row.fecha_creacion,
-    sort: true,
-    sortOrder: "da",
+    field: (row) => row.codigo,
   },
   {
-    name: "id_requerimiento",
-    label: "Requerimiento",
+    name: "nombre",
+    label: "Nombre",
     align: "left",
-    field: (row) => row.id_requerimiento,
+    field: (row) => row.nombre,
   },
   {
-    name: "id_producto",
-    label: "Producto",
+    name: "presupuestoAsignado",
+    label: "Presupuesto asignado",
     align: "left",
-    field: (row) => row.id_producto,
+    field: (row) => row.presupuestoAsignado,
   },
   {
-    name: "cantidad",
-    label: "Cantidad",
+    name: "presupuestoActual",
+    label: "Presupuesto Actual",
     align: "left",
-    field: (row) => row.cantidad,
+    field: (row) => row.presupuestoActual,
   },
   {
-    name: "valor_unitario",
-    label: "Valor Unitario",
-    align: "center",
-    field: (row) => row.valor_unitario,
+    name: "supervisor",
+    label: "Supervisor",
+    align: "left",
+    field: (row) => row.supervisor,
   },
   {
-    name: "subtotal",
-    label: "Subtotal",
-    align: "center",
-    field: (row) => row.subtotal,
+    name: "proveedor",
+    label: "Proveedor",
+    align: "left",
+    field: (row) => row.proveedor,
+  },
+  {
+    name: "proceso",
+    label: "Proceso",
+    align: "left",
+    field: (row) => row.proceso,
   },
   {
     name: "opciones",
@@ -74,27 +71,114 @@ const columns = ref([
 const rows = ref([]);
 
 const data = ref({
-  fecha_creacion: "",
-  fecha_entrega: "",
-  ficha: "",
-  instructor_encargado: "",
-});
+  codigo: "",
+  nombre: "",
+  presupuestoAsignado: "",
+  presupuestoActual: "",
+  proveedor: "",
+  proceso: "",
+  supervisor: "",
+  });
+
+let seletProceso = ref([]);
+let seletInstructor = ref([]);
+let seletProveedor = ref([]);
+let seletcompletado = ref([]);
+
+/* const preciototal = data.cantidad * data.precioporunidad; */
+
+const obtenerProveedor = async () => {
+try {
+  const proveedores = await useProveedor.obtenerInfoProveedor();
+  console.log("Todos los proveedores:", proveedores);
+
+  seletProveedor.value = proveedores.map((proveedor) => ({
+    label: `${proveedor.nombre}`,
+    value: String(proveedor._id),
+  }));
+
+  seletProveedor.value.sort((a, b) => {
+    if (a.label < b.label) {
+      return -1;
+    }
+    if (a.label > b.label) {
+      return 1;
+    }
+    return 0;
+  });
+} catch (error) {
+  console.error(error);
+}
+};
+
+obtenerProveedor();
+
+const obtenerProceso = async () => {
+try {
+  const res = await useProceso.obtenerInfoProceso();
+  const procesos = res.procesos
+  console.log("Todos los Procesos:", procesos);
+
+  seletProceso.value = procesos.map((proceso) => ({
+    label: `${proceso.nombre}`,
+    value: String(proceso._id),
+  }));
+
+  seletProceso.value.sort((a, b) => {
+    if (a.label < b.label) {
+      return -1;
+    }
+    if (a.label > b.label) {
+      return 1;
+    }
+    return 0;
+  });
+} catch (error) {
+  console.error(error);
+}
+};
+
+const obtenerUsuario = async () => {
+try {
+  const usuario = await useUsuario.obtenerInfoUsuarios();
+  console.log("Todos los Instructores:", usuario);
+
+  seletInstructor.value = usuario.map((instructor_encargado) => ({
+    label: `${instructor_encargado.nombre}`,
+    value: String(instructor_encargado._id),
+  }));
+
+  seletInstructor.value.sort((a, b) => {
+    if (a.label < b.label) {
+      return -1;
+    }
+    if (a.label > b.label) {
+      return 1;
+    }
+    return 0;
+  });
+} catch (error) {
+  console.error(error);
+}
+};
+
 
 /* const preciototal = data.cantidad * data.precioporunidad; */
 
 const obtenerInfo = async () => {
   try {
-    const pedidos = await usePedido.obtenerInfoPedido();
+    await Promise.all([obtenerProveedor(), obtenerUsuario(), obtenerProceso(), ]);
+    const contratos = await useContrato.obtenerInfoContrato();
 
-    console.log(pedidos);
+    console.log(contratos);
 
-    if (!pedidos) return
+    if (!contratos) return
 
-    if (pedidos.error) {
-      notificar('negative', pedidos.error)
+    if (contratos.error) {
+      notificar('negative', contratos.error)
       return
     }
-    rows.value = pedidos;
+    rows.value = contratos;
 
   } catch (error) {
     console.error(error);
@@ -110,19 +194,23 @@ const modal = ref(false);
 const opciones = {
   agregar: () => {
     data.value = {
-      fecha_creacion: "",
-      fecha_entrega: "",
-      ficha: "",
-      subtotal: "",
-      total: "",
-      impuestos: "",
-
+      codigo: "",
+      nombre: "",
+      presupuestoAsignado: "",
+      presupuestoActual: "",
+      proveedor: "",
+      proceso: "",
+      supervisor: "",
     };
     modal.value = true;
     estado.value = "guardar";
   },
   editar: (info) => {
-    data.value = { ...info }
+    data.value = {
+      ...info,
+      proveedor: {label: info.proveedor.nombre,value: info.proveedor}, // Asignar solo el ID del destino
+      supervisor: {label: info.supervisor.nombre ,value: info.supervisor} , // Asignar solo el ID del instructor
+    };
     modal.value = true;
     estado.value = "editar";
   },
@@ -132,22 +220,25 @@ function buscarIndexLocal(id) {
   return rows.value.findIndex((r) => r._id === id);
 }
 
+
 const enviarInfo = {
   guardar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await useCliente.guardar(data.value);
+      const info = { ...data.value, supervisor: data.value.supervisor.value, proveedor:data.value.proveedor.value, proceso:data.value.proceso.value };
+      const response = await useContrato.postContrato(info);
       console.log(response);
-      if (!response) return
+      if (!response) return;
       if (response.error) {
-        notificar('negative', response.error)
+        notificar("negative", response.error);
         loadingmodal.value = false;
-        return
+        return;
       }
 
-      rows.value.unshift(response.cliente);
-      notificar('positive', 'Guardado exitosamente')
+      rows.value.unshift(response);
+      notificar("positive", "Guardado exitosamente");
       modal.value = false;
+      obtenerInfo();
     } catch (error) {
       console.log(error);
     } finally {
@@ -157,19 +248,38 @@ const enviarInfo = {
   editar: async () => {
     loadingmodal.value = true;
     try {
-      const response = await useCliente.editar(data.value._id, data.value);
+      console.log('---------------------')
+      console.log('peticion para editar:')
+      console.log({
+        ...data.value,
+        proveedor: {...data.value.proveedor.value},
+        supervisor: {...data.value.supervisor.value}, 
+        proceso: {...data.value.proceso.value}, 
+      })
+      const response = await useContrato.putContrato(data.value._id, {
+        ...data.value,
+        proveedor: {...data.value.proveedor.value},
+        supervisor: {...data.value.supervisor.value}, 
+        proceso: {...data.value.proceso.value}, 
+      });
       console.log(response);
-      if (!response) return
+      if (!response) return;
       if (response.error) {
-        notificar('negative', response.error)
+        notificar('negative', response.error);
         loadingmodal.value = false;
-        return
+        return;
       }
-      rows.value.splice(buscarIndexLocal(response._id), 1, response);
-      notificar('positive', 'Editado exitosamente')
+      const index = rows.value.findIndex((contratos) => contratos._id === response._id);
+      rows.value.splice(index, 1, response);
+      notificar('positive', 'Editado exitosamente');
       modal.value = false;
     } catch (error) {
       console.log(error);
+      if (error.response){
+        if (error.response.data){
+          notificar('negative', error.response.data.error)
+        }
+      }
     } finally {
       loadingmodal.value = false;
     }
@@ -179,7 +289,7 @@ const enviarInfo = {
 const in_activar = {
   activar: async (id) => {
     try {
-      const response = await useCliente.activar(id);
+      const response = await useContrato.activar(id);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -195,7 +305,7 @@ const in_activar = {
   },
   inactivar: async (id) => {
     try {
-      const response = await useCliente.inactivar(id);
+      const response = await useContrato.inactivar(id);
       console.log(response);
       if (!response) return
       if (response.error) {
@@ -216,9 +326,7 @@ const in_activar = {
 function validarCampos() {
 
   const arrData = Object.entries(data.value)
-  console.log(arrData);
   for (const d of arrData) {
-    console.log(d);
     if (d[1] === null) {
       notificar('negative', "Por favor complete todos los campos")
       return
@@ -230,35 +338,27 @@ function validarCampos() {
       }
     }
 
-    if (d[0] === "fecha_creacion" && d[1].toString().length < 1) {
-      notificar('negative', "La fecha de creacion es obligatoria")
+    if (d[0] === "codifo" && d[1].toString().length < 1) {
+      notificar('negative', "El codigo es obligatoria")
       return
     }
-    if (d[0] === "fecha_entrega" && d[1].toString().length < 1) {
-      notificar('negative', "La fecha de entrega es obligatoria")
+    if (d[0] === "nombre" && d[1].toString().length < 1) {
+      notificar('negative', "El nombre es obligatori0")
       return
     }
-    if (d[0] === "subtotal" && d[1].toString().length < 1) {
-      notificar('negative', "El subtotal es obligatorio")
+    if (d[0] === "presupuestoAsignado" && d[1].toString().length < 1) {
+      notificar('negative', "El presupuesto asignado es obligatorio")
       return
     }
-    if (d[0] === "total" && d[1].toString().length < 1) {
-      notificar('negative', "El subtotal es obligatorio")
-      return
-    }
-
-    if (d[0] === "cedula" && d[1].toString().length < 8) {
-      notificar('negative', "La cedula debe tener más de 8 digitos")
+    if (d[0] === "presupuestoActual" && d[1].toString().length < 1) {
+      notificar('negative', "El presupuesto Actual es obligatorio")
       return
     }
 
-    if (d[0] === "email" && !d[1].includes('@')) {
-      notificar('negative', 'Email no válido')
-      return
-    }
   }
   enviarInfo[estado.value]()
 }
+
 
 function notificar(tipo, msg) {
   $q.notify({
@@ -365,21 +465,6 @@ function prompt() {
         </template>
       
       </q-table>
-
-      <q-card-section class="q-gutter-md row items-end justify-center continputs1">
-          <q-btn @click="validarCampos" :loading="loadingmodal" padding="10px" color="secondary" label="guardar">
-            <q-icon name="style" color="white" right />
-          </q-btn>
-
-          <q-btn :loading="loadingmodal" padding="10px" color="secondary" label="imprimir">
-            <q-icon name="print" color="white" right />
-          </q-btn>
-
-          <q-btn :loading="loadingmodal" padding="10px" color="warning" label="cancelar" text-color="white" v-close-popup>
-            <q-icon name="cancel" color="white" right />
-          </q-btn>
-
-        </q-card-section>
 
       <!-- <router-link to="/Det_pedido" class="ingresarcont">
         <q-btn class="ingresar opcion" color="primary">Crear Pedido
