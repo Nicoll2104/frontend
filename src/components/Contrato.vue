@@ -426,6 +426,9 @@ function prompt() {
           <h4 class="titulo-cont">
             {{ modelo + ' ' }}
           </h4>
+          <q-btn @click="opciones.agregar" label="Añadir" color="secondary">
+              <q-icon name="style" color="white" right />
+            </q-btn>
           <q-input borderless dense debounce="300" color="primary" v-model="filter" class="buscar">
             <template v-slot:append>
               <q-icon name="search" />
