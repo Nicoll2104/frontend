@@ -431,6 +431,12 @@ function prompt() {
               <q-icon name="search" />
             </template>
           </q-input>
+          <router-link to="/proveedor" class="ingresarcont">
+            <q-btn color="warning" icon-right="add_circle_outline" style="margin-right: 20px">Proveedor</q-btn>
+         </router-link>
+          <router-link to="/proceso" class="ingresarcont">
+            <q-btn color="secondary" icon-right="add_circle_outline">Proceso</q-btn>
+          </router-link>
         </template>
 
         <template v-slot:header="props">

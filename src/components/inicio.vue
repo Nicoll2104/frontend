@@ -36,6 +36,7 @@ import areas from "../assets/areas.png";
 import pedido from "../assets/pedido.png";
 import producto from "../assets/producto.png";
 import usuario from "../assets/usuario.png";
+import contrato from "../assets/contrato.png";
 import { Cookies } from "quasar";
 
 const rol = Cookies.get('rol')
@@ -48,9 +49,7 @@ let content = ref({
     { ruta: "/Pedidos", titulo: "Pedido", img: pedido },
     { ruta: "/Productos", titulo: "Producto", img: producto },
     { ruta: "/Usuario", titulo: "Usuarios", img: usuario },
-    { ruta: "/Contrato", titulo: "Contrato", img: presupuesto },
-    { ruta: "/Proveedor", titulo: "Proveedor", img: presupuesto },
-    { ruta: "/Proceso", titulo: "Proceso", img: presupuesto },
+    { ruta: "/Contrato", titulo: "Contrato", img: contrato },
   ],
   Instructor: [
   { ruta: "/Dependencias", titulo: "Dependencias", img: presupuesto },
@@ -59,8 +58,7 @@ let content = ref({
     { ruta: "/Areas", titulo: "Areas", img: areas },
     { ruta: "/Pedidos", titulo: "Pedido", img: pedido },
     { ruta: "/Productos", titulo: "Producto", img: producto },
-    { ruta: "/Contrato", titulo: "Contrato", img: presupuesto },
-    { ruta: "/", titulo: "Contrato", img: presupuesto },
+
   ],
   Bodega: [
   { ruta: "/Dependencias", titulo: "Dependencias", img: presupuesto },
@@ -70,6 +68,7 @@ let content = ref({
     { ruta: "/Pedidos", titulo: "Pedido", img: pedido },
     { ruta: "/Productos", titulo: "Producto", img: producto },
     { ruta: "/Compras", titulo: "Compras", img: presupuesto },
+    { ruta: "/Contrato", titulo: "Contrato", img: contrato },
   ],
 });
 </script>
