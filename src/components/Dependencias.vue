@@ -38,7 +38,7 @@ const columns = ref([
   },
   {
     name: "opciones",
-    label: "",
+    label: "Opciones",
     field: "opciones",
     align: "center",
   },
@@ -267,7 +267,7 @@ function notificar(tipo, msg) {
 </script>
 
 <template>
-  <div>
+  <div class="container">
     <q-dialog v-model="modal">
       <q-card class="modal">
         <q-toolbar>
@@ -294,8 +294,8 @@ function notificar(tipo, msg) {
       </q-card>
     </q-dialog>
 
-    <div class="q-pa-md">
-      <q-table :rows="rows" :columns="columns" class="tabla " row-key="name" :loading="loadingTable" :filter="filter"
+    <div class="left-column q-pa-md">
+      <q-table :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
         rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
         no-results-label="No hay resultados para la busqueda" dense>
         <template v-slot:top>
@@ -319,130 +319,91 @@ function notificar(tipo, msg) {
             </q-th>
           </q-tr>
         </template>
+        <template v-slot:body="props">
+          <tr :props="props">
+            <q-td v-for="col in props.cols" :key="col.name" :props="props"
+              :auto-width="col.name == 'opciones'" :class="props.row.expanded ? 'no-border ' : ''">
+              <q-div v-if="col.name != 'opciones' && col.name != 'status' ">
+                {{ col.value }}
+              </q-div>
+              <q-div v-else-if="col.name == 'status'">
+                <q-btn class="botonv1" padding="10px" :label="props.row.status == 1 ? 'Activo' : props.row.status == 0 ? 'Inactivo' : '‎  ‎   ‎   ‎   ‎ '"
+                  :color="props.row.status == 1 ? 'primary' : 'secondary'" :loading="props.row.status == 'load'"
+                  loading-indicator-size="small"
+                  @click="props.row.status == 1 ? in_activar.putInactivar(props.row._id) : in_activar.putActivar(props.row._id); props.row.status = 'load';" />
+              </q-div>
+              <q-div v-else-if="col.name == 'opciones' ">
+                <q-btn color="warning" icon="edit" class="text-caption q-pa-sm q-mx-xs" @click="opciones.editar(props.row)" />
+                <q-btn class="text-caption q-pa-sm q-mx-xs" @click="props.row.expanded = !props.row.expanded"
+                  :icon="props.row.expanded ? 'zoom_out' : 'zoom_in'" :color="props.row.expanded ? 'grey' : 'secondary'" />
+              </q-div>
+            </q-td>
+          </tr>
 
-<!--         <template v-slot:body-cell-status="props">
-          <q-td :props="props" class="botones">
-            <q-btn class="botonv1" padding="10px" :label="props.row.status == 1
-              ? 'Activo'
-              : props.row.status == 0
-                ? 'Inactivo'
-                : '‎  ‎   ‎   ‎   ‎ '
-              " :color="props.row.status == 1 ? 'primary' : 'secondary'" :loading="props.row.status == 'load'"
-              loading-indicator-size="small" @click="
-                props.row.status == 1
-                  ? in_activar.putInactivar(props.row._id)
-                  : in_activar.putActivar(props.row._id);
-              props.row.status = 'load';
-              " />
-          </q-td>
+          <tr :class="!props.row.expanded ? 'sinaltura' : ''" colspan="100%" :props="props">
+            <td :class="!props.row.expanded ? 'no-border sinaltura' : ''" colspan="100%">
+              <div class="show-p" :style="{ height: props.row.expanded ? '45px' : '0' }">
+                <q-div class="">
+                  <div class="text-center" v-if="props.row.detalle">
+                    <q-btn colspan="100%" :loading="loadingTableDist" class="text-lowercase" flat>
+                      <q-div class="q-mx-sm"><b>codigo presupuestal:</b> {{ props.row.detalle.codigo_presupuestal }}</q-div>
+                      <q-div class="q-mx-sm"><b>presupuesto actual:</b> {{ props.row.detalle.presupuesto_actual }}</q-div>
+                      <q-div class="q-mx-sm"><b>presupuesto asignado:</b> {{ props.row.detalle.presupuesto_asignado }}</q-div>
+                    </q-btn>
+                  </div>
+
+                  <q-div class="text-center" v-if="!props.row.detalle">
+                    <q-btn @click="opciones.agregar" label="crear" color="grey-6" class="text-capitalize text-white">
+                      <q-icon name="add" color="white" right />
+                    </q-btn>
+                  </q-div>
+                </q-div>
+              </div>
+            </td>
+          </tr>
         </template>
-
-        <template v-slot:body-cell-opciones="props">
-          <q-td :props="props" class="botones" auto-width>
-            <q-btn color="warning" icon="edit" class="text-caption q-pa-sm q-mx-sx" @click="opciones.editar(props.row)" />
-              
-              <q-btn color="secondary" icon="zoom_in" class="text-caption q-pa-sm q-mx-sm" 
-              @click="props.expand = !props.expand" :icon="props.expand ? 'remove' : 'add'"/>
-          </q-td>
-        </template> -->
-<!--q -->
-  <template v-slot:body="props">
-  <tr :props="props" >
-    <q-td v-for="col in props.cols" :key="col.name" :props="props"
-    :auto-width="col.name == 'opciones'" :class="props.row.expanded ? 'no-border ' : ''">
-      <q-div v-if="col.name != 'opciones' && col.name != 'status' ">
-        {{ col.value }}
-      </q-div>
-      <q-div v-else-if="col.name == 'status'">
-        <q-btn class="botonv1" padding="10px" :label="props.row.status == 1 ? 'Activo' : props.row.status == 0 ? 'Inactivo' : '‎  ‎   ‎   ‎   ‎ '" :color="props.row.status == 1 ? 'primary' : 'secondary'" :loading="props.row.status == 'load'" loading-indicator-size="small" @click="props.row.status == 1 ? in_activar.putInactivar(props.row._id) : in_activar.putActivar(props.row._id); props.row.status = 'load';" />
-      </q-div>
-      <q-div v-else-if="col.name == 'opciones' ">
-        <q-btn color="warning" icon="edit" class="text-caption q-pa-sm q-mx-xs" @click="opciones.editar(props.row)" />
-        <q-btn class="text-caption q-pa-sm q-mx-xs" @click="props.row.expanded = !props.row.expanded" :icon="props.row.expanded ? 'zoom_out' : 'zoom_in'" :color="props.row.expanded ? 'grey' : 'secondary'"/>
-      </q-div>
-    </q-td>
-  </tr>
-  
-  <tr :class="!props.row.expanded ? 'sinaltura' : ''" colspan="100%" :props="props" >
-  <td :class="!props.row.expanded ? 'no-border sinaltura' : ''" colspan="100%"  >
-  <div class="show-p" :style="{ height: props.row.expanded ? '45px' : '0' }">
-  <q-div class="">
-
-      <div class="text-center "  v-if="props.row.detalle" >
-         <q-btn colspan="100%" :loading="loadingTableDist" class="text-lowercase" flat >
-          <q-div class="q-mx-sm"><b>codigo presupuestal:</b> {{ props.row.detalle.codigo_presupuestal}}</q-div>
-          <q-div class="q-mx-sm"><b>presupuesto actual:</b> {{ props.row.detalle.presupuesto_actual}}</q-div>
-          <q-div class="q-mx-sm"><b>presupuesto asignado:</b> {{ props.row.detalle.presupuesto_asignado}}</q-div>
-        </q-btn>
-      </div>
-
-      <q-div class="text-center " v-if="!props.row.detalle" >
-        <q-btn @click="opciones.agregar" label="crear" color="grey-6"
-        class="text-capitalize text-white ">
-              <q-icon name="add" color="white" right />
-            </q-btn>
-      </q-div>
-
-      <!-- QUE TalTnTO Tienes amigO eSta brutal -->
-  
-  </q-div>
-  </div>
-  </td>
-</tr>
-</template>
-  </q-table>
+      </q-table>
     </div>
 
+    <div class="right-column">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Opciones</div>
+        </q-card-section>
+
+        <q-card-section>
+          <div>
+            expaded anda enamoradooooo :)
+          </div>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-actions align="right">
+          <q-btn flat label="Red de conociemiento" color="primary" />
+          <q-btn flat label="Distribuccion de dependencias" color="primary" />
+        </q-card-actions>
+      </q-card>
+    </div>
   </div>
 </template>
+
 <style scoped>
-/* 
-primary: Color principal del tema.
-secondary: Color secundario del tema.
-accent: Color de acento.
-positive: Color para indicar una acción positiva o éxito.
-negative: Color para indicar una acción negativa o error.
-info: Color para información o mensajes neutrales.
-warning: Color para advertencias o mensajes importantes. 
-*/
-
-* {
-  margin: 0px;
-  padding: 0px;
-  transition: height 0.5s ease, padding 0.5s ease; 
+.container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+  padding: 20px;
 }
 
-.show-p {
-  overflow: hidden;
-}
-
-.sinaltura{
-  height: 0px !important;
-  padding-top: 0px !important;
-  padding-bottom: 0px !important;
-}
-
-.paddingnone{
-  padding-top: 0px !important;
-  padding-bottom: 0px !important;
-}
-
-.modal {
-  width: 100%;
-  max-width: 600px;
+.left-column,
+.right-column {
+  padding: 10px;
 }
 
 .tabla {
-  padding: 0 20px;
-  margin: 10px auto;
-  max-width: 700px;  
-
-  border: 0px solid black;
-
-}
-
-.titulo-cont {
-  margin: auto;
+  width: 80%;
+  height: 60%;
 }
 
 .buscar {
@@ -459,12 +420,23 @@ warning: Color para advertencias o mensajes importantes.
   font-size: 15px;
 }
 
-
-
 .botonv1 {
   font-size: 10px;
   font-weight: bold;
 }
 
+.show-p {
+  overflow: hidden;
+}
 
+.sinaltura {
+  height: 0px !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+.paddingnone {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
 </style>

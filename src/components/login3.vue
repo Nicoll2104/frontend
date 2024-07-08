@@ -10,7 +10,9 @@
 
       <input class="input opcion" type="text" placeholder="Nombre de usuario">
       <div class="contrasenacont">
-        <input class="input opcion" type="text" placeholder="Contraseña">
+        <input class="input opcion" type="password" id="password" placeholder="Contraseña">
+        <span class="toggle-password" onclick="togglePassword()">👁️</span>
+        <!-- <input class="input opcion" type="text" placeholder="Contraseña"> -->
         <router-link to="/Restableciemiento" class="ingresarcont">
           <button class="contrasenaayuda">¿Olvidaste tu contraseña?</button>
         </router-link>
@@ -167,6 +169,7 @@ input::placeholder {
 .contrasenacont {
   width: min-content;
   margin: auto;
+  position: relative;
 }
 
 .contrasenaayuda {

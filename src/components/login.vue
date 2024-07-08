@@ -6,6 +6,8 @@
   import Cookies from 'js-cookie'
 
 
+
+
   const UsuarioStore = useUsuarioStore()
   const router = useRouter()
   
@@ -13,6 +15,11 @@ const data = ref({
   correo: "",
   contrasena: "",
 });
+const showPassword = ref(false);
+
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value;
+};
   const $q = useQuasar();
   let errorMessage = ref("");
     
@@ -122,37 +129,43 @@ async function validarIngreso() {
 
 <template>
     <div class="cont bg-dark flex flex-center fullscreen">
-        <div class="olascont">
-            <img class="olaazul" src="../assets/olaazul.svg">
-            <img class="olaverde" src="../assets/olaverde.svg">
-        </div>
-            <q-card class="my-card q-ma-lg q-px-md q-py-lg" >
-                <q-card-section class="q-py-none">
-                    <p class="text-h3 text-primary text-bold">Bienvenido</p>
-                    <q-div class="subtittle text-primary"> Por favor ingrese sus datos de usuario para continuar</q-div>
-                </q-card-section>
-                <q-card-section>
-                    <q-input v-model="data.correo" label="Correo electronico"
-                    class="q-mb-lg input"/>
-                    <q-input  v-model="data.contrasena" label="Contraseña" type="password" 
-                    class=" input"/>
-                </q-card-section>
-
-                <q-card-section>
-                    <router-link to="/Restableciemiento">
-                        <span class="text-secondary text-weight-bold contrasenaayuda">¿Olvidaste tu contraseña?</span>
-                    </router-link>
-
-                    <q-card-section>
-                    </q-card-section>
-                    <q-btn push color="secondary" label="Ingresar" class="float-right" @click="validarCampos" :loading="loading"/>
-                </q-card-section>
-
-                        
-
-            </q-card>
-        </div>
-</template>
+      <div class="olascont">
+        <img class="olaazul" src="../assets/olaazul.svg">
+        <img class="olaverde" src="../assets/olaverde.svg">
+      </div>
+      <q-card class="my-card q-ma-lg q-px-md q-py-lg">
+        <q-card-section class="q-py-none">
+          <p class="text-h3 text-primary text-bold">Bienvenido</p>
+          <q-div class="subtittle text-primary">Por favor ingrese sus datos de usuario para continuar</q-div>
+        </q-card-section>
+        <q-card-section>
+          <q-input v-model="data.correo" label="Correo electrónico" class="q-mb-lg input" />
+          <q-input
+            v-model="data.contrasena"
+            :type="showPassword ? 'text' : 'password'"
+            label="Contraseña"
+            class="input"
+          >
+            <template v-slot:append>
+              <q-icon
+                :name="showPassword ? 'visibility_off' : 'visibility'"
+                @click="togglePasswordVisibility"
+                class="cursor-pointer"
+              />
+            </template>
+          </q-input>
+        </q-card-section>
+        <q-card-section>
+          <router-link to="/Restableciemiento">
+            <span class="text-secondary text-weight-bold contrasenaayuda">¿Olvidaste tu contraseña?</span>
+          </router-link>
+        </q-card-section>
+        <q-card-section>
+          <q-btn push color="secondary" label="Ingresar" class="float-right" @click="validarCampos" :loading="loading" />
+        </q-card-section>
+      </q-card>
+    </div>
+  </template>
     
     <!-- scoped sirve para evitar que los estilos afecte a los
     demas componentes  -->
@@ -207,6 +220,9 @@ async function validarIngreso() {
 
 .contrasenaayuda:hover{
     color: $primary !important;
+}
+.cursor-pointer {
+  cursor: pointer;
 }
 
 </style>
