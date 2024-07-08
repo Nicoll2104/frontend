@@ -380,8 +380,12 @@ function notificar(tipo, msg) {
         <q-separator />
 
         <q-card-actions align="right">
-          <q-btn flat label="Red de conociemiento" color="primary" />
+          <router-link to="/Red_conocimiento">
+          <q-btn flat label="Red de conocimiento" color="primary" />
+        </router-link>
+        <router-link to="/Dis_dependencias">
           <q-btn flat label="Distribuccion de dependencias" color="primary" />
+        </router-link>
         </q-card-actions>
       </q-card>
     </div>

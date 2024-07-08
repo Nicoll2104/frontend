@@ -18,8 +18,8 @@ import Entradas from '../components/entradas.vue'
 import proveedor from '../components/proveedor.vue'
 import Perfil from '../components/perfil.vue'
 import Proceso from '../components/Proceso.vue'
-
-
+import Red_conociemiento from '../components/red_conocimiento.vue'
+import Dis_dependencias from '../components/dis_dependencias.vue'
 
 import {createRouter, createWebHashHistory} from 'vue-router'
 import { useUsuarioStore } from "../stores/usuario.js"
@@ -63,6 +63,8 @@ const routes = [
         { path: "/", redirect: "/menu/inicio" },
         { path: "/inicio", component: inicio, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Dependencias', component:Dependencias, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/Red_conocimiento', component:Red_conociemiento, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
+        {path: '/Dis_dependencias', component:Dis_dependencias, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Destino', component:Destino, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Lotes', component:Lotes, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
         {path: '/Areas', component:Areas, beforeEnter: auth , meta: { rol: ['Administrador','Instructor']}},
