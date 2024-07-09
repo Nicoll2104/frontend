@@ -183,7 +183,7 @@ async function validarIngreso() {
 
 
 .my-card {
-  background-color: rgba(235, 235, 235, 0.075);
+  background-color: rgba(235, 235, 235, 0.644);
 }
 
 .olascont {
