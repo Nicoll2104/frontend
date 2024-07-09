@@ -183,35 +183,48 @@ async function validarIngreso() {
 
 
 .my-card {
-  background-color: rgba(230, 225, 225, 0.363);
+  background-color: rgba(235, 235, 235, 0.075);
 }
 
-
-
 .olascont {
-    flex: 1;
-    background: url('../assets/fondo3.png') no-repeat center center fixed;
-    background-size: cover; /* Asegura que la imagen cubra todo el espacio */
-  height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la ventana */
+  background: url('../assets/fondo5.png') no-repeat center center fixed;
+  background-size: cover;
+  flex: 1;
+  user-select: none;
+  z-index: -1;
+  overflow: hidden;
+  position: fixed;
+  height: 100vh;
   width: 100vw;
-}
-.olascont {
-    user-select: none;
-    z-index: -1;
-    Overflow: hidden;
-    position: fixed;
-    height: 100vh;
-    width: 100vw;
-    bottom: 0;
-    right: 50%;
-    transform: translate(50%, 0);
+  top: 0;
+  left: 0;
 }
 
-@media only screen and (min-width: 1200px) {
+/* Media queries for responsiveness */
+@media (max-width: 1200px) {
+  .olascont {
+    background-size: cover; /* Ensures the image covers the background in larger screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .olascont {
+    background-size: cover; /* Ensures the image covers the background in tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .olascont {
+    background-size: cover; /* Ensures the image covers the background in mobile phones */
+  }
+}
+
+
+/* @media only screen and (min-width: 1200px) {
     .olascont{
         bottom: -2vw;
     }
-}
+} */
 
 .olaverde,
 .olaazul {
