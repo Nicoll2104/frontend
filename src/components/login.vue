@@ -130,8 +130,8 @@ async function validarIngreso() {
 <template>
     <div class="cont bg-dark flex flex-center fullscreen">
       <div class="olascont">
-        <img class="olaazul" src="../assets/olaazul.svg">
-        <img class="olaverde" src="../assets/olaverde.svg">
+       <!--  <img class="olaazul" src="../assets/olaazul.svg"> -->
+        <!-- <img class="olaverde" src="../assets/olaverde.svg"> -->
       </div>
       <q-card class="my-card q-ma-lg q-px-md q-py-lg">
         <q-card-section class="q-py-none">
@@ -177,18 +177,23 @@ async function validarIngreso() {
 
 
 * {
-    margin: 0;
+    margin: 0, 0 , 0, 0 ;
     padding: 0;
 }
 
-.my-card{
-    transform: translate(0px, -50px);
+
+.my-card {
+  background-color: rgba(230, 225, 225, 0.363);
 }
 
 
 
 .olascont {
     flex: 1;
+    background: url('../assets/fondo3.png') no-repeat center center fixed;
+    background-size: cover; /* Asegura que la imagen cubra todo el espacio */
+  height: 100vh; /* Asegura que el contenedor ocupe toda la altura de la ventana */
+  width: 100vw;
 }
 .olascont {
     user-select: none;
