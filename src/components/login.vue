@@ -130,8 +130,8 @@ async function validarIngreso() {
 <template>
     <div class="cont bg-dark flex flex-center fullscreen">
       <div class="olascont">
-        <img class="olaazul" src="../assets/olaazul.svg">
-        <img class="olaverde" src="../assets/olaverde.svg">
+       <!--  <img class="olaazul" src="../assets/olaazul.svg"> -->
+        <!-- <img class="olaverde" src="../assets/olaverde.svg"> -->
       </div>
       <q-card class="my-card q-ma-lg q-px-md q-py-lg">
         <q-card-section class="q-py-none">
@@ -177,36 +177,54 @@ async function validarIngreso() {
 
 
 * {
-    margin: 0;
+    margin: 0, 0 , 0, 0 ;
     padding: 0;
 }
 
-.my-card{
-    transform: translate(0px, -50px);
+
+.my-card {
+  background-color: rgba(235, 235, 235, 0.644);
 }
-
-
 
 .olascont {
-    flex: 1;
-}
-.olascont {
-    user-select: none;
-    z-index: -1;
-    Overflow: hidden;
-    position: fixed;
-    height: 100vh;
-    width: 100vw;
-    bottom: 0;
-    right: 50%;
-    transform: translate(50%, 0);
+  background: url('../assets/fondo5.png') no-repeat center center fixed;
+  background-size: cover;
+  flex: 1;
+  user-select: none;
+  z-index: -1;
+  overflow: hidden;
+  position: fixed;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
 }
 
-@media only screen and (min-width: 1200px) {
+/* Media queries for responsiveness */
+@media (max-width: 1200px) {
+  .olascont {
+    background-size: cover; /* Ensures the image covers the background in larger screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .olascont {
+    background-size: cover; /* Ensures the image covers the background in tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .olascont {
+    background-size: cover; /* Ensures the image covers the background in mobile phones */
+  }
+}
+
+
+/* @media only screen and (min-width: 1200px) {
     .olascont{
         bottom: -2vw;
     }
-}
+} */
 
 .olaverde,
 .olaazul {
