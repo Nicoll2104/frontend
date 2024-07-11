@@ -267,7 +267,7 @@ function notificar(tipo, msg) {
 </script>
 
 <template>
-  <div class="container">
+  <div class="container" >
     <q-dialog v-model="modal">
       <q-card class="modal">
         <q-toolbar>
@@ -294,13 +294,14 @@ function notificar(tipo, msg) {
       </q-card>
     </q-dialog>
 
-    <div class="left-column q-pa-md">
+    <div class="q-pa-md">
       <q-table :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
         rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
         no-results-label="No hay resultados para la busqueda" dense>
-        <template v-slot:top>
+        <template v-slot:top >
+          <div class="headertabla">
           <h4 class="titulo-cont">
-            {{ modelo + ' ' }}
+            {{ modelo + '' }}
             <q-btn @click="opciones.agregar" label="Añadir" color="secondary">
               <q-icon name="style" color="white" right />
             </q-btn>
@@ -310,6 +311,7 @@ function notificar(tipo, msg) {
               <q-icon name="search" />
             </template>
           </q-input>
+        </div>
         </template>
 
         <template v-slot:header="props">
@@ -368,13 +370,7 @@ function notificar(tipo, msg) {
     <div class="right-column">
       <q-card>
         <q-card-section>
-          <div class="text-h6">Opciones</div>
-        </q-card-section>
-
-        <q-card-section>
-          <div>
-            expaded anda enamoradooooo :)
-          </div>
+          <div class="text-h5">Opciones</div>
         </q-card-section>
 
         <q-separator />
@@ -393,11 +389,12 @@ function notificar(tipo, msg) {
 </template>
 
 <style scoped>
-.container {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 20px;
-  padding: 20px;
+.container{
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+
 }
 
 .left-column,
@@ -405,9 +402,20 @@ function notificar(tipo, msg) {
   padding: 10px;
 }
 
-.tabla {
-  width: 80%;
-  height: 60%;
+.tabla { 
+  padding: 0 20px;
+  margin: 10px auto;
+  max-width: 1200px;
+}
+
+.headertabla{
+  display: flex;
+  flex-flow: row wrap;
+  gap: 16px ;
+}
+
+.titulo-cont {
+  margin: auto;
 }
 
 .buscar {
