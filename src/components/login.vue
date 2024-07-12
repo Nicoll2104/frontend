@@ -133,17 +133,19 @@ async function validarIngreso() {
        <!--  <img class="olaazul" src="../assets/olaazul.svg"> -->
         <!-- <img class="olaverde" src="../assets/olaverde.svg"> -->
       </div>
-      <q-card class="my-card q-ma-lg q-px-md q-py-lg">
+      <q-card class="my-card q-ma-lg q-px-lg q-py-xl">
         <q-card-section class="q-py-none">
-          <p class="text-h3 text-primary text-bold">Bienvenido</p>
-          <q-div class="subtittle text-primary">Por favor ingrese sus datos de usuario para continuar</q-div>
+          <p class="text-h3 text-white text-bold">Bienvenido</p>
+          <q-div class="subtittle text-white">Por favor ingrese sus datos de usuario para continuar</q-div>
         </q-card-section>
         <q-card-section>
-          <q-input v-model="data.correo" label="Correo electrónico" class="q-mb-lg input" />
+          <q-input v-model="data.correo" label="Correo electrónico" 
+          color="white" class="mb-lg input" />
           <q-input
             v-model="data.contrasena"
             :type="showPassword ? 'text' : 'password'"
             label="Contraseña"
+            color="white"
             class="input"
           >
             <template v-slot:append>
@@ -157,7 +159,7 @@ async function validarIngreso() {
         </q-card-section>
         <q-card-section>
           <router-link to="/Restableciemiento">
-            <span class="text-secondary text-weight-bold contrasenaayuda">¿Olvidaste tu contraseña?</span>
+            <span class="text-black text-weight-bold contrasenaayuda">¿Olvidaste tu contraseña?</span>
           </router-link>
         </q-card-section>
         <q-card-section>
@@ -183,11 +185,14 @@ async function validarIngreso() {
 
 
 .my-card {
-  background-color: rgba(235, 235, 235, 0.644);
+  border: 3px solid #00000035;
+  background-color: rgba(0, 0, 0, 0.114);
+  backdrop-filter: blur(0.4rem);
 }
 
 .olascont {
-  background: url('../assets/fondo5.png') no-repeat center center fixed;
+  background: url('../assets/fondo5.png') 
+  no-repeat center fixed;
   background-size: cover;
   flex: 1;
   user-select: none;
@@ -237,7 +242,7 @@ async function validarIngreso() {
 }
 
 .contrasenaayuda:hover{
-    color: $primary !important;
+    color: $secondary !important;
 }
 .cursor-pointer {
   cursor: pointer;
