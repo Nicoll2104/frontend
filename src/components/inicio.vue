@@ -2,28 +2,23 @@
   <q-card-section
     class="q-gutter-md row items-center justify-center aling tarjetascont"
   >
-    <router-link
+    <q-card
       v-for="(item, index) in content[rol]"
       :key="index"
-      :to="item.ruta"
-      class="link-card"
+      flat
+      bordered
+      class="custom-card cursor-pointer"
+      @click="$router.push(item.ruta)"
     >
-      <q-btn
-        color="accent"
-        class="tarjetasbtn text-weight-bold text-h6 justify-center"
-      >
-        <span class="tarjetastxt text-black">{{ item.titulo }}</span>
-
-        <div class="card__content" :class="item.titulo + 'btn'">
-          <img
-            :src="item.img"
-            alt=""
-            :class="item.titulo + 'img'"
-            class="img"
-          />
+      <q-card-section class="bg-green-4 text-white">
+        <div class="row items-center justify-center">
+          <img :src="item.img" alt="" class="img" />
         </div>
-      </q-btn>
-    </router-link>
+      </q-card-section>
+      <q-card-section class="text-center text-weight-bold text-h6">
+        {{ item.titulo }}
+      </q-card-section>
+    </q-card>
   </q-card-section>
 </template>
 
@@ -95,6 +90,21 @@ let content = ref({
 
 .tarjetastxt {
   width: 50%;
+}
+.custom-card {
+  width: 100%; 
+}
+
+@media (min-width: 600px) {
+  .custom-card {
+    width: 35%; 
+  }
+}
+
+@media (min-width: 900px) {
+  .custom-card {
+    width: 20%; 
+  }
 }
 
 </style>
