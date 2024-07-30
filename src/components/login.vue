@@ -135,18 +135,21 @@ async function validarIngreso() {
       </div>
       <q-card class="my-card q-ma-lg q-px-lg q-py-xl">
         <q-card-section class="q-py-none">
-          <p class="text-h3 text-white text-bold">Bienvenido</p>
-          <q-div class="subtittle text-white">Por favor ingrese sus datos de usuario para continuar</q-div>
+          <p class="text-h2 text-white text-bold ">Bienvenido</p>
+          <q-div class="text-h5 text-white">Por favor ingrese sus datos de usuario para continuar a la pagina</q-div>
         </q-card-section>
         <q-card-section>
           <q-input v-model="data.correo" label="Correo electrónico" 
-          color="white" class="mb-lg input" />
+          color="white" label-color="white" 
+          class="input input q-my-md" outlined dark  />
+          
           <q-input
             v-model="data.contrasena"
             :type="showPassword ? 'text' : 'password'"
             label="Contraseña"
             color="white"
-            class="input"
+            label-color="white"
+            class="input q-my-md" outlined dark 
           >
             <template v-slot:append>
               <q-icon
@@ -159,11 +162,12 @@ async function validarIngreso() {
         </q-card-section>
         <q-card-section>
           <router-link to="/Restableciemiento">
-            <span class="text-black text-weight-bold contrasenaayuda">¿Olvidaste tu contraseña?</span>
+            <div class="text-body1 text-accent text-weight-bold contrasenaayuda">¿Olvidaste tu contraseña?</div>
           </router-link>
         </q-card-section>
         <q-card-section>
-          <q-btn push color="secondary" label="Ingresar" class="float-right" @click="validarCampos" :loading="loading" />
+          <q-btn push color="secondary" label="Ingresar"  class="float-right" 
+          @click="validarCampos" :loading="loading" size="17px" />
         </q-card-section>
       </q-card>
     </div>
@@ -172,7 +176,7 @@ async function validarIngreso() {
     <!-- scoped sirve para evitar que los estilos afecte a los
     demas componentes  -->
 
-    <!-- lang="scss" es para poder utilizar variables sass-->
+    <!-- lang="scss" es para poder utilizar variables sass con "$"-->
 
 <style lang="scss" scoped>
 @use '../quasar-variables.scss' as *;
@@ -185,9 +189,10 @@ async function validarIngreso() {
 
 
 .my-card {
-  border: 3px solid #00000035;
-  background-color: rgba(0, 0, 0, 0.114);
-  backdrop-filter: blur(0.4rem);
+  border-radius: 2%;
+  border: 3px solid #000000;
+  background-color: rgba(0, 0, 0, 0.125);
+  backdrop-filter: blur(0.1rem) ;
 }
 
 .olascont {
@@ -224,13 +229,6 @@ async function validarIngreso() {
   }
 }
 
-
-/* @media only screen and (min-width: 1200px) {
-    .olascont{
-        bottom: -2vw;
-    }
-} */
-
 .olaverde,
 .olaazul {
     position: absolute;
@@ -241,9 +239,16 @@ async function validarIngreso() {
     transform: translate(50%, 0);
 }
 
-.contrasenaayuda:hover{
-    color: $secondary !important;
+.contrasenaayuda{
+  transition: ease 0.3s;
+  width: fit-content;
 }
+
+.contrasenaayuda:hover{
+    //color: $secondary !important;
+    transform: scale(1.2) translate(10%, 0);
+}
+
 .cursor-pointer {
   cursor: pointer;
 }

@@ -10,7 +10,7 @@
       class="custom-card cursor-pointer"
       @click="$router.push(item.ruta)"
     >
-      <q-card-section class="bg-green-4 text-white">
+      <q-card-section class="bg-green-4 text-white imgcont">
         <div class="row items-center justify-center">
           <img :src="item.img" alt="" class="img" />
         </div>
@@ -68,7 +68,9 @@ let content = ref({
 });
 </script>
 
-<style>
+<style lang="scss">
+@use '../quasar-variables.scss' as *;
+
 * {
   text-decoration: none;
 }
@@ -76,17 +78,22 @@ let content = ref({
   min-height: 50vh;
 }
 
+.imgcont{
+  transition: ease 0.5s;
+  perspective: 150px;
+}
+
+.custom-card:hover .imgcont{
+    transform: rotateX(20deg) rotateY(180deg);
+    background-color: rgb(213, 213, 213) !important;
+  }
+
 .img {
   margin: 10px;
   height: 150px;
 }
 
-.tarjetasbtn {
-  margin: 15px;
-  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.144);
-  width: 70vw !important;
-  max-width: 400px;
-}
+
 
 .tarjetastxt {
   width: 50%;
