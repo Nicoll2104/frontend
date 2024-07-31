@@ -126,29 +126,45 @@ async function validarIngreso() {
 
 
         
-            <q-card class="my-card q-ma-md q-px-md q-py-lg " >
-                <q-card-section class="q-py-none">
-                    <p class="text-h3 text-primary text-bold">Perfil</p>
-                    <q-div class="subtittle text-primary"></q-div>
-                </q-card-section>
-                <q-card-section>
-                  <p class="subtittle q-my-md text-primary text-left"> Nombre: {{ usuario.nombre }}</p>
-                  <p class="subtittle q-my-md text-primary text-left"> Correo: {{ usuario.correo }}</p>
-                  <p class="subtittle q-my-md text-primary text-left"> Rol: {{ usuario.rol }}</p>
-                  <p class="subtittle q-my-md text-primary text-left"> Telefono: {{ usuario.telefono }}</p>
-                  <p class="subtittle q-my-md text-primary text-left"> Estado: {{ usuario.status == 1 ? 'Activo' : 'Inactivo' }}</p>
-                </q-card-section>
-
-                <q-card-section>
-                    <q-btn push color="warning" label="editar el perfil" class="text-capitalize q-mx-md" @click="editar()" :loading="loading"
-                    icon="edit"/>
-                    <router-link to="/inicio">
-                    <q-btn push color="primary" label="volver al menú" class="text-capitalize q-mx-md" :loading="loading"
-                    icon="home"/>
-                    </router-link>
-                </q-card-section>
-            </q-card>
-
+        <template>
+  <q-card class="my-card q-ma-md q-px-md q-py-lg">
+    <q-card-section class="q-py-none">
+      <p class="text-h3 text-primary text-bold">Perfil</p>
+      <q-div class="subtittle text-primary"></q-div>
+    </q-card-section>
+    <q-card-section>
+      <q-row>
+        <!-- Columna Izquierda -->
+        <q-col cols="6">
+          <div class="column-content">
+            <p class="subtittle q-my-md text-primary text-left">Nombre: {{ usuario.nombre }}</p>
+            <q-img
+              class="q-my-md"
+              :src="usuario.imagen"
+              alt="Imagen del usuario"
+              style="max-width: 100%; border-radius: 50%;"
+            ></q-img>
+          </div>
+        </q-col>
+        <!-- Columna Derecha -->
+        <q-col cols="6">
+          <div class="column-content">
+            <p class="subtittle q-my-md text-primary text-left">Correo: {{ usuario.correo }}</p>
+            <p class="subtittle q-my-md text-primary text-left">Rol: {{ usuario.rol }}</p>
+            <p class="subtittle q-my-md text-primary text-left">Teléfono: {{ usuario.telefono }}</p>
+            <p class="subtittle q-my-md text-primary text-left">Estado: {{ usuario.status == 1 ? 'Activo' : 'Inactivo' }}</p>
+          </div>
+        </q-col>
+      </q-row>
+    </q-card-section>
+    <q-card-section>
+      <q-btn push color="warning" label="Editar el perfil" class="text-capitalize q-mx-md" @click="editar()" :loading="loading" icon="edit" />
+      <router-link to="/inicio">
+        <q-btn push color="primary" label="Volver al menú" class="text-capitalize q-mx-md" :loading="loading" icon="home" />
+      </router-link>
+    </q-card-section>
+  </q-card>
+</template>
             
         </div>
 </template>
