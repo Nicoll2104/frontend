@@ -159,7 +159,7 @@ async function validarIngreso() {
           <div class="text-body1 text-accent text-weight-bold contrasenaayuda">¿Olvidaste tu contraseña?</div>
         </router-link>
       </q-card-section>
-      <q-card-section>
+      <q-card-section class="q-pt-none">
         <q-btn push label="Ingresar" class="full-width-btn" @click="validarCampos" :loading="loading" />
       </q-card-section>
     </q-card>
@@ -195,7 +195,7 @@ async function validarIngreso() {
 
 .custom-card-size {
   width: 350px;
-  height: 400px;
+  height: auto; /* Change to auto to adjust height based on content */
 }
 
 .bienvenido-verde {
@@ -207,8 +207,6 @@ async function validarIngreso() {
 .contraseña {
   width: 100%;
   margin: 10px 0;
-  border: 1px solid #4CAF50;
-  border-radius: 5px;
 }
 
 .q-input__control {
@@ -220,7 +218,6 @@ async function validarIngreso() {
   width: 100%;
   background-color: #4CAF50;
   color: white;
-  margin-top: 10px; /* Reducir el margen superior */
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
@@ -228,6 +225,10 @@ async function validarIngreso() {
 
 .q-card-section {
   padding: 5px 0; /* Reducir el padding para reducir los espacios entre secciones */
+}
+
+.q-card-section.q-pt-none {
+  padding-top: 0 !important; /* Remove top padding for the button section */
 }
 
 .contrasenaayuda {
@@ -276,3 +277,5 @@ async function validarIngreso() {
   }
 }
 </style>
+
+
