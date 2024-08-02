@@ -98,7 +98,7 @@ let menu2_content = ref({
                 <q-toolbar>
                     <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
                     <q-toolbar-title>
-                        <q-avatar icon="page_info"/>
+                        <q-avatar icon="page_info" class="titulo"/>
                         Distribucion De Presupuesto SENA
                     </q-toolbar-title>
                     <router-link to="/">
@@ -198,9 +198,6 @@ let menu2_content = ref({
     transition: transform ease 0.2s;
 }
 
-.avatarimg{
-}
-
 .avatarcont:hover{
     padding: 10px;
     transform: translate(0% , 0%);
@@ -210,5 +207,6 @@ let menu2_content = ref({
     width: min-content;
     transform: translate(0 , -60%);
 }
+
 
 </style>

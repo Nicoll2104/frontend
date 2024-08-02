@@ -155,7 +155,7 @@ async function validarIngreso() {
         </q-input>
       </q-card-section>
       <q-card-section>
-        <router-link to="/Restablecimiento">
+        <router-link to="/Restableciemiento">
           <div class="text-body1 text-accent text-weight-bold contrasenaayuda">¿Olvidaste tu contraseña?</div>
         </router-link>
       </q-card-section>

@@ -188,5 +188,10 @@ function notificar(tipo, msg) {
   height: 110px !important;
  
 }
+.modal{
+  width: 25%;
+  height: 80%;
+}
+
 
 </style>

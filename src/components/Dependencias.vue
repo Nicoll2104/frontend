@@ -5,7 +5,7 @@ import { useDependStore } from "../stores/dependencia.js";
 import { useDistLoteDependStore } from "../stores/dis_lote_dependencia";
 import { useQuasar } from 'quasar'
 
-const modelo = "Dependencias";
+const modelo = "";
 const useDependencias = useDependStore();
 const useDistLoteDepend = useDistLoteDependStore();
 const loadingTable = ref(true)
@@ -269,6 +269,7 @@ function notificar(tipo, msg) {
 </script>
 
 <template>
+  <div class="titulo">Dependencias</div>
   <div class="container" >
     <q-dialog v-model="modal">
       <q-card class="modal">
@@ -326,7 +327,7 @@ function notificar(tipo, msg) {
 
     <div class="q-pa-md">
       <q-table :rows="rows" :columns="columns" class="tabla" row-key="name" :loading="loadingTable" :filter="filter"
-        rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[10, 20, 40, 0]"
+        rows-per-page-label="visualización de filas" page="2" :rows-per-page-options="[5, 10, 20, 0]"
         no-results-label="No hay resultados para la busqueda" dense>
         <template v-slot:top >
           <div class="headertabla">
@@ -399,22 +400,22 @@ function notificar(tipo, msg) {
     </div>
 
     <div class="q-pa-md">
-      <q-card>
-        <q-card-section>
-          <div class="text-h5">Opciones</div>
-        </q-card-section>
+  <q-card class="custom-card">
+    <q-card-section class="custom-card-header">
+      <div class="text-h5 custom-card-title">Opciones</div>
+    </q-card-section>
 
-        <q-separator />
+    <q-separator />
 
-        <q-card-actions align="right">
-        <router-link to="/Dis_dependencias">
-          <q-btn flat label="Distribuccion de dependencias" color="primary" />
-        </router-link>
-        <q-btn class="botonv1" size="md" @click="showModalRed = true"
-        color="primary" icon="science" label="Red de conocimiento" />
-        </q-card-actions>
-      </q-card>
-    </div>
+    <q-card-actions class="custom-card-actions">
+      <router-link to="/Dis_dependencias">
+        <q-btn flat label="Distribucción de dependencias" icon="science" size="md" class="custom-btn" />
+      </router-link>
+      <q-btn class="custom-btn" size="md" @click="showModalRed = true" icon="science" label="Red de conocimiento" />
+    </q-card-actions>
+  </q-card>
+</div>
+
   </div>
 </template>
 
@@ -434,8 +435,10 @@ function notificar(tipo, msg) {
 
 .tabla { 
   padding: 0 20px;
-  margin: auto;
-  max-width: 1200px;
+  height: 100% !important;
+  width: 150% !important;
+  float: left;
+
 }
 
 .headertabla{
@@ -481,4 +484,58 @@ function notificar(tipo, msg) {
   padding-top: 0px !important;
   padding-bottom: 0px !important;
 }
+.custom-card {
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 60%;
+  height: 50%;
+  float: right;
+  margin-left: 140px;
+}
+
+.custom-card-header {
+  background-color: #38a151; /* Color de fondo del encabezado */
+  color: #ffffff; /* Color del texto del encabezado */
+  padding: 16px; /* Espaciado dentro del encabezado */
+  text-align: center;
+}
+
+.custom-card-title {
+  font-size: 18px; /* Tamaño del texto del título */
+}
+
+.custom-card-actions {
+  padding: 16px; /* Espaciado dentro de las acciones de la tarjeta */
+  display: flex;
+  justify-content: space-between; /* Distribuir los botones equitativamente */
+}
+
+.custom-btn {
+  border: 1px solid #38a151; /* Borde de color azul */
+  border-radius: 5px; /* Bordes redondeados */
+  color: #121213; /* Color del texto */
+  padding: 10px 16px; /* Espaciado dentro del botón */
+  text-transform: uppercase; /* Texto en mayúsculas */
+  transition: background-color 0.3s, color 0.3s; 
+  margin-bottom: 10px;
+}
+
+.custom-btn:hover {
+  background-color: #38a151; 
+  color: #e6e9ec; 
+}
+
+.highlight-btn {
+  background-color: #4a90e2; 
+  color: #ffffff; 
+}
+
+.highlight-btn:hover {
+  background-color: #357ab7; 
+}
+.titulo{
+  font-size: 300%;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
 </style>
