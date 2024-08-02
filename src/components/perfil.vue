@@ -1,4 +1,6 @@
+
 <template>
+
   <div class="cont flex flex-center fullscreen">
 
     <q-dialog v-model="modal">
@@ -64,7 +66,9 @@
       </q-card-actions>
     </q-card>
   </div>
+  <h5>En proceso de remodelacion...:)</h5>
 </template>
+
 
 <script setup>
 import { ref } from "vue";
@@ -192,6 +196,8 @@ function notificar(tipo, msg) {
   width: 25%;
   height: 80%;
 }
-
+h5{
+  margin-top: 500px;
+}
 
 </style>

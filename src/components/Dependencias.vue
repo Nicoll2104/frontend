@@ -417,6 +417,7 @@ function notificar(tipo, msg) {
 </div>
 
   </div>
+  <h5>En proceso de remodelacion...:)</h5>
 </template>
 
 <style scoped>
