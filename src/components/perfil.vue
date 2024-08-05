@@ -38,10 +38,7 @@
 
         </q-card-section>
         <q-card-section class="col-5 flex flex-center imagen">
-          <q-img
-            class="rounded-borders"
-            src="https://cdn.quasar.dev/img/parallax2.jpg"
-          />
+          <img src="https://cdn.quasar.dev/img/avatar3.jpg">
         </q-card-section>
       </q-card-section>
       
@@ -49,11 +46,11 @@
 
 
       <q-card-section>
-        <p class="subtittle q-my-md text-positive text-left"><strong>Nombre:</strong><span class="nombre-color"></span> {{ usuario.nombre }}</p>
-        <p class="subtittle q-my-md text-positive text-left"><strong>Correo:</strong> {{ usuario.correo }}</p>
-        <p class="subtittle q-my-md text-positive text-left"><strong>Rol:</strong> {{ usuario.rol }}</p>
-        <p class="subtittle q-my-md text-positive text-left"><strong>Teléfono:</strong> {{ usuario.telefono }}</p>
-        <p class="subtittle q-my-md text-positive text-left"><strong>Estado:</strong> {{ usuario.status == 1 ? 'Activo' : 'Inactivo' }}</p>
+        <p class="subtittle q-my-md text-positive text-left"><strong>Nombre:</strong><span class="nombre-color">{{ usuario.nombre }}</span></p>
+        <p class="subtittle q-my-md text-positive text-left"><strong>Correo:</strong><span class="Correo-color">{{ usuario.correo }}</span></p>
+        <p class="subtittle q-my-md text-positive text-left"><strong>Rol:</strong><span class="rol-color">{{ usuario.rol }}</span></p>
+        <p class="subtittle q-my-md text-positive text-left"><strong>Teléfono:</strong><span class="telefono-color">{{ usuario.telefono }}</span></p>
+        <p class="subtittle q-my-md text-positive text-left"><strong>Estado:</strong><span class="estado-color">{{ usuario.status == 1 ? 'Activo' : 'Inactivo' }}</span></p>
       </q-card-section>
 
       <q-separator />
@@ -66,7 +63,6 @@
       </q-card-actions>
     </q-card>
   </div>
-  <h5>En proceso de remodelacion...:)</h5>
 </template>
 
 
@@ -179,8 +175,6 @@ function notificar(tipo, msg) {
   }
 }
 
-
-
 .contrasenaayuda:hover {
   color: $positive !important;
 }
@@ -190,6 +184,7 @@ function notificar(tipo, msg) {
 .imagen{
   width: 200px !important; 
   height: 110px !important;
+ margin-left: 20px
  
 }
 .modal{
@@ -199,5 +194,8 @@ function notificar(tipo, msg) {
 h5{
   margin-top: 500px;
 }
+.nombre-color, .Correo-color,.rol-color,.telefono-color,.estado-color{
+    color: black;
+  }
 
 </style>
