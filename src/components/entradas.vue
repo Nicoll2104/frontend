@@ -35,12 +35,11 @@
           ></q-input>
 
           <q-select
-            filled
+            class="modalinputs"
+            outlined
             v-model="data.idProducto"
             :options="seletProducto"
             label="Seleccione el producto"
-            class="q-mx-auto"
-            style="width: 300px"
           />
         </q-card-section>
         <q-card-section
@@ -122,6 +121,108 @@
           </q-tr>
         </template>
 
+        <template v-slot:body-cell-idProducto="props">
+          <q-td :props="props" class="botones">  
+            <q-btn-dropdown auto-close flat no-caps 
+            :label="props.row.idProducto.nombre" split>
+        
+        <q-list padding style="width: 300px">
+          <q-item clickable class="q-mb-sm">
+            <q-item-section avatar>
+              <q-avatar icon="folder" color="primary" text-color="white" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>{{ props.row.idProducto.nombre }}</q-item-label>
+              <q-item-label caption>producto</q-item-label>
+            </q-item-section>
+            
+            <q-item-section side>
+              <q-icon name="edit" color="primary" />
+            </q-item-section>
+          </q-item>
+          <q-separator inset />
+          <q-item-label header>informacion hacerca del producto</q-item-label>
+
+          <q-item>
+            <q-item-section avatar >
+              <q-avatar icon="assignment" color="teal" text-color="white" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label class="text-capitalize" >codigo</q-item-label>
+              <q-item-label caption>{{props.row.idProducto.codigo}}</q-item-label>
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar >
+              <q-avatar icon="assignment" color="teal" text-color="white" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label class="text-capitalize">descripcion</q-item-label>
+              <q-item-label caption>{{props.row.idProducto.descripcion}} dsadsa</q-item-label>
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar >
+              <q-avatar icon="assignment" color="teal" text-color="white" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label class="text-capitalize" >unidad_medida</q-item-label>
+              <q-item-label caption>{{props.row.idProducto.unidad_medida}}</q-item-label>
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar >
+              <q-avatar icon="assignment" color="teal" text-color="white" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label class="text-capitalize" >precio_unitario</q-item-label>
+              <q-item-label caption>{{props.row.idProducto.precio_unitario}}</q-item-label>
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar >
+              <q-avatar icon="assignment" color="teal" text-color="white" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label class="text-capitalize" >iva</q-item-label>
+              <q-item-label caption>{{props.row.idProducto.iva}}</q-item-label>
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar >
+              <q-avatar icon="assignment" color="teal" text-color="white" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label class="text-capitalize" >lote</q-item-label>
+              <q-item-label caption>{{props.row.idProducto.lote}}</q-item-label>
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar >
+              <q-avatar icon="assignment" color="teal" text-color="white" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label class="text-capitalize" >status</q-item-label>
+              <q-item-label caption>{{props.row.idProducto.status}}</q-item-label>
+            </q-item-section>
+          </q-item>
+
+
+
+
+
+        </q-list>
+
+
+      </q-btn-dropdown>
+          </q-td>
+        </template>
         <template v-slot:body-cell-status="props">
           <q-td :props="props" class="botones">
             <q-btn
@@ -158,6 +259,8 @@
             />
           </q-td>
         </template>
+
+        
       </q-table>
     </div>
   </div>

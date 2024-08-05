@@ -26,9 +26,14 @@ app.use(Quasar, {
     }
   });
 
-pinia.use(createPersistedState({
+/* pinia.use(createPersistedState({
   storage: sessionStorage, 
-}))
+})) */
+
+  pinia.use(createPersistedState({
+    storage: localStorage,
+  }))
+
 
 
 app.mount('#app')
